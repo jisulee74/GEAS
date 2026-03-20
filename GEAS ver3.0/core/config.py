@@ -1,4 +1,4 @@
-# core/config.py
+# core/config.py: 설정 스키마(자료구조) 정의, .env 값을 객체로 변환
 from __future__ import annotations
 from dataclasses import dataclass, asdict, field
 from typing import Dict, Any, Tuple, Optional
@@ -21,7 +21,7 @@ class DbConfig:
     )
 
     time_index: str = "reg_date"
-    
+
     sub_table: str = ""
     sub_cols: str = ""
 
@@ -35,6 +35,7 @@ class DbConfig:
     poll_interval_sec: float = 2.0
 
     @classmethod
+    # .env 속 환경변수 읽어옴. 없는 경우 아래 기본값 사용.
     def from_env(cls) -> "DbConfig":
         return cls(
             host=os.getenv("DB_HOST", "127.0.0.1"),
@@ -64,6 +65,7 @@ class DbConfig:
             poll_interval_sec=float(os.getenv("POLL_INTERVAL_SEC", "2.0")),
         )
 
+    # 현재 객체를 다시 환경변수 키 형태 딕셔너리로 변환 (키는 .env에서 사용할 환경변수 이름과 일치)
     def to_config_dict(self) -> Dict[str, Any]:
         d = asdict(self)
         return {
@@ -95,6 +97,7 @@ class DbConfig:
         }
 
 @dataclass
+# 제어 파라미터 스키마: 컨트롤러 토글(어떤 안전기능 쓸지)/임계값(기준값 얼마로 할지) 저장
 class ControllerParams:
     USE_WIND_CAP: bool = True
     USE_MIN_ACH: bool = True
@@ -113,9 +116,10 @@ class ControllerParams:
     extra: Dict[str, Any] = field(default_factory=dict)
 
     @classmethod
+    # 여러 레이어의 딕셔너리를 받아서 ControllerParams 객체로 병합. 레이어는 우선순위에 따라 덮어쓰기됨.
     def from_layers(cls, *layers: Dict[str, Any]) -> "ControllerParams":
         base = asdict(cls())
-        base.pop("extra", None)
+        base.pop("extra", None) # 클래스에 없는 키는 extra로 보관
 
         merged_extra: Dict[str, Any] = {}
 
@@ -133,6 +137,7 @@ class ControllerParams:
         return cp
 
 @dataclass
+# 물리 파라미터 저장
 class PhysicsDefaults:
     UA_default: float = 1.0
     C_default: float = 1.0

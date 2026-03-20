@@ -1,3 +1,4 @@
+#core/features.py: 하루치 데이터(df_day)로부터 파생변수 계산
 from __future__ import annotations
 from typing import Dict, Any, Optional
 import numpy as np
@@ -20,6 +21,7 @@ def _step_minutes(df: pd.DataFrame, col: str = "reg_date") -> float:
         return 1.0
     return float(dt.median() / 60.0)
 
+# 이슬점(Tdew) 계산
 def _dewpoint_magnus(T_c: np.ndarray, RH_pct: np.ndarray) -> np.ndarray:
     T = np.asarray(T_c, dtype=float)
     RH = np.clip(np.asarray(RH_pct, dtype=float), 1e-6, 100.0)
@@ -28,6 +30,7 @@ def _dewpoint_magnus(T_c: np.ndarray, RH_pct: np.ndarray) -> np.ndarray:
     Td = (b * gamma) / (a - gamma)
     return Td
 
+# 증기압차(VPD) 계산
 def _vpd_kpa(T_c: np.ndarray, RH_pct: np.ndarray) -> np.ndarray:
     T = np.asarray(T_c, dtype=float)
     RH = np.clip(np.asarray(RH_pct, dtype=float), 0.0, 100.0)
@@ -35,12 +38,13 @@ def _vpd_kpa(T_c: np.ndarray, RH_pct: np.ndarray) -> np.ndarray:
     ea = es * (RH / 100.0)
     return np.maximum(es - ea, 0.0)
 
+# 생리 및 결로 안전 변수 계산
 def compute_humidity_features(
-    df_day: pd.DataFrame,
+    df_day: pd.DataFrame, # 하루치 데이터 기준
     now: Optional[pd.Timestamp] = None,
     temp_col: str = "in_temp",
     rh_col: str = "in_hum",
-    risk_threshold: float = 0.8,     # °C, condensation safety margin
+    risk_threshold: float = 0.8,     # °C, condensation safety margin: 결로 안전 변수(cond_risk_10m)
     ) -> Dict[str, Any]:
 
     res: Dict[str, Any] = {}
@@ -127,6 +131,7 @@ def compute_humidity_features(
 
     return res
 
+# 광/에너지 균형 변수 계산
 def compute_light_features(
     df_day: pd.DataFrame,
     sunrise: Optional[pd.Timestamp] = None,
@@ -183,6 +188,7 @@ def compute_light_features(
 
     return res
 
+#  물리 안전 및 기구 한계 변수 계산
 def compute_thermal_features(
     df_day: pd.DataFrame,
     sunrise: Optional[pd.Timestamp],
@@ -303,6 +309,7 @@ def build_features(
         T_night=T_night,
     )
 
+# 생리/광/열 지표 각각 계산 후 하나로 합침
 def compute_all_features(
     df_day: pd.DataFrame,
     sunrise: Optional[pd.Timestamp],

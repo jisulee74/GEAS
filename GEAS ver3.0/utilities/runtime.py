@@ -19,6 +19,8 @@ from policy.controller import Controller, PolicyState
 from policy.profiles import get_profile
 from policy.stage import stage as STAGE_CONFIG
 
+_POLICY_STATE_FIELDS = set(PolicyState.__dataclass_fields__.keys())
+
 
 def db_connect_for_write(cfg: DbConfig) -> pymysql.connections.Connection:
     conn = pymysql.connect(
@@ -58,15 +60,41 @@ def load_policy_state(path: str) -> PolicyState:
     try:
         with open(path, "r", encoding="utf-8") as f:
             data = json.load(f)
-        return PolicyState(**data)
+
+        if not isinstance(data, dict):
+            return PolicyState()
+
+        # Support both legacy flat JSON and nested "params" JSON.
+        source = data.get("params") if isinstance(data.get("params"), dict) else data
+        policy_data = {k: v for k, v in source.items() if k in _POLICY_STATE_FIELDS}
+        return PolicyState(**policy_data)
     except Exception:
         return PolicyState()
 
 
 def save_policy_state(path: str, st: PolicyState) -> None:
     data = st.to_dict()
+    meta: Dict[str, Any] = {}
+    use_nested_params = False
+
+    # Preserve non-policy keys (e.g., comments/description) and keep existing shape.
+    if os.path.exists(path):
+        try:
+            with open(path, "r", encoding="utf-8") as f:
+                old = json.load(f)
+            if isinstance(old, dict):
+                use_nested_params = isinstance(old.get("params"), dict)
+                meta = {k: v for k, v in old.items() if k not in _POLICY_STATE_FIELDS and k != "params"}
+        except Exception:
+            meta = {}
+
+    if use_nested_params:
+        payload = {**meta, "params": data}
+    else:
+        payload = {**meta, **data}
+
     with open(path, "w", encoding="utf-8") as f:
-        json.dump(data, f, ensure_ascii=False, indent=2, default=str)
+        json.dump(payload, f, ensure_ascii=False, indent=2, default=str)
 
 
 def prepare_today_context(
