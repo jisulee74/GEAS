@@ -77,6 +77,7 @@ def compute_humidity_features(
     res["dTcond"] = float(dTcond[-1]) if len(dTcond) else np.nan
 
     # ---- 1-hour window stats ----
+    ## to calculate vpdlo_min_1h and rh90_min_1h
     t = pd.to_datetime(df["reg_date"])
     if now is None:
         now = t.iloc[-1]
@@ -103,23 +104,37 @@ def compute_humidity_features(
     res["rh90_min_1h"] = rh90_min
     res["vpdlo_min_1h"] = vpdlo_min
 
-    # ---- simple 10-min condensation risk (linear extrapolation) ----
-    if len(dTcond) >= 5:
-        t_s = (t - t.iloc[0]).dt.total_seconds().to_numpy()
-        # focus last 30 minutes
-        t_last = now - pd.Timedelta(minutes=30)
+    # ------------------------------------------------------------------------
+    # <simple 10-min condensation risk (linear extrapolation)>
+    # 최근 30분의 dTcond 추세를 선형으로 추정해서, 10분 뒤 dTcond가 위험 기준보다 낮아지는지 판단
+    # ------------------------------------------------------------------------
+
+    #1. 유의미한 추세 계산 조건: 하루치 전체 중 현재까지 유효한 데이터포인트가 최소 5개 이상
+    if len(dTcond) >= 5: 
+        t_s = (t - t.iloc[0]).dt.total_seconds().to_numpy() # 시간 → 숫자 변환
+
+        #2. focus last 30 minutes
+        t_last = now - pd.Timedelta(minutes=30) 
         mask30 = t >= t_last
-        t_seg = t_s[mask30]
-        dT_seg = dTcond[mask30]
+        
+        #3. 회귀용 데이터 추출 (입력 x: t_seg, 출력 y: dT_seg)
+        t_seg = t_s[mask30] # t_seg: 최근 30분 구간의 시간 (초 단위)
+        dT_seg = dTcond[mask30] # dT_seg: 그 시간 내의 이슬점여유(dTcond) 값
+
+        #4. 시간 기준 재정렬
         if len(t_seg) >= 2:
-            t0 = t_seg[0]
-            tt = t_seg - t0
-            X = np.column_stack([np.ones_like(tt), tt])
-            beta, *_ = np.linalg.lstsq(X, dT_seg, rcond=None)
-            # 10 min ahead from now
-            dt_pred = 10 * 60.0
-            t_pred = (now - t.iloc[0]).total_seconds() - t0 + dt_pred
-            dT_future = beta[0] + beta[1] * t_pred
+            t0 = t_seg[0] # t0: 최근 30분 구간의 '시작 시각(초)'
+            tt = t_seg - t0 # 시간을 0부터 시작하도록 평행이동 ⇒ 안정적 회귀 수행 (∵큰 절대시간 대신 작은 상대시간 사용)
+
+            #5. 선형 회귀 (원리: 최근 30분의 t와 dT로 직선 추세 맞춤)
+            X = np.column_stack([np.ones_like(tt), tt]) # 시간 1차원 배열 tt를 2차원 입력행렬로 바꾸는 역할 (절편, 기울기)
+            beta, *_ = np.linalg.lstsq(X, dT_seg, rcond=None) # 위 X와 dT_seg로 '가장 잘 맞는 직선' 계수 beta=[b0, b1] 계산
+
+            #6. 10 min ahead from now: 과거 30분 데이터 내 추세를 10분 미래로 extrapolation
+            dt_pred = 10 * 60.0 # 예측할 미래 시점: 10분 → 초 단위
+            t_pred = (now - t.iloc[0]).total_seconds() - t0 + dt_pred # 10분 뒤 시점을 tt 좌표계로 변환 (기준이 0인 좌표계)
+            dT_future = beta[0] + beta[1] * t_pred # 구한 직선식에 t_pred 대입해서 10분 뒤 dTcond 예측값 계산
+
             res["cond_dTcond_10m"] = float(dT_future)
             res["cond_risk_10m"] = int(dT_future < risk_threshold)
         else:

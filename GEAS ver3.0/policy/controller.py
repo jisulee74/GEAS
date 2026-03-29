@@ -358,18 +358,29 @@ class _Inner:
 
         return {"open_cap": cap_open, "ach_min": ach_min, "ramp": self.RAMP_LIMIT}
 
+    # control_fcu(): 현재 시점의 FCU 동작 결정 함수
     def control_fcu(self) -> Tuple[str, str]:
-        mode = "cool" if self.st.fcu_mode == "cool" else "heat"
-        if np.isnan(self.in_temp):
-            return (mode, "off")
-        is_day = _is_daytime(self.now, self.sunrise, self.sunset)
+        mode = "cool" if self.st.fcu_mode == "cool" else "heat" #FCU 모드 로드 (현재 main.py에서 사전설정돼있음: heat)
+
+        # 현재 실내온도(in_temp) 정보가 없으면 FCU를 끔 (fail-safe)
+        # -> 현재 실내온도와 목표온도를 비교하며 정책 결정해야하므로 판단 근거가 없으면 정책 수행이 불가능
+        if np.isnan(self.in_temp):  
+            return (mode, "off") 
+        
+        is_day = _is_daytime(self.now, self.sunrise, self.sunset) # 지금이 주간인지 야간인지 판단
+
+        # DB(Dead Band): 목표온도 근처의 허용 오차
+        # 목표온도 근처에서 FCU의 빈번한 ON/OFF를 방지하기 위함
+        # 최초값은 0.3/0.4도로 설정되어 있음; KPI기반으로 학습과정에서 조정됨
+        # 현재 온도가 목표 온도보다 DB 이내로 가까우면 FCU를 끄는 정책을 구현하기 위해 사용됨
         DB, _ = _dead_pb(is_day, self.st)
-        _, _, _, T_now = self._targets()
+
+        _, _, _, T_now = self._targets() # _targets() 호출 -> 현재 시점의 목표 온도(T_now) 로드
         err = self.in_temp - T_now
         if mode == "cool":
-            return (mode, "on" if err > DB else "off")
+            return (mode, "on" if err > DB else "off") # 현재온도가 목표온도보다 많이 높으면 -> 냉방 ON
         else:
-            return (mode, "on" if err < -DB else "off")
+            return (mode, "on" if err < -DB else "off") # 현재온도가 목표온도보다 많이 낮으면 -> 난방 ON
 
     def control_window(self) -> Tuple[int, str, str]:
         if np.isnan(self.in_temp):
