@@ -2,7 +2,9 @@ from __future__ import annotations
 
 import json
 import os
+import runpy
 from typing import Dict, Any, Optional, Tuple
+from pathlib import Path
 from datetime import datetime
 
 import numpy as np
@@ -15,7 +17,7 @@ from core.preprocessing import normalize_for_derived, latest_row_for_controller
 from core.solar_eta import compute_eta, integrate_measured_to_jcm2
 from core.features import compute_all_features
 from infra.repository import Repository
-from policy.controller import Controller, PolicyState
+from policy.controller_doc import Controller, PolicyState
 from policy.profiles import get_profile
 from policy.stage import stage as STAGE_CONFIG
 
@@ -51,6 +53,171 @@ def fetch_today_dataframe(repo: Repository) -> pd.DataFrame:
 
     df = pd.DataFrame(rows)
     return df
+
+
+_CASE_CLASSIFIER_API: Optional[Dict[str, Any]] = None
+
+
+def _load_case_classifier_api() -> Optional[Dict[str, Any]]:
+    global _CASE_CLASSIFIER_API
+    if _CASE_CLASSIFIER_API is not None:
+        return _CASE_CLASSIFIER_API
+
+    model_path = Path(__file__).resolve().parents[2] / "modeling ver3.0" / "data_case_classifier.py"
+    if not model_path.exists():
+        _CASE_CLASSIFIER_API = None
+        return None
+
+    try:
+        _CASE_CLASSIFIER_API = runpy.run_path(str(model_path))
+    except Exception as exc:
+        print(f"[CASE CLASSIFIER] load failed: {exc}")
+        _CASE_CLASSIFIER_API = None
+    return _CASE_CLASSIFIER_API
+
+
+def fetch_recent_history_dataframe(repo: Repository) -> pd.DataFrame:
+    now = kst_now()
+    lookback_days = int(os.getenv("PHYSICS_CASE_LOOKBACK_DAYS", "35"))
+    since_ts = now - pd.Timedelta(days=lookback_days)
+    limit = int(os.getenv("FETCH_LIMIT_PHYSICS_CASE", "50000"))
+    rows = repo.fetch_since(since_ts=since_ts, limit=limit, inclusive=True)
+    if not rows:
+        return pd.DataFrame()
+    return pd.DataFrame(rows)
+
+
+def detect_physics_case(df_recent: pd.DataFrame) -> Dict[str, Any]:
+    api = _load_case_classifier_api()
+    if api and "classify_data_availability" in api:
+        classify = api["classify_data_availability"]
+        decision = classify(
+            df_recent,
+            time_col="reg_date",
+            sufficient_days=int(os.getenv("PHYSICS_CASE_SUFFICIENT_DAYS", "30")),
+            limited_days=int(os.getenv("PHYSICS_CASE_LIMITED_DAYS", "3")),
+            max_missing_ratio_for_sufficient=float(os.getenv("PHYSICS_CASE_MAX_MISSING", "0.20")),
+            min_control_events_for_sufficient=int(os.getenv("PHYSICS_CASE_MIN_CONTROL_EVENTS", "50")),
+            min_rows_for_limited=int(os.getenv("PHYSICS_CASE_MIN_ROWS_LIMITED", "24")),
+        )
+        return {
+            "data_case": decision.data_case,
+            "metrics": dict(decision.metrics),
+            "reasons": list(decision.reasons),
+        }
+
+    row_count = int(len(df_recent.index))
+    limited_threshold = int(os.getenv("PHYSICS_LIMITED_ROWS", "24"))
+    if row_count <= 0:
+        return {"data_case": "no_data", "metrics": {"row_count": 0}, "reasons": ["empty_dataframe"]}
+    if row_count < limited_threshold:
+        return {"data_case": "limited", "metrics": {"row_count": row_count}, "reasons": ["row_count_below_threshold"]}
+    return {"data_case": "sufficient", "metrics": {"row_count": row_count}, "reasons": []}
+
+
+_SENSOR_QC_API: Optional[Dict[str, Any]] = None
+
+
+def _load_sensor_qc_api() -> Optional[Dict[str, Any]]:
+    global _SENSOR_QC_API
+    if _SENSOR_QC_API is not None:
+        return _SENSOR_QC_API
+
+    model_path = Path(__file__).resolve().parents[2] / "modeling ver3.0" / "3_3__센서_데이터_보정_및_신뢰성_확보_구조.py"
+    if not model_path.exists():
+        _SENSOR_QC_API = None
+        return None
+
+    try:
+        _SENSOR_QC_API = runpy.run_path(str(model_path))
+    except Exception as exc:
+        print(f"[SENSOR QC] load failed: {exc}")
+        _SENSOR_QC_API = None
+    return _SENSOR_QC_API
+
+
+def apply_sensor_calibration(df_raw: pd.DataFrame) -> pd.DataFrame:
+    if df_raw.empty:
+        return df_raw
+
+    enabled = os.getenv("ENABLE_SENSOR_QC", "1").strip().lower()
+    if enabled in {"0", "false", "no", "off"}:
+        return df_raw
+
+    min_rows = int(os.getenv("SENSOR_QC_MIN_ROWS", "80"))
+    if len(df_raw.index) < min_rows:
+        return df_raw
+
+    api = _load_sensor_qc_api()
+    if not api or "make_state_df" not in api:
+        return df_raw
+
+    make_state_df = api["make_state_df"]
+    max_win = int(os.getenv("SENSOR_QC_WINDOW", "144"))
+    step = int(os.getenv("SENSOR_QC_STEP", "30"))
+    alpha = float(os.getenv("SENSOR_QC_ALPHA", "0.01"))
+
+    win = min(max_win, len(df_raw.index) - 1)
+    if win <= 1:
+        return df_raw
+    step = max(1, min(step, max(1, win // 4)))
+
+    try:
+        df_state = make_state_df(df_raw, plot=False, win=win, step=step, alpha=alpha)
+    except Exception as exc:
+        print(f"[SENSOR QC] calibration skipped: {exc}")
+        return df_raw
+
+    if df_state.empty or "time" not in df_state.columns:
+        return df_raw
+
+    calibrated = df_raw.copy()
+    calibrated["reg_date"] = pd.to_datetime(calibrated["reg_date"], errors="coerce")
+
+    qc_cols = [c for c in ["time", "Tin_corr", "RHin_corr", "CO2_corr", "QC_flag", "CO2_QC_flag"] if c in df_state.columns]
+    merge_df = df_state[qc_cols].copy()
+    merge_df = merge_df.rename(columns={"time": "reg_date"})
+
+    calibrated = calibrated.merge(merge_df, on="reg_date", how="left")
+
+    if "Tin_corr" in calibrated.columns:
+        calibrated["in_temp"] = calibrated["Tin_corr"].where(calibrated["Tin_corr"].notna(), calibrated.get("in_temp"))
+    if "RHin_corr" in calibrated.columns:
+        calibrated["in_hum"] = calibrated["RHin_corr"].where(calibrated["RHin_corr"].notna(), calibrated.get("in_hum"))
+    if "CO2_corr" in calibrated.columns:
+        calibrated["in_co2"] = calibrated["CO2_corr"].where(calibrated["CO2_corr"].notna(), calibrated.get("in_co2"))
+
+    if "QC_flag" in calibrated.columns:
+        calibrated["sensor_qc_flag"] = calibrated["QC_flag"].fillna(False).astype(bool)
+    if "CO2_QC_flag" in calibrated.columns:
+        calibrated["sensor_qc_co2_flag"] = calibrated["CO2_QC_flag"].fillna(False).astype(bool)
+
+    temp_changed = 0
+    hum_changed = 0
+    co2_changed = 0
+    if "Tin_corr" in calibrated.columns and "in_temp" in df_raw.columns:
+        raw_temp = pd.to_numeric(df_raw["in_temp"], errors="coerce")
+        cal_temp = pd.to_numeric(calibrated["in_temp"], errors="coerce")
+        temp_changed = int(((raw_temp - cal_temp).abs() > 1e-9).fillna(False).sum())
+    if "RHin_corr" in calibrated.columns and "in_hum" in df_raw.columns:
+        raw_hum = pd.to_numeric(df_raw["in_hum"], errors="coerce")
+        cal_hum = pd.to_numeric(calibrated["in_hum"], errors="coerce")
+        hum_changed = int(((raw_hum - cal_hum).abs() > 1e-9).fillna(False).sum())
+    if "CO2_corr" in calibrated.columns and "in_co2" in df_raw.columns:
+        raw_co2 = pd.to_numeric(df_raw["in_co2"], errors="coerce")
+        cal_co2 = pd.to_numeric(calibrated["in_co2"], errors="coerce")
+        co2_changed = int(((raw_co2 - cal_co2).abs() > 1e-9).fillna(False).sum())
+
+    total_rows = max(int(len(calibrated.index)), 1)
+    qc_rows = int(calibrated.get("sensor_qc_flag", pd.Series(False, index=calibrated.index)).fillna(False).sum())
+    qc_co2_rows = int(calibrated.get("sensor_qc_co2_flag", pd.Series(False, index=calibrated.index)).fillna(False).sum())
+    print(
+        "[SENSOR QC] applied "
+        f"rows={total_rows}, temp_changed={temp_changed}, hum_changed={hum_changed}, co2_changed={co2_changed}, "
+        f"qc_rows={qc_rows} ({qc_rows/total_rows:.1%}), co2_qc_rows={qc_co2_rows} ({qc_co2_rows/total_rows:.1%})"
+    )
+
+    return calibrated
 
 
 def load_policy_state(path: str) -> PolicyState:
@@ -111,7 +278,8 @@ def prepare_today_context(
 
     now = kst_now()
 
-    df_norm = normalize_for_derived(df_today_raw)
+    df_calibrated = apply_sensor_calibration(df_today_raw)
+    df_norm = normalize_for_derived(df_calibrated)
     df_today = slice_today(df_norm, now, col="reg_date")
     if df_today.empty:
         return None
@@ -634,6 +802,10 @@ def run_once(
         f"[INIT] farm_sn={cfg.farm_sn}, lat={lat}, lon={lon}"
     )
 
+    df_recent = fetch_recent_history_dataframe(repo)
+    case_info = detect_physics_case(df_recent)
+    print(f"[INIT] physics_case={case_info['data_case']} metrics={case_info['metrics']} reasons={case_info['reasons']}")
+
     df_today_raw = fetch_today_dataframe(repo)
     if df_today_raw.empty:
         print("[INFO] No data for today. Exit.")
@@ -665,6 +837,14 @@ def run_once(
     profile_params = get_profile(profile_name) or {}
     params: Dict[str, Any] = dict(profile_params)
     params["fcu_mode"] = fcu_mode
+    params["farm_sn"] = cfg.farm_sn
+    params["stage_name"] = stage_name
+    params["physics_case"] = case_info["data_case"]
+    params["physics_case_info"] = case_info
+    params["physics_model_name"] = str(params.get("physics_model_name", "default"))
+    params["physics_store_path"] = str(
+        Path(__file__).resolve().parents[1] / "physics_store" / "physics_params_store.json"
+    )
 
     ctrl = Controller(
         dataframe=latest,

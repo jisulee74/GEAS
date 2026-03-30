@@ -18,6 +18,7 @@ class PolicyState:
     alpha_curtain: float = 1.0
     fcu_mode: str = "cool"  # "cool" or "heat"
     last_score: Optional[float] = None
+    last_daily_eval_date: Optional[str] = None
 
     def to_dict(self) -> Dict[str, Any]:
         return asdict(self)

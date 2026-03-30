@@ -13,11 +13,12 @@ class DbConfig:
     name: str = "farmstom"
 
     main_table: str = "data_silla_enc"
-    id_idx: str = "farm_sn"
+    id_idx: str = "iot_data_idx"
     farm_sn: int = 97
     main_cols: str = (
-        "reg_date, in_temp, in_hum, out_temp, out_hum, "
-        "out_winddirec, out_windsp, out_light"
+        "reg_date, in_temp, in_hum, in_co2, out_temp, out_hum, "
+        "out_winddirec, out_windsp, out_light, out_rain, "
+        "cont_heater_run, cont_skyl_vol, cont_cur_vol, cont_co2_run, cont_fan_run"
     )
 
     time_index: str = "reg_date"
@@ -49,10 +50,10 @@ class DbConfig:
             main_table=os.getenv("MAIN_TABLE_NAME", "data_silla_enc"),
             sub_table=os.getenv("SUB_TABLE_NAME", ""),
 
-            id_idx=os.getenv("ID_IDX", "farm_sn"),
-            farm_sn=int(os.getenv("FARM_SN", "97")),
+            id_idx=os.getenv("ID_IDX", "iot_data_idx"),
+            farm_sn=int(os.getenv("FARM_SN", os.getenv("DB_FARM_SN", "97"))),
 
-            main_cols=os.getenv("MAIN_COLS", "reg_date, out_light"),
+            main_cols=os.getenv("MAIN_COLS", "reg_date, in_temp, in_hum, in_co2, out_temp, out_hum, out_winddirec, out_windsp, out_light, out_rain, cont_heater_run, cont_skyl_vol, cont_cur_vol, cont_co2_run, cont_fan_run"),
             sub_cols=os.getenv("SUB_COLS", ""),
 
             out_env_cols=os.getenv("OUT_ENV_COL", ""),

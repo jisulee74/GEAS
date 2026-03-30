@@ -78,7 +78,7 @@ def _clear_sky_ghi_series(
         day_length = (sunset - sunrise) / pd.Timedelta(hours=1)
         x = np.clip(t_hours / max(day_length, 1e-6), 0, 1)
         # bell-shaped approximate GHI, peak ~800 W/m²
-        ghi = 800.0 * np.sin(np.pi * x)
+        ghi = np.asarray(800.0 * np.sin(np.pi * x), dtype=float)
         ghi[ghi < 0] = 0.0
         ghi = pd.Series(ghi, index=times, name="ghi")
 
