@@ -1,0 +1,307 @@
+GEAS / Modeling Validation Report
+생성일: 2026-03-30
+검증 범위:
+- /home/ljs/jslee/GEAS ver3.0
+- /home/ljs/jslee/modeling ver3.0
+
+목적
+이 문서는 실제 DB(data_silla_enc, farmstom, iot_data_idx=97)를 기반으로 현재 코드가 문법적으로 정상인지, 주요 실행 경로가 실제 데이터에서 동작하는지, 그리고 modeling/validation KPI가 어떤 결과를 내는지 정리한 보고서이다.
+
+==================================================
+1. 검증 환경
+==================================================
+
+Python 환경
+- conda env: /home/ljs/miniconda3/envs/jisulee-geas-py310
+
+실데이터 DB
+- HOST: 211.195.9.227
+- PORT: 3306
+- DB: farmstom
+- TABLE: data_silla_enc
+- 대상 팜: iot_data_idx = 97
+
+실데이터 전체 범위
+- 전체 row 수: 178092
+- 시작 시각: 2024-03-06 12:20:00
+- 종료 시각: 2026-03-30 15:45:00
+
+==================================================
+2. 전체 코드 문법 검증
+==================================================
+
+대상
+- GEAS ver3.0 내 전체 .py
+- modeling ver3.0 내 전체 .py
+
+결과
+- compileall 기준 전체 통과
+- 즉, 현재 두 프로젝트의 Python 파일은 문법적으로는 깨지지 않음
+
+==================================================
+3. 실데이터 기반 대표 case 확인
+==================================================
+
+3-1. no_data 대표 구간
+- 기간: 2024-02-28 12:20:00 ~ 2024-03-05 12:20:00
+- row 수: 0
+- classifier 결과: no_data
+- reason: empty_dataframe
+
+3-2. limited 대표 구간
+- 기간: 2026-01-14 00:00:00 ~ 2026-02-18 23:59:59
+- row 수: 8445
+- coverage_days: 29.44
+- unique_days: 30
+- missing_ratio: 0.0
+- control_events: 1609
+- classifier 결과: limited
+
+3-3. sufficient 대표 구간
+- 기간: 2025-05-20 00:00:00 ~ 2025-06-24 23:59:59
+- row 수: 10208
+- coverage_days: 35.67
+- unique_days: 36
+- missing_ratio: 0.0
+- control_events: 6916
+- classifier 결과: sufficient
+
+추가 관찰
+- 최근 35일(2026-02-25 ~ 2026-03-30)은 기간은 충분하지만 control_events=0이라 classifier 결과가 limited였다.
+
+==================================================
+4. modeling ver3.0 실데이터 검증
+==================================================
+
+4-1. 3_6_3 (무데이터)
+대표 기간: no_data 구간
+결과
+- 함수 실행 정상
+- sample_theta 반환 정상
+- 무데이터 케이스용 theta 생성 확인
+
+예시 theta
+- UA: 5657.55
+- C: 30474948.05
+- eta: 0.2125
+- k_heat: 45669.54
+- a0: 0.4668
+- a1: 4.9191
+- a2: 0.9025
+- a3: 0.0
+
+판정
+- 3_6_3 경로는 현재 코드 기준으로 동작 확인 완료
+
+4-2. 3_6_4 (제한적 데이터)
+대표 기간: 2026-01-14 ~ 2026-02-18
+결과
+- 함수 실행 정상
+- theta 생성 정상
+- approval = approved True
+
+예시 theta
+- UA: 2656.26
+- C: 17780805.10
+- eta: 0.6015
+- k_heat: 36218.39
+- a0: 0.0621
+- a1: 5.3320
+- a2: 1.4044
+- a3: 0.0
+
+판정
+- 3_6_4 경로는 대표 limited 구간에서 정상 동작 및 승인 확인
+- 실데이터 기반 1차 검증 완료로 볼 수 있음
+
+4-3. 3_6_5 (충분한 데이터)
+대표 기간: 2025-05-20 ~ 2025-06-24
+결과
+- 함수 실행 정상
+- sufficient로 classifier 판정됨
+- approval 계산이 실제로 수행되도록 수정함
+- 현재 대표 sufficient 구간에서는 approval = approved False
+- 반려 사유: out_of_range:eta, out_of_range:a1
+
+실행 결과 예시
+- method: generalized
+- theta:
+  - C: 3812286.91
+  - k_heat: 0.0
+  - eta: 2174.0859
+  - UA: 7560.0
+  - a0: 0.05
+  - a1: 252000.0
+  - a2: 0.1
+  - a3: 0.0
+- approval metrics:
+  - n_obs: 10207
+  - value: 20.634624203539357
+  - convergence: 0
+
+판정
+- 3_6_5는 현재 충분 데이터 대표 구간에서 "계산은 되지만 승인 단계에서 반려됨"이 명확히 확인됨
+- 즉 approval 흐름은 이제 구현되었고, 실제 문제는 식별 결과가 물리적으로 비정상이라는 점임
+
+4-4. daily_modeling_batch
+결과
+- 최근 35일 실제 데이터에 대해 batch 엔트리포인트 실행 확인
+- classifier 결과에 따라 limited 경로가 선택됨
+- limited theta_result approval 통과 확인
+
+판정
+- case 분기 -> case별 modeling 경로 선택 -> 결과 반환 흐름은 실데이터 기준으로 동작 확인
+
+==================================================
+5. 3_6_6 정책 비교 KPI (실데이터)
+==================================================
+
+실행 설정
+- 최근 데이터 기반 fit 후, 최근 7일 window 비교 수행
+- 정책 비교: Observed / Baseline / AI
+
+fit 결과
+- fit_loss: 0.2419511224
+- fit_conv: 0
+
+주요 KPI 결과
+
+Observed
+- temp_violation_rate_mean: 0.779762
+- condensation_violation_rate_mean: 0.408730
+- high_humidity_violation_rate_mean: 0.434524
+- temp_mae_mean: 13.497162
+- temp_excess_mean: 4.419918
+
+Baseline
+- temp_violation_rate_mean: 0.333333
+- condensation_violation_rate_mean: 0.499008
+- high_humidity_violation_rate_mean: 0.499008
+- temp_mae_mean: 5.693985
+- temp_excess_mean: 0.625901
+- vent_total_movement_mean: 1.4
+- heat_switch_count_mean: 15.0
+- vent_switch_count_mean: 0.0
+
+AI
+- temp_violation_rate_mean: 0.063492
+- condensation_violation_rate_mean: 0.499008
+- high_humidity_violation_rate_mean: 0.499008
+- temp_mae_mean: 5.131203
+- temp_excess_mean: 0.356138
+- vent_total_movement_mean: 6.4
+- heat_switch_count_mean: 30.0
+- vent_switch_count_mean: 2.0
+
+해석
+- 온도 관련 성능은 AI가 Observed/Baseline 대비 뚜렷하게 개선됨
+- 반면 결로/고습 위반률은 현재 비교 구간에서 AI와 Baseline이 거의 동일하여 개선이 약함
+
+==================================================
+6. GEAS ver3.0 실데이터 런타임 검증
+==================================================
+
+실행 대상
+- utilities/runtime.py 의 run_once()
+- 실제 DB 접속 후 today context 생성, sensor QC, controller_doc, 로그 저장까지 수행
+
+실행 결과
+- run_once() 실제 완료
+- 반환 타입: dict
+- 반환 키:
+  - curtain
+  - effective_params
+  - fan
+  - fcu
+  - outer
+  - physics
+  - thermal_curtain
+  - window
+
+실행 중 확인된 로그
+- sensor QC 실제 적용
+  - rows=194
+  - temp_changed=3
+  - hum_changed=5
+  - co2_changed=0
+  - qc_rows=10 (5.2%)
+- 제어 결과 예시
+  - window=(0, 'main', 'HOLD')
+  - curtain=('shade', 100)
+  - fcu=('heat', 'off')
+  - fan=('off',)
+- 로그 저장 성공
+  - control_log_test insert 성공
+  - control_actuation insert 성공
+  - policy_log_test insert 성공
+
+판정
+- 실제 액추에이터 API 송신(send_control_api) 이전 단계까지는 실데이터 기준 정상 동작 확인
+
+==================================================
+7. 검증 중 발견되어 수정한 실제 버그
+==================================================
+
+7-1. runtime.py
+문제
+- case_info 계산 전에 먼저 print하여 UnboundLocalError 발생
+조치
+- case_info 계산 후 print 하도록 순서 수정
+
+7-2. solar_eta.py
+문제
+- fallback clear-sky 계산에서 pandas Index에 직접 값 대입 시도
+- TypeError: Index does not support mutable operations
+조치
+- numpy 배열로 변환 후 음수 GHI 보정하도록 수정
+
+7-3. core/config.py
+문제
+- 실제 DB 스키마는 iot_data_idx인데 기본 id_idx가 farm_sn으로 잡혀 있었음
+- 기본 main_cols도 실운영 경로에 필요한 컬럼이 너무 적었음
+조치
+- 기본 id_idx를 iot_data_idx로 수정
+- 기본 main_cols를 실제 운영 컬럼들로 확장
+- DB_FARM_SN fallback 지원 추가
+
+7-4. 3_6_5 approval 미폐쇄
+문제
+- auto_save=False일 때는 sufficient-data 경로가 theta만 반환하고 approval을 계산하지 않았음
+조치
+- auto_save 여부와 무관하게 approval을 항상 계산하여 반환하도록 수정
+
+==================================================
+8. 현재 시점 결론
+==================================================
+
+1. 전체 코드 문법 검증은 통과했다.
+2. modeling ver3.0의 no_data / limited / sufficient / policy compare 경로는 모두 실제 데이터 기준으로 실행 확인이 가능했다.
+3. 이 중 3_6_4는 대표 limited 구간에서 승인까지 통과하여 비교적 안정적이다.
+4. 3_6_5는 representative sufficient 구간에서 실행은 되며 approval도 이제 계산되지만, 현재는 eta/a1 범위 초과로 반려된다.
+5. GEAS ver3.0의 run_once()는 실제 DB와 센서 보정, controller_doc, 로그 저장까지 정상 수행된다.
+6. 실제 액추에이터 API 송신까지 포함한 최종 운영 실행(main.py 전체)은 안전상 수행하지 않았다.
+   이유: send_control_api()가 실제 스마트팜 장치에 명령을 보낼 수 있기 때문이다.
+
+==================================================
+9. 아직 남아 있는 한계
+==================================================
+
+- 3_6_5 충분 데이터 경로는 approval까지 닫혔지만, representative sufficient 구간에서 실제로 승인 가능한 파라미터를 아직 만들지 못함
+- 문서 비명시 threshold/candidate grid/approval 기준은 여전히 존재함
+- 실제 액추에이터 API 송신까지 포함한 최종 운영 검증은 미수행
+- 3_6_6의 KPI를 module 3 approval에 직접 연결하는 폐루프는 아직 보강 여지 있음
+
+==================================================
+10. 참고 파일
+==================================================
+
+- GEAS ver3.0/utilities/runtime.py
+- GEAS ver3.0/policy/controller_doc.py
+- GEAS ver3.0/core/config.py
+- GEAS ver3.0/core/solar_eta.py
+- modeling ver3.0/data_case_classifier.py
+- modeling ver3.0/daily_modeling_batch.py
+- modeling ver3.0/3_6_3__무데이터_환경에서의_견고성_검증_방법론.py
+- modeling ver3.0/3_6_4__제한적_데이터_환경에서의_부분_검증_방법론.py
+- modeling ver3.0/3_6_5__충분한_데이터_환경에서의_검증_방법론.py
+- modeling ver3.0/3_6_6__외기_조건_고전_기반_정책_비교_시뮬레이션.py
