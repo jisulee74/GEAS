@@ -50,9 +50,3 @@ Current evaluation files include:
 - `3_6_3__AI_자율제어기_견고성_검증_방법론.py`
 - `3_6_4__제한적_데이터_환경에서의_부분_검증_방법론.py`
 - `3_6_6__외기_조건_고전_기반_정책_비교_시뮬레이션.py`
-
-## Notes
-
-- The repository was restructured so that `main` exposes the high-level layout directly.
-- The previous root README can still be recovered from commit `9f22911` if needed.
-- Local backup folders such as `_restructure_backup/` are intentionally not tracked in GitHub.
