@@ -15,8 +15,8 @@ import pandas as pd
 from physics_store_sync import approve_and_save_theta_case, evaluate_theta_candidate
 
 _THIS_DIR = Path(__file__).resolve().parent
-_BASIC_PATH = _THIS_DIR / '1__단일_구획_모델_회귀_기반_식별_방법.py'
-_GENERAL_PATH = _THIS_DIR / '2__단일_구획_모델_회귀_기반_식별_방법_일반화.py'
+_BASIC_PATH = _THIS_DIR / 'theta_sufficient_core.py'
+_GENERAL_PATH = _THIS_DIR / 'theta_sufficient_structure_aware.py'
 
 
 def _period_bounds(df: pd.DataFrame) -> tuple[Optional[str], Optional[str]]:

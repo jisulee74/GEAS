@@ -1,0 +1,13 @@
+{
+  "T_day_bias": 1.0,
+  "T_night_bias": 1.0,
+  "DB_day": 0.6,
+  "PB_day": 1.0,
+  "DB_night": 0.45,
+  "PB_night": 1.0,
+  "K_window_day": 0.5,
+  "K_window_night": 1.7043028209833646,
+  "alpha_curtain": 0.5,
+  "fcu_mode": "heat",
+  "last_score": 0.49994202898550727
+}

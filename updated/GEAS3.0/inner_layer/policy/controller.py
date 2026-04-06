@@ -253,6 +253,17 @@ class _InnerDoc:
                 "DB_used_now": float(db),
                 "PB_used_now": float(pb),
             },
+            "window_gain": {
+                "K_window_day": float(self.st.K_window_day),
+                "K_window_night": float(self.st.K_window_night),
+                "K_used_now": float(self.st.K_window_day if is_day else self.st.K_window_night),
+            },
+            "curtain": {
+                "alpha_curtain": float(self.st.alpha_curtain),
+                "target_jcm2": float(self.target_jcm2),
+                "measured_sum_jcm2": float(self.out_light_sum),
+                "sunlight_ratio": None if not np.isfinite(self.sum_ratio) else float(self.sum_ratio),
+            },
             "candidate_search": {
                 "generated": int(self._last_counts["generated"]),
                 "feasible": int(self._last_counts["feasible"]),
@@ -489,24 +500,16 @@ class _InnerDoc:
         return float(tin_next)
 
     def _predict_energy(self, candidate: CandidateAction) -> float:
-        window_pct = int(candidate.window[0])
-        shade_open = int(candidate.curtain[1])
-        thermal_open = int(candidate.thermal_curtain[1])
-        _, fcu_state = candidate.fcu
-        fan_state = candidate.fan[0]
-
-        e_fcu = 1.0 if fcu_state == "on" else 0.0
-        e_fan = 0.3 if fan_state == "on" else 0.0
-        e_window = 0.1 * (window_pct / 100.0)
-        e_curtain = 0.05 * ((100 - shade_open) / 100.0)
-        e_thermal = 0.05 * ((100 - thermal_open) / 100.0)
-        return float(e_fcu + e_fan + e_window + e_curtain + e_thermal)
+        # Placeholder for future energy-cost modeling. Keep the hook in the
+        # cost function so later work can populate this without changing the
+        # candidate-evaluation flow.
+        _ = candidate
+        return 0.0
 
     def _constraint_penalty(self, candidate: CandidateAction) -> float:
-        is_day, _, t_night_eff, _ = self._targets()
+        is_day, _, _, t_target = self._targets()
+        _, pb = _dead_pb(is_day, self.st)
         window_pct = int(candidate.window[0])
-        shade_open = int(candidate.curtain[1])
-        thermal_open = int(candidate.thermal_curtain[1])
         fcu_state = candidate.fcu[1]
         fan_state = candidate.fan[0]
 
@@ -523,29 +526,26 @@ class _InnerDoc:
         if ach_est < min_ach:
             penalty += 2.0 * (min_ach - ach_est)
 
+        prev_open = int(_clamp(self.window_pct_fb, 0, 100)) if np.isfinite(self.window_pct_fb) else None
+        if prev_open is not None:
+            step = max(int(caps["ramp"]), 1)
+            excess = abs(window_pct - prev_open) - step
+            if excess > 0:
+                penalty += excess / float(step)
+
         if fan_state == "off" and (fcu_state == "on" or window_pct >= 20):
             penalty += 1.0
         if fan_state == "on" and fcu_state == "off" and window_pct == 0:
-            penalty += 0.5
+            penalty += 1.0
 
-        if not is_day and shade_open != 100:
-            penalty += abs(shade_open - 100) / 100.0
-        if is_day and thermal_open != 100:
-            penalty += abs(thermal_open - 100) / 100.0
-
-        delta_cond = self.safety.delta_cond
-        if delta_cond is None or not np.isfinite(delta_cond):
-            delta_cond = self.dTcond_kpi
-        if delta_cond is not None and np.isfinite(delta_cond) and delta_cond < 0.8 and window_pct > 10:
-            penalty += (window_pct - 10) / 10.0
-
-        if (not is_day) and np.isfinite(self.in_temp):
-            cold_gap = max(t_night_eff - float(self.in_temp), 0.0)
-            if cold_gap > 0 and thermal_open > 50:
-                penalty += cold_gap * (thermal_open - 50) / 100.0
-
-        if np.isfinite(self.window_pct_fb):
-            penalty += 0.1 * abs(window_pct - float(self.window_pct_fb)) / max(float(self.RAMP_LIMIT), 1.0)
+        t_pred = self._predict_temp(candidate)
+        if np.isfinite(t_pred) and np.isfinite(t_target):
+            t_min = float(t_target) - float(pb)
+            t_max = float(t_target) + float(pb)
+            if t_pred < t_min:
+                penalty += float(t_min - t_pred)
+            elif t_pred > t_max:
+                penalty += float(t_pred - t_max)
 
         return float(max(penalty, 0.0))
 

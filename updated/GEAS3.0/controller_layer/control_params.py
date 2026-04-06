@@ -19,25 +19,48 @@ from utilities.db_utils import ensure_db_and_table, get_db_connection
 
 LOG_TABLE_NAME = "control_params"
 
+
+def _result_sections(result: Dict[str, Any]) -> tuple[Dict[str, Any], Dict[str, Any], Dict[str, Any]]:
+    outer = result.get("outer", {})
+    if not isinstance(outer, dict):
+        outer = {}
+
+    control_section = result.get("control", {})
+    if isinstance(control_section, dict):
+        effective = control_section.get("effective_params", {})
+        physics = control_section.get("physics", {})
+    else:
+        effective = result.get("effective_params", {})
+        physics = result.get("physics", {})
+
+    if not isinstance(effective, dict):
+        effective = {}
+    if not isinstance(physics, dict):
+        physics = {}
+
+    return effective, physics, outer
+
 def build_params_row_from_result(
     result: Dict[str, Any],
     cfg: DbConfig,
     ) -> Dict[str, Any]:
 
-    ctrl = result.get("control", {})
-    outer = result.get("outer", {})
-    policy_state = result.get("policy_state", None)
+    effective, physics, outer = _result_sections(result)
     agro_kpis = result.get("agro_kpis", {}) or {}
-
-    effective = ctrl.get("effective_params", {}) if isinstance(ctrl, dict) else {}
-    physics = ctrl.get("physics", {}) if isinstance(ctrl, dict) else {}
-
     kpi = outer.get("kpi", {}) or {}
 
-    now_str = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    raw_ts = effective.get("timestamp")
+    if hasattr(raw_ts, "to_pydatetime"):
+        raw_ts = raw_ts.to_pydatetime()
+    if isinstance(raw_ts, datetime.datetime):
+        reg_date = raw_ts.strftime("%Y-%m-%d %H:%M:%S")
+    elif isinstance(raw_ts, str) and raw_ts.strip():
+        reg_date = raw_ts.strip()
+    else:
+        reg_date = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     row: Dict[str, Any] = {
-        "reg_date": now_str,
+        "reg_date": reg_date,
         "farm_sn": cfg.farm_sn,
         "is_daytime": 1 if effective.get("is_daytime") else 0,
         "fcu_mode": effective.get("fcu_mode"),
@@ -48,6 +71,8 @@ def build_params_row_from_result(
     window_gain = effective.get("window_gain", {}) or {}
     curtain = effective.get("curtain", {}) or {}
     phys = effective.get("physics", {}) or {}
+    if not isinstance(phys, dict) or not phys:
+        phys = physics
 
     row.update(
         {
@@ -89,6 +114,21 @@ def build_params_row_from_result(
         {
             "delta_cond": safety.get("delta_cond"),
             "vpd": safety.get("vpd"),
+            "tdew": agro_kpis.get("Tdew"),
+            "cond_risk_10m": agro_kpis.get("cond_risk_10m"),
+            "cond_dTcond_10m": agro_kpis.get("cond_dTcond_10m"),
+            "rh90_min_1h": agro_kpis.get("rh90_min_1h"),
+            "vpdlo_min_1h": agro_kpis.get("vpdlo_min_1h"),
+            "ach_min_day": agro_kpis.get("ACH_min_day"),
+            "ach_min_night": agro_kpis.get("ACH_min_night"),
+            "ramp_lim": agro_kpis.get("RampLim"),
+            "dT": agro_kpis.get("dT"),
+            "cs_sum_jcm2": agro_kpis.get("cs_sum_jcm2"),
+            "light_eta": agro_kpis.get("LightETA"),
+            "vent_loss_proxy": agro_kpis.get("vent_loss_proxy"),
+            "candidate_generated": (effective.get("candidate_search", {}) or {}).get("generated"),
+            "candidate_feasible": (effective.get("candidate_search", {}) or {}).get("feasible"),
+            "selected_cost": (effective.get("candidate_search", {}) or {}).get("selected_cost"),
         }
     )
 
@@ -158,6 +198,21 @@ def insert_params_to_log(result: Dict[str, Any], cfg: DbConfig) -> None:
             lambda_g_solar DOUBLE NULL,
             delta_cond   DOUBLE NULL,
             vpd          DOUBLE NULL,
+            tdew         DOUBLE NULL,
+            cond_risk_10m TINYINT NULL,
+            cond_dTcond_10m DOUBLE NULL,
+            rh90_min_1h  DOUBLE NULL,
+            vpdlo_min_1h DOUBLE NULL,
+            ach_min_day  DOUBLE NULL,
+            ach_min_night DOUBLE NULL,
+            ramp_lim     DOUBLE NULL,
+            dT           DOUBLE NULL,
+            cs_sum_jcm2  DOUBLE NULL,
+            light_eta    DATETIME NULL,
+            vent_loss_proxy DOUBLE NULL,
+            candidate_generated INT NULL,
+            candidate_feasible INT NULL,
+            selected_cost DOUBLE NULL,
 
             cov_day      DOUBLE NULL,
             cov_night    DOUBLE NULL,
@@ -175,6 +230,31 @@ def insert_params_to_log(result: Dict[str, Any], cfg: DbConfig) -> None:
 
     try:
         ensure_db_and_table(cfg, db_name, create_table_sql)
+
+        conn = get_db_connection(cfg, db_name=db_name, autocommit=True)
+        try:
+            alter_stmts = [
+                "ALTER TABLE `control_params` ADD COLUMN IF NOT EXISTS tdew DOUBLE NULL AFTER vpd",
+                "ALTER TABLE `control_params` ADD COLUMN IF NOT EXISTS cond_risk_10m TINYINT NULL AFTER tdew",
+                "ALTER TABLE `control_params` ADD COLUMN IF NOT EXISTS cond_dTcond_10m DOUBLE NULL AFTER cond_risk_10m",
+                "ALTER TABLE `control_params` ADD COLUMN IF NOT EXISTS rh90_min_1h DOUBLE NULL AFTER cond_dTcond_10m",
+                "ALTER TABLE `control_params` ADD COLUMN IF NOT EXISTS vpdlo_min_1h DOUBLE NULL AFTER rh90_min_1h",
+                "ALTER TABLE `control_params` ADD COLUMN IF NOT EXISTS ach_min_day DOUBLE NULL AFTER vpdlo_min_1h",
+                "ALTER TABLE `control_params` ADD COLUMN IF NOT EXISTS ach_min_night DOUBLE NULL AFTER ach_min_day",
+                "ALTER TABLE `control_params` ADD COLUMN IF NOT EXISTS ramp_lim DOUBLE NULL AFTER ach_min_night",
+                "ALTER TABLE `control_params` ADD COLUMN IF NOT EXISTS dT DOUBLE NULL AFTER ramp_lim",
+                "ALTER TABLE `control_params` ADD COLUMN IF NOT EXISTS cs_sum_jcm2 DOUBLE NULL AFTER dT",
+                "ALTER TABLE `control_params` ADD COLUMN IF NOT EXISTS light_eta DATETIME NULL AFTER cs_sum_jcm2",
+                "ALTER TABLE `control_params` ADD COLUMN IF NOT EXISTS vent_loss_proxy DOUBLE NULL AFTER light_eta",
+                "ALTER TABLE `control_params` ADD COLUMN IF NOT EXISTS candidate_generated INT NULL AFTER vent_loss_proxy",
+                "ALTER TABLE `control_params` ADD COLUMN IF NOT EXISTS candidate_feasible INT NULL AFTER candidate_generated",
+                "ALTER TABLE `control_params` ADD COLUMN IF NOT EXISTS selected_cost DOUBLE NULL AFTER candidate_feasible",
+            ]
+            with conn.cursor() as cur:
+                for stmt in alter_stmts:
+                    cur.execute(stmt)
+        finally:
+            conn.close()
 
         conn = get_db_connection(cfg, db_name=db_name, autocommit=True)
         try:
@@ -209,6 +289,21 @@ def insert_params_to_log(result: Dict[str, Any], cfg: DbConfig) -> None:
                 "lambda_g_solar",
                 "delta_cond",
                 "vpd",
+                "tdew",
+                "cond_risk_10m",
+                "cond_dTcond_10m",
+                "rh90_min_1h",
+                "vpdlo_min_1h",
+                "ach_min_day",
+                "ach_min_night",
+                "ramp_lim",
+                "dT",
+                "cs_sum_jcm2",
+                "light_eta",
+                "vent_loss_proxy",
+                "candidate_generated",
+                "candidate_feasible",
+                "selected_cost",
                 "cov_day",
                 "cov_night",
                 "mdev_day",

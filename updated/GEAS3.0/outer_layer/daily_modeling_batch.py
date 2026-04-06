@@ -9,6 +9,8 @@ from typing import Any, Dict, Optional
 import pandas as pd
 
 _THIS_DIR = Path(__file__).resolve().parent
+_UPDATED_ROOT = _THIS_DIR.parent
+_EVAL_DIR = _UPDATED_ROOT.parent / "evaluation"
 
 
 def _history_period(df: pd.DataFrame) -> tuple[Optional[str], Optional[str]]:
@@ -20,10 +22,12 @@ def _history_period(df: pd.DataFrame) -> tuple[Optional[str], Optional[str]]:
     return ts.iloc[0].isoformat(), ts.iloc[-1].isoformat()
 
 
-def _load(path_name: str) -> Dict[str, Any]:
-    if str(_THIS_DIR) not in sys.path:
-        sys.path.insert(0, str(_THIS_DIR))
-    return runpy.run_path(str(_THIS_DIR / path_name))
+def _load(path_name: str, *, base_dir: Optional[Path] = None) -> Dict[str, Any]:
+    target_dir = base_dir or _THIS_DIR
+    for _path in (target_dir, _THIS_DIR, _UPDATED_ROOT):
+        if str(_path) not in sys.path:
+            sys.path.insert(0, str(_path))
+    return runpy.run_path(str(target_dir / path_name))
 
 
 def run_daily_modeling_batch(
@@ -56,49 +60,41 @@ def run_daily_modeling_batch(
     }
 
     if decision.data_case == 'no_data':
-        mod = _load('3_6_3__무데이터_환경에서의_견고성_검증_방법론.py')
-        theta = mod['sample_theta'](
-            auto_save=True,
-            farm_sn=farm_sn,
-            stage_name=stage_name,
-            model_name='default',
-            valid_from=valid_from,
-            valid_to=valid_to,
-            store_path=store_path,
-        )
-        out['theta_result'] = theta
+        out['theta_identification'] = None
+        out['message'] = 'no_data 환경에서는 물리파라미터 식별을 수행하지 않음'
         return out
 
     if decision.data_case == 'limited':
-        mod = _load('3_6_4__제한적_데이터_환경에서의_부분_검증_방법론.py')
-        theta = mod['sample_theta'](
+        mod = _load('theta_limited.py')
+        theta_limited = mod['identify_physical_params_auto'](
+            df_history,
+            area_m2=area_m2,
+            cover_type=cover_type,
+            height_m=height_m,
             auto_save=True,
             farm_sn=farm_sn,
             stage_name=stage_name,
             model_name='default',
-            valid_from=valid_from,
-            valid_to=valid_to,
             store_path=store_path,
         )
-        out['theta_result'] = theta
+        out['theta_identification'] = theta_limited
+        out['theta_limited'] = theta_limited
         return out
 
-    mod_365 = _load('3_6_5__충분한_데이터_환경에서의_검증_방법론.py')
-    theta_result = mod_365['estimate_theta_sufficient'](
+    mod_365 = _load('theta_sufficient.py')
+    theta_sufficient = mod_365['identify_physical_params'](
         df_history,
-        method=sufficient_method,
         auto_save=True,
         farm_sn=farm_sn,
         stage_name=stage_name,
+        model_name='default',
         store_path=store_path,
-        area_m2=area_m2,
-        cover_type=cover_type,
-        height_m=height_m,
     )
-    out['theta_result'] = theta_result
+    out['theta_identification'] = theta_sufficient
+    out['theta_sufficient'] = theta_sufficient
 
     if policy_compare and compare_window_start and compare_window_end:
-        mod_366 = _load('3_6_6__외기_조건_고전_기반_정책_비교_시뮬레이션.py')
+        mod_366 = _load('3_6_6__외기_조건_고전_기반_정책_비교_시뮬레이션.py', base_dir=_EVAL_DIR)
         map_columns_raw = mod_366['map_columns_raw']
         regularize_time_std = mod_366['regularize_time_std']
         derive_features = mod_366['derive_features']
