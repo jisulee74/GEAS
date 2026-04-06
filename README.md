@@ -1,5 +1,7 @@
 # GEAS Repository Layout
 
+Last updated: 2026-04-06
+
 This repository is organized into two top-level code roots and one technical document.
 
 ## Root Items
