@@ -1,13 +1,14 @@
 # GEAS Repository Layout
 
-Last updated: 2026-04-06
+Last updated: 2026-04-24
 
-This repository is organized into two top-level code roots and one technical document.
+This repository is organized into preserved source materials, the active GEAS 3.0 working tree, an offline predictor benchmark workspace, and the main technical document.
 
 ## Root Items
 
 - `origin/`: preserved original GEAS 3.0 source tree and converted reference scripts
 - `updated/`: reorganized working tree for the current GEAS 3.0 runtime and evaluation code
+- `geas_predictor_benchmark/`: offline predictor comparison workspace for inner-layer temperature forecasting
 - `AI 자율제어기(GEAS Ver3.0) 기술문서.pdf`: technical document used as the main reference for code and methodology mapping
 
 ## Directory Structure
@@ -23,6 +24,11 @@ updated/
     inner_layer/
     outer_layer/
   evaluation/
+
+geas_predictor_benchmark/
+  benchmark.py
+  plot_from_csv.py
+  results/
 ```
 
 ## origin/
@@ -39,14 +45,33 @@ updated/
 - `updated/GEAS3.0/controller_layer/`: orchestration and controller entrypoints
 - `updated/GEAS3.0/inner_layer/`: core control logic, feature generation, repository access, utilities
 - `updated/GEAS3.0/outer_layer/`: daily modeling, policy update, and supporting outer-loop runtime logic
-- `updated/evaluation/`: offline evaluation and validation scripts separated from the runtime layers
+- `updated/evaluation/`: offline evaluation scripts, period-selection helpers, and generated evaluation outputs separated from the runtime layers
 
 ## evaluation/
 
-The `3_6_*` modules were moved under `updated/evaluation/` because they function as offline validation or policy-comparison code rather than runtime control-layer logic.
+`updated/evaluation/` now centers on the current offline evaluation entrypoints rather than the earlier `3_6_*` filenames.
 
 Current evaluation files include:
 
-- `3_6_3__AI_자율제어기_견고성_검증_방법론.py`
-- `3_6_4__제한적_데이터_환경에서의_부분_검증_방법론.py`
-- `3_6_6__외기_조건_고전_기반_정책_비교_시뮬레이션.py`
+- `limited_data_eval.py`
+- `no_data_eval.py`
+- `sufficient_data_eval.py`
+
+Additional evaluation-related directories include:
+
+- `eval_period_selection/`: helper scripts and saved outputs for representative period selection
+- `eval_results/`: generated evaluation artifacts for no-data, limited-data, and sufficient-data runs
+
+## geas_predictor_benchmark/
+
+`geas_predictor_benchmark/` is an offline experiment workspace for swapping only the inner-layer next-step temperature predictor while keeping the surrounding GEAS control flow fixed.
+
+- `benchmark.py`: runs predictor comparison experiments against the shared replay pipeline
+- `plot_from_csv.py`: regenerates plots from saved benchmark CSV outputs
+- `results/`: saved reports, CSV summaries, JSON metadata, and PNG charts from benchmark runs
+
+## Notes
+
+- The repository was restructured so that `main` exposes the high-level layout directly.
+- The previous root README can still be recovered from commit `9f22911` if needed.
+- Local backup folders such as `_restructure_backup/` are intentionally not tracked in GitHub.
