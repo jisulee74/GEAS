@@ -55,8 +55,8 @@ class DailyPolicyUpdater:
         self.day_temp, self.night_temp = base_temp
         self.st = policy_state
         self.params = params or {}
-        self.daily_eval_hour = int(self.params.get("DAILY_EVAL_HOUR", 23))
-        self.daily_eval_minute = int(self.params.get("DAILY_EVAL_MINUTE", 55))
+        self.daily_eval_hour = int(self.params.get("DAILY_EVAL_HOUR", 10))
+        self.daily_eval_minute = int(self.params.get("DAILY_EVAL_MINUTE", 0))
         self.force_daily_eval = bool(self.params.get("FORCE_DAILY_EVAL", False))
 
     def _update(self, kpi: Dict[str, float], sunlight_ratio: float) -> PolicyState:

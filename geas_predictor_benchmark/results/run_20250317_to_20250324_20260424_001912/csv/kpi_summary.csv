@@ -1,0 +1,5 @@
+temp_viol_rate,temp_viol_maxrun,cond_viol_rate,cond_viol_maxrun,rh_viol_rate,vpd_viol_rate,hv_ineff_rate,tv_vent,sw_heat,model
+0.0,0.0,0.0,0.0,0.0,0.0,0.0,122.6,723.0,physics
+0.0,0.0,0.0,0.0,0.0,0.0,0.0,127.39999999999999,743.0,physics_residual_tiny_ttm
+0.0,0.0,0.0,0.0,0.0,0.0,0.0,2.6,955.0,random_forest
+0.13638626182180189,128.0,0.0,0.0,0.0,0.0,0.039603960396039604,114.89999999999999,781.0,tiny_ttm

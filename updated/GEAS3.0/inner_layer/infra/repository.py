@@ -52,7 +52,7 @@ class Repository:
         finally:
             conn.close()
 
-    def fetch(self, limit: int = 144, order: str = "asc"):
+    def fetch(self, limit: int = 288, order: str = "asc"):
         if order not in ("asc", "desc"):
             raise ValueError("order must be 'asc' or 'desc'")
 

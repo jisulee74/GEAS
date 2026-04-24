@@ -35,6 +35,8 @@ THERMAL_PERCENT_CANDIDATES: Tuple[int, ...] = tuple(range(0, 101, 10))
 FCU_STATE_CANDIDATES: Tuple[str, ...] = ("off", "on")
 FAN_STATE_CANDIDATES: Tuple[str, ...] = ("off", "on")
 
+_NO_DATA_EVAL_API: Optional[Dict[str, Any]] = None
+
 
 @dataclass(frozen=True)
 class CandidateAction:
@@ -50,6 +52,268 @@ class ScoredCandidate:
     action: CandidateAction
     cost: float
     detail: Dict[str, float]
+
+
+def sat_vp_kpa_no_data(Tc: float) -> float:
+    return float(0.61078 * np.exp((17.2694 * Tc) / (Tc + 237.3)))
+
+
+def dewpoint_c_no_data(Tc: float, RH: float) -> float:
+    es = sat_vp_kpa_no_data(Tc)
+    e = np.clip(RH * es, 1e-6, es)
+    ln_ratio = np.log(e / 0.61078)
+    return float((237.3 * ln_ratio) / (17.2694 - ln_ratio))
+
+
+def vpd_kpa_no_data(Tc: float, RH: float) -> float:
+    es = sat_vp_kpa_no_data(Tc)
+    ea = np.clip(RH * es, 0, es)
+    return float(np.maximum(0.0, es - ea))
+
+
+def hinge_no_data(z: float) -> float:
+    return float(np.maximum(0.0, z))
+
+
+def sample_theta_no_data(rng=None) -> Dict[str, float]:
+    if rng is None:
+        rng = np.random.default_rng()
+    return {
+        "UA": float(rng.uniform(2000, 7000)),
+        "C": float(rng.uniform(5e6, 4e7)),
+        "eta": float(rng.uniform(0.2, 0.8)),
+        "k_heat": float(rng.uniform(15000, 50000)),
+        "a0": float(rng.uniform(0.05, 0.5)),
+        "a1": float(rng.uniform(2.0, 10.0)),
+        "a2": float(rng.uniform(0.3, 2.0)),
+        "k_evap": float(rng.uniform(1e-6, 5e-6)),
+        "k_photo": float(rng.uniform(1e-5, 5e-5)),
+        "rho_cp": 1.2 * 1005,
+    }
+
+
+def ach_model_no_data(x_vent: float, wind: float, a0: float, a1: float, a2: float, ACH_max: float = 15.0) -> float:
+    ach = a0 + a1 * x_vent + a2 * wind * x_vent
+    return float(np.clip(ach, 0.0, ACH_max))
+
+
+def _sat_vp_kpa_no_data_arr(Tc) -> np.ndarray:
+    Tc_arr = np.asarray(Tc, dtype=float)
+    return 0.61078 * np.exp((17.2694 * Tc_arr) / (Tc_arr + 237.3))
+
+
+def _project_action_grid_no_data(prev_a: Dict[str, float], ramp_max: float = 0.15) -> Dict[str, np.ndarray]:
+    grid = make_action_grid_no_data()
+    u_heat = np.array([1.0 if float(g['u_heat']) > 0.5 else 0.0 for g in grid], dtype=float)
+    u_co2 = np.array([1.0 if float(g['u_co2']) > 0.5 else 0.0 for g in grid], dtype=float)
+    curtain = np.clip(np.array([float(g['curtain']) for g in grid], dtype=float), 0.0, 1.0)
+    x_raw = np.clip(np.array([float(g['x_vent']) for g in grid], dtype=float), 0.0, 1.0)
+    # 3.6.3 documents heat/vent mutual exclusion as a safety-rule example.
+    x_raw = np.where(u_heat > 0.5, 0.0, x_raw)
+    prev_x = float(prev_a['x_vent'])
+    dx = np.clip(x_raw - prev_x, -ramp_max, ramp_max)
+    x_vent = prev_x + dx
+    return {
+        'u_heat': u_heat,
+        'u_co2': u_co2,
+        'curtain': curtain,
+        'x_vent': x_vent,
+    }
+
+
+def _step_dynamics_no_data_batch(
+    state: Dict[str, float],
+    u: Dict[str, float],
+    actions: Dict[str, np.ndarray],
+    theta: Dict[str, float],
+    dt_min: int = 10,
+    A: float = 200.0,
+    V: float = 300.0,
+    Imax: float = 650.0,
+    T0: float = 5.0,
+) -> Dict[str, np.ndarray]:
+    dt = dt_min * 60.0
+    Tin = float(state['Tin'])
+    e_in = float(state['e_in'])
+    CO2 = float(state['CO2'])
+
+    x_vent = np.asarray(actions['x_vent'], dtype=float)
+    curtain = np.asarray(actions['curtain'], dtype=float)
+    u_heat = np.asarray(actions['u_heat'], dtype=float)
+    u_co2 = np.asarray(actions['u_co2'], dtype=float)
+
+    ACH = np.clip(float(theta['a0']) + float(theta['a1']) * x_vent + float(theta['a2']) * float(u['wind']) * x_vent, 0.0, 15.0)
+    It_eff = float(u['It']) * (1.0 - curtain)
+
+    Q_trans = float(theta['UA']) * (float(u['Tout']) - Tin)
+    Q_solar = float(theta['eta']) * A * It_eff
+    Q_heat = float(theta['k_heat']) * u_heat
+    Q_vent = float(theta['rho_cp']) * V * (ACH / 3600.0) * (float(u['Tout']) - Tin)
+    Tin_next = Tin + (dt / float(theta['C'])) * (Q_trans + Q_solar + Q_heat + Q_vent)
+
+    e_out = float(u['RHout']) * sat_vp_kpa_no_data(float(u['Tout']))
+    evap = float(theta['k_evap']) * (It_eff / Imax) * max(0.0, Tin - T0)
+    e_next = np.maximum(0.05, e_in + dt * ((ACH / 3600.0) * (e_out - e_in) + evap))
+
+    RHin = np.clip(e_next / _sat_vp_kpa_no_data_arr(Tin_next), 0.0, 1.0)
+    VPD = np.maximum(0.0, _sat_vp_kpa_no_data_arr(Tin_next) - np.clip(RHin * _sat_vp_kpa_no_data_arr(Tin_next), 0.0, _sat_vp_kpa_no_data_arr(Tin_next)))
+
+    gT = np.clip((Tin_next - 5.0) / 20.0, 0.0, 1.0)
+    gV = np.clip(VPD / 1.2, 0.0, 1.0)
+    uptake = float(theta['k_photo']) * It_eff * gT * gV * 1e6
+    inj = 50.0 * u_co2
+    CO2_next = np.maximum(300.0, CO2 + dt * ((ACH / 3600.0) * (float(u['CO2out']) - CO2) + inj - uptake))
+
+    Q_ventloss = np.maximum(0.0, float(theta['rho_cp']) * V * (ACH / 3600.0) * np.maximum(0.0, Tin_next - float(u['Tout'])))
+    return {
+        'Tin': Tin_next,
+        'e_in': e_next,
+        'CO2': CO2_next,
+        'ACH': ACH,
+        'It_eff': It_eff,
+        'Q_heat': Q_heat,
+        'Q_ventloss': Q_ventloss,
+        'RHin': RHin,
+        'VPD': VPD,
+    }
+
+
+def step_dynamics_no_data(
+    state: Dict[str, float],
+    u: Dict[str, float],
+    a: Dict[str, float],
+    theta: Dict[str, float],
+    dt_min: int = 10,
+    A: float = 200.0,
+    V: float = 300.0,
+    Imax: float = 650.0,
+    T0: float = 5.0,
+) -> Dict[str, float]:
+    batch = _step_dynamics_no_data_batch(
+        state,
+        u,
+        {k: np.array([float(v)], dtype=float) for k, v in a.items()},
+        theta,
+        dt_min=dt_min,
+        A=A,
+        V=V,
+        Imax=Imax,
+        T0=T0,
+    )
+    return {key: float(np.asarray(value)[0]) for key, value in batch.items() if key not in ('RHin', 'VPD')}
+
+
+def project_action_no_data(a: Dict[str, float], prev_a: Dict[str, float], ramp_max: float = 0.15) -> Dict[str, float]:
+    projected = dict(a)
+    projected['u_heat'] = 1.0 if float(projected['u_heat']) > 0.5 else 0.0
+    projected['u_co2'] = 1.0 if float(projected['u_co2']) > 0.5 else 0.0
+    projected['x_vent'] = float(np.clip(projected['x_vent'], 0.0, 1.0))
+    projected['curtain'] = float(np.clip(projected['curtain'], 0.0, 1.0))
+    if projected['u_heat'] > 0.5:
+        projected['x_vent'] = 0.0
+    dx = float(projected['x_vent']) - float(prev_a['x_vent'])
+    dx = float(np.clip(dx, -ramp_max, ramp_max))
+    projected['x_vent'] = float(prev_a['x_vent']) + dx
+    return projected
+
+
+def check_feasible_no_data(
+    pred: Dict[str, float],
+    u: Dict[str, float],
+    a: Dict[str, float],
+    theta: Dict[str, float],
+    T_min: float = 12.0,
+    T_max: float = 28.0,
+    dTcond_min: float = 0.8,
+    alpha: float = 0.25,
+) -> bool:
+    RHin = min(1.0, max(0.0, float(pred['e_in']) / sat_vp_kpa_no_data(float(pred['Tin']))))
+    Td = dewpoint_c_no_data(float(pred['Tin']), RHin)
+    dTcond = float(pred['Tin']) - Td
+    c1 = T_min <= float(pred['Tin']) <= T_max
+    c2 = dTcond >= dTcond_min
+    c3 = float(a['x_vent']) <= 1e-9 if float(a['u_heat']) > 0.5 else True
+    if float(a['u_heat']) > 0.5:
+        c3 = c3 and float(pred['Q_ventloss']) <= alpha * max(1e-6, float(pred['Q_heat']))
+    return bool(c1 and c2 and c3)
+
+
+def make_action_grid_no_data() -> List[Dict[str, float]]:
+    return [
+        {'u_heat': uh, 'x_vent': xv, 'curtain': cu, 'u_co2': uco}
+        for uh in [0.0, 1.0]
+        for xv in [0.0, 0.1, 0.3, 0.6]
+        for cu in [0.0, 0.6, 0.9]
+        for uco in [0.0, 1.0]
+    ]
+
+
+def policy_optimal_no_data(
+    state: Dict[str, float],
+    u: Dict[str, float],
+    prev_a: Dict[str, float],
+    theta: Dict[str, float],
+    weights: Optional[Dict[str, float]] = None,
+    Tref: float = 18.0,
+    VPD_min: float = 0.30,
+    T_min: float = 12.0,
+    T_max: float = 28.0,
+    dTcond_min: float = 0.8,
+    alpha: float = 0.25,
+    dt_min: int = 10,
+    A: float = 200.0,
+    V: float = 300.0,
+    ramp_max: float = 0.15,
+) -> Dict[str, float]:
+    if weights is None:
+        weights = {'wT': 1.0, 'wVPD': 1.0, 'wE': 1e-8, 'wDx': 0.2, 'wSlack': 50.0}
+
+    actions = _project_action_grid_no_data(prev_a, ramp_max)
+    pred = _step_dynamics_no_data_batch(state, u, actions, theta, dt_min=dt_min, A=A, V=V)
+
+    RHin = pred['RHin']
+    Tin_next = pred['Tin']
+    es = _sat_vp_kpa_no_data_arr(Tin_next)
+    e = np.clip(RHin * es, 1e-6, es)
+    ln_ratio = np.log(e / 0.61078)
+    Td = (237.3 * ln_ratio) / (17.2694 - ln_ratio)
+    dTcond = Tin_next - Td
+
+    feasible = (Tin_next >= T_min) & (Tin_next <= T_max) & (dTcond >= dTcond_min)
+    heat_mask = actions['u_heat'] > 0.5
+    feasible &= (~heat_mask) | (actions['x_vent'] <= 1e-9)
+    heat_feasible = pred['Q_ventloss'] <= alpha * np.maximum(1e-6, pred['Q_heat'])
+    feasible &= (~heat_mask) | heat_feasible
+
+    J = np.full(Tin_next.shape, np.inf, dtype=float)
+    if np.any(feasible):
+        Jf = np.zeros(Tin_next.shape, dtype=float)
+        Jf += float(weights['wT']) * (Tin_next - Tref) ** 2
+        Jf += float(weights['wVPD']) * np.maximum(0.0, VPD_min - pred['VPD'])
+        Jf += float(weights['wE']) * (pred['Q_heat'] + pred['Q_ventloss'])
+        Jf += float(weights['wDx']) * np.abs(actions['x_vent'] - float(prev_a['x_vent']))
+        slackT = np.maximum(0.0, T_min - Tin_next) + np.maximum(0.0, Tin_next - T_max)
+        slackC = np.maximum(0.0, dTcond_min - dTcond)
+        Jf += float(weights['wSlack']) * (slackT + slackC)
+        J[feasible] = Jf[feasible]
+        best_idx = int(np.argmin(J))
+        return {
+            'u_heat': float(actions['u_heat'][best_idx]),
+            'x_vent': float(actions['x_vent'][best_idx]),
+            'curtain': float(actions['curtain'][best_idx]),
+            'u_co2': float(actions['u_co2'][best_idx]),
+        }
+
+    return project_action_no_data(
+        {
+            'u_heat': 1.0 if float(state['Tin']) < (Tref - 1.0) else 0.0,
+            'x_vent': 0.0,
+            'curtain': 0.6,
+            'u_co2': 0.0,
+        },
+        prev_a,
+        ramp_max,
+    )
 
 
 class _InnerDoc:
@@ -612,6 +876,270 @@ class _InnerDoc:
         }
 
 
+class _NoDataEvalInner:
+    def __init__(
+        self,
+        latest: pd.DataFrame,
+        out_light_info: Tuple[pd.Timestamp, pd.Timestamp, pd.Timestamp | pd.NaT, np.ndarray, float],
+        base_temp: Tuple[float, float],
+        st: PolicyState,
+        phys: PhysicsContext,
+        safety: SafetyState,
+        defaults: PhysicsDefaults,
+        params: Dict[str, Any],
+        agro_kpis: Optional[Dict[str, Any]] = None,
+    ):
+        self.row = latest.iloc[0]
+        self.sunrise, self.sunset, self.eta, self.cs_sum, self.target_jcm2 = out_light_info
+        self.day_temp, self.night_temp = base_temp
+        self.st = st
+        self.phys = phys
+        self.safety = safety
+        self.defaults = defaults
+        self.params = params or {}
+        self.kpis = agro_kpis or {}
+        self.now = pd.Timestamp(self.row["reg_date"])
+        self.physics_case = str(self.params.get("physics_case", "default"))
+        self.physics_model_name = str(self.params.get("physics_model_name", "default"))
+        self.physics_store = PhysicsStore(self.params.get("physics_store_path"))
+        self.store_record = None
+        self.store_phys: Dict[str, float] = {}
+        self.store_lambda: Dict[str, float] = {}
+
+        self._last_action: Optional[Dict[str, Any]] = None
+        self._last_effective_params: Dict[str, Any] = {}
+        self._theta = self._build_theta()
+
+    def _coalesce_float(self, *values: Any, default: float) -> float:
+        for value in values:
+            try:
+                fval = float(value)
+            except Exception:
+                continue
+            if np.isfinite(fval):
+                return fval
+        return float(default)
+
+    def _sample_seed(self) -> int:
+        explicit_seed = self.params.get("no_data_eval_seed")
+        if explicit_seed is not None:
+            try:
+                return int(explicit_seed)
+            except Exception:
+                pass
+
+        farm_sn = self.params.get("farm_sn", 0)
+        try:
+            farm_val = int(farm_sn)
+        except Exception:
+            farm_val = sum(ord(ch) for ch in str(farm_sn))
+
+        bucket = int(self.now.floor("5min").timestamp())
+        return int((bucket + farm_val) % (2**32 - 1))
+
+    def _build_theta(self) -> Dict[str, float]:
+        theta = sample_theta_no_data(np.random.default_rng(self._sample_seed()))
+
+        store_record = self.physics_store.get_record(
+            farm_sn=self.params.get("farm_sn"),
+            stage_name=self.params.get("stage_name"),
+            model_name=self.physics_model_name,
+            target_ts=self.now,
+        )
+        self.store_record = store_record
+        store_params = dict(store_record.params) if store_record is not None else {}
+        self.store_phys = dict(store_params)
+
+        ach_coef = self.phys.ACH_coef or {}
+        theta["UA"] = self._coalesce_float(
+            store_params.get("UA"),
+            self.phys.UA,
+            theta.get("UA"),
+            default=3000.0,
+        )
+        theta["C"] = self._coalesce_float(
+            store_params.get("C"),
+            self.phys.C,
+            theta.get("C"),
+            default=8.0e5,
+        )
+        theta["eta"] = self._coalesce_float(
+            store_params.get("eta"),
+            self.phys.g_solar,
+            theta.get("eta"),
+            default=0.12,
+        )
+        theta["a0"] = self._coalesce_float(
+            store_params.get("a0"),
+            ach_coef.get("a0"),
+            theta.get("a0"),
+            default=0.05,
+        )
+        theta["a1"] = self._coalesce_float(
+            store_params.get("a1"),
+            ach_coef.get("a1"),
+            theta.get("a1"),
+            default=2.5,
+        )
+        theta["a2"] = self._coalesce_float(
+            store_params.get("a2"),
+            ach_coef.get("a2"),
+            theta.get("a2"),
+            default=0.15,
+        )
+        theta["rho_cp"] = self._coalesce_float(
+            store_params.get("rho_cp"),
+            theta.get("rho_cp"),
+            default=1.2 * 1005,
+        )
+        theta["k_heat"] = self._coalesce_float(
+            store_params.get("k_heat"),
+            self.params.get("physics_k_heat"),
+            theta.get("k_heat"),
+            default=15000.0,
+        )
+        return theta
+
+    def _state(self) -> Dict[str, float]:
+        tin = self._coalesce_float(self.row.get("in_temp"), default=15.0)
+        rh = self._coalesce_float(
+            self.row.get("in_humidity"),
+            self.row.get("in_hum"),
+            self.row.get("humidity"),
+            default=70.0,
+        )
+        if rh > 1.5:
+            rh = rh / 100.0
+        rh = float(np.clip(rh, 0.0, 1.0))
+        co2 = self._coalesce_float(
+            self.row.get("in_co2"),
+            self.row.get("co2"),
+            default=900.0,
+        )
+        return {
+            "Tin": float(tin),
+            "e_in": float(rh * sat_vp_kpa_no_data(float(tin))),
+            "CO2": float(co2),
+        }
+
+    def _disturbance(self) -> Dict[str, float]:
+        is_day = bool(self.sunrise <= self.now <= self.sunset)
+        tout = self._coalesce_float(self.row.get("out_temp"), default=5.0)
+        rh_out = self._coalesce_float(
+            self.row.get("out_humidity"),
+            self.row.get("out_hum"),
+            default=75.0,
+        )
+        if rh_out > 1.5:
+            rh_out = rh_out / 100.0
+        out_light = self._coalesce_float(self.row.get("out_light"), default=0.0)
+        wind = self._coalesce_float(self.row.get("wind_speed"), default=0.5)
+        co2_out = self._coalesce_float(self.row.get("out_co2"), default=420.0)
+        return {
+            "Tout": float(tout),
+            "RHout": float(np.clip(rh_out, 0.0, 1.0)),
+            "It": float(max(out_light, 0.0)),
+            "wind": float(max(wind, 0.0)),
+            "CO2out": float(co2_out),
+            "hour": float(self.now.hour + self.now.minute / 60.0),
+            "is_day": is_day,
+        }
+
+    def _prev_action(self) -> Dict[str, float]:
+        window_pct = self._coalesce_float(self.row.get("window_pct"), default=0.0)
+        return {"u_heat": 0.0, "x_vent": float(np.clip(window_pct / 100.0, 0.0, 1.0)), "curtain": 0.0, "u_co2": 0.0}
+
+    def _weights(self) -> Dict[str, float]:
+        return {
+            "wT": float(self.params.get("NO_DATA_WT", 1.0)),
+            "wVPD": float(self.params.get("NO_DATA_WVPD", 1.0)),
+            "wE": float(self.params.get("NO_DATA_WE", 1.0e-8)),
+            "wDx": float(self.params.get("NO_DATA_WDX", 0.2)),
+            "wSlack": float(self.params.get("NO_DATA_WSLACK", 50.0)),
+        }
+
+    def _select_action(self) -> Dict[str, Any]:
+        if self._last_action is not None:
+            return self._last_action
+
+        state = self._state()
+        disturbance = self._disturbance()
+        prev_action = self._prev_action()
+        chosen = policy_optimal_no_data(
+            state,
+            disturbance,
+            prev_action,
+            self._theta,
+            weights=self._weights(),
+            Tref=float(self.day_temp if disturbance["is_day"] else self.night_temp),
+            dt_min=int(self.params.get("physics_dt_min", 10)),
+            A=float(self.params.get("greenhouse_area_m2", 200.0)),
+            V=float(self.params.get("greenhouse_volume_m3", 300.0)),
+            ramp_max=float(self.params.get("NO_DATA_RAMP_MAX", 0.15)),
+        )
+        pred = step_dynamics_no_data(
+            state,
+            disturbance,
+            chosen,
+            self._theta,
+            dt_min=int(self.params.get("physics_dt_min", 10)),
+            A=float(self.params.get("greenhouse_area_m2", 200.0)),
+            V=float(self.params.get("greenhouse_volume_m3", 300.0)),
+        )
+
+        curtain_open_pct = int(np.clip(round((1.0 - float(chosen["curtain"])) * 100.0), 0, 100))
+        thermal_pct = 100 if disturbance["is_day"] else max(curtain_open_pct, 10)
+        fan_state = "on" if (float(chosen["x_vent"]) > 0 or float(chosen["u_heat"]) > 0.5) else "off"
+
+        self._last_action = {
+            "window": (
+                int(np.clip(round(float(chosen["x_vent"]) * 100.0), 0, 100)),
+                "main",
+                "OPEN" if float(chosen["x_vent"]) > 0 else "HOLD",
+            ),
+            "curtain": ("shade", curtain_open_pct),
+            "thermal_curtain": ("thermal", int(np.clip(thermal_pct, 0, 100))),
+            "fcu": (self.st.fcu_mode, "on" if float(chosen["u_heat"]) > 0.5 else "off"),
+            "fan": (fan_state,),
+        }
+        self._last_effective_params = {
+            "timestamp": self.now,
+            "mode": "no_data_eval_3_6_3",
+            "physics_case": self.physics_case,
+            "theta": {k: float(v) for k, v in self._theta.items() if isinstance(v, (int, float, np.floating))},
+            "selected_action": {k: float(v) for k, v in chosen.items()},
+            "predicted_next": {k: float(v) for k, v in pred.items() if isinstance(v, (int, float, np.floating))},
+            "weights": self._weights(),
+        }
+        return self._last_action
+
+    def control_fcu(self) -> Tuple[str, str]:
+        return self._select_action()["fcu"]
+
+    def control_window(self) -> Tuple[int, str, str]:
+        return self._select_action()["window"]
+
+    def control_curtain(self) -> Tuple[str, int]:
+        return self._select_action()["curtain"]
+
+    def control_thermal_curtain(self) -> Tuple[str, int]:
+        return self._select_action()["thermal_curtain"]
+
+    def control_fan(self) -> Tuple[str]:
+        return self._select_action()["fan"]
+
+    def run(self) -> Dict[str, Any]:
+        action = self._select_action()
+        return {
+            "window": action["window"],
+            "curtain": action["curtain"],
+            "thermal_curtain": action["thermal_curtain"],
+            "fcu": action["fcu"],
+            "fan": action["fan"],
+            "effective_params": dict(self._last_effective_params),
+        }
+
+
 class Controller:
     def __init__(
         self,
@@ -645,17 +1173,31 @@ class Controller:
         if "fcu_mode" in self.params:
             self.state.fcu_mode = "heat" if self.params["fcu_mode"] == "heat" else "cool"
 
-        self.inner = _InnerDoc(
-            self.latest,
-            self.out_light_info,
-            self.base_temp,
-            self.state,
-            self.phys,
-            self.safety,
-            self.defaults,
-            self.params,
-            agro_kpis=agro_kpis,
-        )
+        physics_case = str(self.params.get("physics_case", "default")).lower()
+        if physics_case == "no_data":
+            self.inner = _NoDataEvalInner(
+                self.latest,
+                self.out_light_info,
+                self.base_temp,
+                self.state,
+                self.phys,
+                self.safety,
+                self.defaults,
+                self.params,
+                agro_kpis=agro_kpis,
+            )
+        else:
+            self.inner = _InnerDoc(
+                self.latest,
+                self.out_light_info,
+                self.base_temp,
+                self.state,
+                self.phys,
+                self.safety,
+                self.defaults,
+                self.params,
+                agro_kpis=agro_kpis,
+            )
 
     def control_window(self):
         return self.inner.control_window()
@@ -713,6 +1255,17 @@ __all__ = [
     "PhysicsDefaults",
     "PhysicsContext",
     "SafetyState",
+    "sat_vp_kpa_no_data",
+    "dewpoint_c_no_data",
+    "vpd_kpa_no_data",
+    "hinge_no_data",
+    "sample_theta_no_data",
+    "ach_model_no_data",
+    "step_dynamics_no_data",
+    "project_action_no_data",
+    "check_feasible_no_data",
+    "make_action_grid_no_data",
+    "policy_optimal_no_data",
     "_compute_kpis",
     "_score",
 ]

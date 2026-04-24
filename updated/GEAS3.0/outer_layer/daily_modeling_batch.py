@@ -104,7 +104,7 @@ def run_daily_modeling_batch(
         dt0['reg_date'] = pd.to_datetime(dt0['reg_date'])
         dt0 = dt0.sort_values('reg_date').reset_index(drop=True)
         dt_std = map_columns_raw(dt0)
-        dt = regularize_time_std(dt_std, step_mins=10)
+        dt = regularize_time_std(dt_std, step_mins=5)
         dt = derive_features(dt)
 
         compare_result = run_fit_then_window(

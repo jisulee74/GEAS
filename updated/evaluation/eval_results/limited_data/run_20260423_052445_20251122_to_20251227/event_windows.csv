@@ -1,0 +1,13 @@
+event_id,start_idx,end_idx,event_score,event_tags,start_time,end_time
+1,3549,3561,17.38,tout_jump,2025-12-04 07:45:00,2025-12-04 08:40:00
+2,58,70,12.81,"night_no_solar,tout_jump",2025-11-22 04:50:00,2025-11-22 05:45:00
+3,3716,3728,12.3,"heater_step,night_no_solar,tout_jump,vent_step",2025-12-04 21:45:00,2025-12-04 22:40:00
+4,3563,3575,12.08,"curtain_step,tout_jump",2025-12-04 08:55:00,2025-12-04 09:55:00
+5,4365,4377,11.0,"heater_step,night_no_solar,tout_jump",2025-12-07 03:50:00,2025-12-07 04:45:00
+6,4388,4400,11.0,"heater_step,night_no_solar,tout_jump",2025-12-07 05:45:00,2025-12-07 06:40:00
+7,8811,8823,11.0,"heater_step,night_no_solar,tout_jump",2025-12-25 20:05:00,2025-12-25 21:00:00
+8,3994,4006,11.0,"heater_step,night_no_solar,tout_jump",2025-12-05 20:55:00,2025-12-05 21:50:00
+9,4031,4043,11.0,"heater_step,night_no_solar,tout_jump",2025-12-06 00:00:00,2025-12-06 00:55:00
+10,4099,4111,11.0,"heater_step,night_no_solar,tout_jump",2025-12-06 05:40:00,2025-12-06 06:35:00
+11,4111,4123,11.0,"heater_step,night_no_solar,tout_jump",2025-12-06 06:40:00,2025-12-06 07:35:00
+12,6370,6382,10.67,"heater_step,night_no_solar,tout_jump",2025-12-14 02:55:00,2025-12-14 03:50:00

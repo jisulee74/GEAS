@@ -37,7 +37,7 @@ def apply_sensor_calibration(df_raw: pd.DataFrame) -> pd.DataFrame:
     if enabled in {"0", "false", "no", "off"}:
         return df_raw
 
-    min_rows = int(os.getenv("SENSOR_QC_MIN_ROWS", "80"))
+    min_rows = int(os.getenv("SENSOR_QC_MIN_ROWS", "160"))
     if len(df_raw.index) < min_rows:
         return df_raw
 
@@ -46,8 +46,8 @@ def apply_sensor_calibration(df_raw: pd.DataFrame) -> pd.DataFrame:
         return df_raw
 
     make_state_df = api["make_state_df"]
-    max_win = int(os.getenv("SENSOR_QC_WINDOW", "144"))
-    step = int(os.getenv("SENSOR_QC_STEP", "30"))
+    max_win = int(os.getenv("SENSOR_QC_WINDOW", "288"))
+    step = int(os.getenv("SENSOR_QC_STEP", "60"))
     alpha = float(os.getenv("SENSOR_QC_ALPHA", "0.01"))
 
     win = min(max_win, len(df_raw.index) - 1)

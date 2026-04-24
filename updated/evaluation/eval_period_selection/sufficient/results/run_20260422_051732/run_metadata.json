@@ -1,0 +1,10 @@
+{
+  "db_table": "data_silla_enc",
+  "iot_data_idx": 97,
+  "sufficient_period_start": "2025-11-29 00:00:00",
+  "sufficient_period_end_exclusive": "2026-01-22 00:00:00",
+  "full_history_start": "2024-03-06 12:20:00",
+  "full_history_end": "2026-04-22 14:15:00",
+  "full_history_rows": 184697,
+  "period_rows": 14618
+}
