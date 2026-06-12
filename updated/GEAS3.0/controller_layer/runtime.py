@@ -882,6 +882,58 @@ def run_once(
     except Exception as e:
         print(f"[ERROR] log_control_actuation_to_db failed: {e}")
 
+    try:
+        df_state_today = fetch_today_named_table_dataframe(cfg, "control_params")
+    except Exception as e:
+        print(f"[WARN] fetch control_params for policy update failed: {e}")
+        df_state_today = pd.DataFrame()
+
+    try:
+        df_actuation_today = fetch_today_named_table_dataframe(cfg, "control_actuation")
+    except Exception as e:
+        print(f"[WARN] fetch control_actuation for policy update failed: {e}")
+        df_actuation_today = pd.DataFrame()
+
+    try:
+        outer_updater = DailyPolicyUpdater(
+            df_today=df_today,
+            out_light_info=out_light_info,
+            base_temp=(T_day, T_night),
+            policy_state=policy_state,
+            params=params,
+            df_state=df_state_today,
+            df_actuation=df_actuation_today,
+        )
+        outer_res = outer_updater.run()
+        res["outer"] = outer_res
+
+        new_policy_dict = outer_res.get("policy", None)
+        if new_policy_dict is not None:
+            try:
+                policy_state = PolicyState(**new_policy_dict)
+            except TypeError:
+                for k, v in new_policy_dict.items():
+                    if hasattr(policy_state, k):
+                        setattr(policy_state, k, v)
+
+            try:
+                save_policy_state(policy_state_path, policy_state)
+            except Exception as e:
+                print(f"[ERROR] save_policy_state failed: {e}")
+
+            try:
+                log_policy_to_db(
+                    cfg,
+                    policy_state,
+                    outer_res,
+                    now.to_pydatetime(),
+                    cfg.farm_sn,
+                    policy_table,
+                )
+            except Exception as e:
+                print(f"[ERROR] log_policy_to_db failed: {e}")
+    except Exception as e:
+        print(f"[ERROR] DailyPolicyUpdater failed: {e}")
 
     try:
         insert_params_to_log(res, cfg)
