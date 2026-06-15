@@ -83,16 +83,20 @@ def preprocess(df: pd.DataFrame) -> pd.DataFrame:
 
 # ── 3. Huber 회귀 ────────────────────────────────────────────────────────────
 
-def fit_huber(df: pd.DataFrame):
+def fit_huber(df: pd.DataFrame, area_m2: float = 360.0):
     """
-    dTin/dt = a1*H_t + a2*It + a3*(Tin-Tout) + a4*V_t*(Tin-Tout)
+    dTin/dt = a1*H_t + a2*(It*A) + a3*(Tin-Tout) + a4*V_t*(Tin-Tout)
     를 Huber 로버스트 회귀로 추정한다.
     """
     from sklearn.linear_model import HuberRegressor
 
+    area = float(area_m2)
+    if not np.isfinite(area) or area <= 0:
+        raise ValueError("area_m2 must be a positive finite value")
+
     df = df.copy()
     df["X1"] = df["H_t"]
-    df["X2"] = df["It"]
+    df["X2"] = df["It"] * area
     df["X3"] = df["Tin"] - df["Tout"]
     df["X4"] = df["V_t"] * (df["Tin"] - df["Tout"])
 
@@ -107,7 +111,7 @@ def fit_huber(df: pd.DataFrame):
     coefs = {
         "intercept": model.intercept_,
         "a1": model.coef_[0],   # H_t  → k_heat/C
-        "a2": model.coef_[1],   # It   → eta/C
+        "a2": model.coef_[1],   # It*A → eta/C
         "a3": model.coef_[2],   # ΔT   → -UA/C
         "a4": model.coef_[3],   # V_t*ΔT → -Kvent/C
     }
@@ -116,13 +120,16 @@ def fit_huber(df: pd.DataFrame):
 
 # ── 4. 시뮬레이션 ────────────────────────────────────────────────────────────
 
-def simulate_Tin(params: list, data: pd.DataFrame) -> np.ndarray:
+def simulate_Tin(params: list, data: pd.DataFrame, area_m2: float = 360.0) -> np.ndarray:
     """
     오일러 적분으로 실내온도를 시간 전진 시뮬레이션한다.
 
     params = [C, k_heat, UA, eta, K_vent]
     """
     C, k_heat, UA, eta, K_vent = params
+    area = float(area_m2)
+    if not np.isfinite(area) or area <= 0:
+        raise ValueError("area_m2 must be a positive finite value")
 
     n = len(data)
     Tin_sim = np.full(n, np.nan)
@@ -144,7 +151,7 @@ def simulate_Tin(params: list, data: pd.DataFrame) -> np.ndarray:
 
         dTin_dt = (1 / C) * (
             k_heat * H_t
-            + eta   * It
+            + eta   * It * area
             - UA    * (Tin - Tout)
             - K_vent * V_t * (Tin - Tout)
         )
@@ -154,7 +161,7 @@ def simulate_Tin(params: list, data: pd.DataFrame) -> np.ndarray:
 
 
 def simulate_Tin_from_ratio(C_val: float, data: pd.DataFrame,
-                             a1, a2, a3, a4) -> np.ndarray:
+                             a1, a2, a3, a4, area_m2: float = 360.0) -> np.ndarray:
     """
     회귀계수 비율에서 물리 파라미터를 유도한 뒤 시뮬레이션한다.
     """
@@ -162,21 +169,21 @@ def simulate_Tin_from_ratio(C_val: float, data: pd.DataFrame,
     eta    = a2 * C_val
     UA     = -a3 * C_val
     Kvent  = -a4 * C_val
-    return simulate_Tin([C_val, k_heat, UA, eta, Kvent], data)
+    return simulate_Tin([C_val, k_heat, UA, eta, Kvent], data, area_m2=area_m2)
 
 
 # ── 5. 최적화 ────────────────────────────────────────────────────────────────
 
-def loss_C(C_val, data, a1, a2, a3, a4):
+def loss_C(C_val, data, a1, a2, a3, a4, area_m2):
     """C에 대한 MSE 손실 함수."""
     if C_val <= 0:
         return 1e12
-    Tin_sim = simulate_Tin_from_ratio(C_val, data, a1, a2, a3, a4)
+    Tin_sim = simulate_Tin_from_ratio(C_val, data, a1, a2, a3, a4, area_m2=area_m2)
     residuals = Tin_sim - data["Tin"].values
     return float(np.nanmean(residuals ** 2))
 
 
-def estimate_C(df_sub: pd.DataFrame, coefs: dict):
+def estimate_C(df_sub: pd.DataFrame, coefs: dict, area_m2: float = 360.0):
     """L-BFGS-B로 최적 C를 탐색한다."""
     from scipy.optimize import minimize
 
@@ -186,7 +193,7 @@ def estimate_C(df_sub: pd.DataFrame, coefs: dict):
     result = minimize(
         fun=loss_C,
         x0=[1e5],
-        args=(df_sub, a1, a2, a3, a4),
+        args=(df_sub, a1, a2, a3, a4, area_m2),
         method="L-BFGS-B",
         bounds=[(1e3, 1e7)],
         options={"maxiter": 200},
@@ -194,7 +201,7 @@ def estimate_C(df_sub: pd.DataFrame, coefs: dict):
     return float(result.x[0])
 
 
-def build_identification_result(coefs: dict, c_est: float) -> dict:
+def build_identification_result(coefs: dict, c_est: float, area_m2: float = 360.0) -> dict:
     """
     문서형 물리파라미터(theta_est)를 구성한다.
     """
@@ -209,6 +216,7 @@ def build_identification_result(coefs: dict, c_est: float) -> dict:
         "k_heat": k_heat_est,
         "eta": eta_est,
         "k_vent": k_vent_est,
+        "A": float(area_m2),
     }
     return {
         "theta_est": theta_est,
@@ -235,17 +243,18 @@ def identify_physical_params(
     stage_name: str | None = None,
     model_name: str = 'default',
     store_path: str | None = None,
+    area_m2: float = 360.0,
 ) -> dict:
     """
     raw 데이터를 받아 물리파라미터를 식별하고 공통 반환 구조로 돌려준다.
     필요 시 현재 저장소 형식에 맞게 자동 저장한다.
     """
     df_proc = preprocess(df_raw)
-    coefs, df_reg = fit_huber(df_proc)
+    coefs, df_reg = fit_huber(df_proc, area_m2=area_m2)
     df_sub = df_proc.iloc[::subsample_step].reset_index(drop=True)
-    c_est = estimate_C(df_sub, coefs)
+    c_est = estimate_C(df_sub, coefs, area_m2=area_m2)
 
-    out = build_identification_result(coefs, c_est)
+    out = build_identification_result(coefs, c_est, area_m2=area_m2)
     valid_from, valid_to = _period_bounds(df_raw)
     out.update(
         {
@@ -253,6 +262,7 @@ def identify_physical_params(
             "n_obs": int(len(df_proc.index)),
             "n_reg": int(len(df_reg.index)),
             "n_subsample": int(len(df_sub.index)),
+            "area_m2": float(area_m2),
             "valid_from": valid_from,
             "valid_to": valid_to,
         }
@@ -273,6 +283,7 @@ def identify_physical_params(
                 'n_obs': out['n_obs'],
                 'n_reg': out['n_reg'],
                 'n_subsample': out['n_subsample'],
+                'area_m2': float(area_m2),
                 'coefs': out['coefs'],
                 'c_est': out['c_est'],
             },

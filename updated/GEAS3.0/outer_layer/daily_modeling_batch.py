@@ -37,7 +37,7 @@ def run_daily_modeling_batch(
     stage_name: Optional[str] = None,
     store_path: Optional[str] = None,
     sufficient_method: str = 'generalized',
-    area_m2: float = 200.0,
+    area_m2: float = 360.0,
     cover_type: str = 'single_film',
     height_m: float = 4.0,
     policy_compare: bool = False,
@@ -89,6 +89,7 @@ def run_daily_modeling_batch(
         stage_name=stage_name,
         model_name='default',
         store_path=store_path,
+        area_m2=area_m2,
     )
     out['theta_identification'] = theta_sufficient
     out['theta_sufficient'] = theta_sufficient

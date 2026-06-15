@@ -987,7 +987,7 @@ def run_daily_batch(
         farm_sn=cfg.farm_sn,
         stage_name=stage_name,
         store_path=physics_store_path,
-        area_m2=float(params.get("GREENHOUSE_AREA_M2", 200.0)),
+        area_m2=float(params.get("GREENHOUSE_AREA_M2", 360.0)),
         cover_type=str(params.get("GREENHOUSE_COVER_TYPE", "single_film")),
         height_m=float(params.get("GREENHOUSE_HEIGHT_M", 4.0)),
     )
