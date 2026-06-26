@@ -1,0 +1,16 @@
+Category,Column Name,Description,결측치 처리 방법(GPT)
+메타데이터 (context),reg_date,등록일자,삭제(reg_date 변환 실패/NaT 행)
+외부 환경 정보 (State),out_windsp,외부 풍속(m/s),"컬럼 없음: 대체(0), 값 결측: ffill/bfill"
+외부 환경 정보 (State),out_winddirec,외부 풍향(°),"컬럼 없음: NaN 생성, 값 결측: NaN 유지"
+외부 환경 정보 (State),out_temp,외부 온도(℃),"컬럼 없음: NaN 생성, 값 결측: ffill/bfill"
+외부 환경 정보 (State),out_rain,외부 감우(Y/N),"컬럼 없음: 대체(0), 값 결측: NaN 유지"
+외부 환경 정보 (State),out_light,외부 광도(W/m^2),"컬럼 없음: 대체(0), 값 결측: ffill/bfill"
+외부 환경 정보 (State),out_hum,외부 습도(%),"컬럼 없음: NaN 생성, 값 결측: NaN 유지"
+내부 환경 정보 (State),in_temp,실내온도 우상 1(℃),"컬럼 없음: NaN 생성, 값 결측/변환불가: NaN 유지"
+내부 환경 정보 (State),in_hum,실내습도 우상 1(%),"컬럼 없음: NaN 생성, 값 결측/변환불가: NaN 유지"
+내부 환경 정보 (State),in_co2,실내 CO2 우상 1(ppm),"컬럼 없음: NaN 생성, 값 결측/변환불가: NaN 유지"
+제어 정보 (Action),cont_skyl_vol,천창 좌(%),"컬럼 없음: 대체(0), 값 결측: NaN 유지"
+제어 정보 (Action),cont_heater_run,FCU 난방(On/Off),"컬럼 없음: NaN 생성, 값 결측: NaN 유지"
+제어 정보 (Action),cont_fan_run,유동팬(On/Off),"컬럼 없음: 대체(0), 값 결측: NaN 유지"
+제어 정보 (Action),cont_cur_vol,차광스크린(%),결측치 처리 없음(존재 여부 판단용)
+제어 정보 (Action),cont_co2_run,CO2(On/Off),결측치 처리 없음(존재 여부 판단용)

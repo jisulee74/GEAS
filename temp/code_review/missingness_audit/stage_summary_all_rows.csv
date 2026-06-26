@@ -1,0 +1,4 @@
+﻿stage,analysis_start,analysis_end,rows,columns,total_cells,missing_cells,missing_ratio,missing_ratio_pct,data_start,data_end,period_days,missing_cells_delta,missing_ratio_delta_pct,rows_delta
+raw_db_fetch,2024-03-06 00:00:00,2026-06-06 00:00:00,197485,15,2962275,0,0.0,0.0,2024-03-06 12:20:00,2026-06-05 23:55:00,821.4826388888889,,,
+after_sensor_qc_skipped,2024-03-06 00:00:00,2026-06-06 00:00:00,197485,15,2962275,0,0.0,0.0,2024-03-06 12:20:00,2026-06-05 23:55:00,821.4826388888889,0.0,0.0,0.0
+after_normalize_for_derived,2024-03-06 00:00:00,2026-06-06 00:00:00,197485,15,2962275,0,0.0,0.0,2024-03-06 12:20:00,2026-06-05 23:55:00,821.4826388888889,0.0,0.0,0.0

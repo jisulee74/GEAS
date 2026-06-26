@@ -1,0 +1,42 @@
+{
+  "robust_eval": {
+    "N": 60,
+    "days": 7,
+    "dt_min": 5,
+    "seed": 42,
+    "n_jobs": 8
+  },
+  "weights": {
+    "wT": 1,
+    "wVPD": 1,
+    "wE": 0.0,
+    "wDx": 0.2,
+    "wSlack": 50
+  },
+  "constraints": {
+    "T_min": 12.0,
+    "T_max": 28.0,
+    "RH_max": 0.9,
+    "VPD_min": 0.3,
+    "dTcond_min": 0.8,
+    "alpha": 0.25
+  },
+  "episode_seed": 42,
+  "theta_seed": 0,
+  "tuning": {
+    "enabled": false,
+    "N": 30,
+    "seed": 42
+  },
+  "plot_path": "/home/ljs/jslee/updated/evaluation/eval_results/no_data/run_20260421_225330/episode_tin.png",
+  "metric_plot_paths": {
+    "temp_viol_rate": "/home/ljs/jslee/updated/evaluation/eval_results/no_data/run_20260421_225330/temp_viol_rate.png",
+    "temp_viol_maxrun": "/home/ljs/jslee/updated/evaluation/eval_results/no_data/run_20260421_225330/temp_viol_maxrun.png",
+    "cond_viol_rate": "/home/ljs/jslee/updated/evaluation/eval_results/no_data/run_20260421_225330/cond_viol_rate.png",
+    "cond_viol_maxrun": "/home/ljs/jslee/updated/evaluation/eval_results/no_data/run_20260421_225330/cond_viol_maxrun.png",
+    "hv_ineff_rate": "/home/ljs/jslee/updated/evaluation/eval_results/no_data/run_20260421_225330/hv_ineff_rate.png",
+    "tv_vent": "/home/ljs/jslee/updated/evaluation/eval_results/no_data/run_20260421_225330/m_deltax_tv_vent.png",
+    "sw_heat": "/home/ljs/jslee/updated/evaluation/eval_results/no_data/run_20260421_225330/m_sw_heat_switch_count.png",
+    "rh_vpd_combined": "/home/ljs/jslee/updated/evaluation/eval_results/no_data/run_20260421_225330/rh_vpd_violation_rates.png"
+  }
+}

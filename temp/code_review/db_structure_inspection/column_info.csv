@@ -1,0 +1,42 @@
+﻿#,컬럼명,Data Type,variable_role,value_type,Comment,description (GPT),min,max,mean,median
+1,idx,int(11),metadata,연속형(int),,테이블 내 고유 행 번호. 데이터 식별용 PK.,,,,
+2,iot_data_idx,varchar(50),metadata,identifier,온실 sn,온실의 고유 식별번호,,,,
+3,reg_date,datetime,metadata,datetime,등록일자,,2024-03-05 10:50,2026-06-18 14:00,-,-
+4,in_medium_temp1,varchar(10),in env state,연속형(float),배지온도 1(℃),배지 온도 센서 1번 값,0,57.1,20.54,19.07
+5,in_medium_temp2,varchar(10),in env state,연속형(float),배지온도 2(℃),배지 온도 센서 2번 값,0,55.85,11.1,0
+6,in_temp,varchar(10),in env state,연속형(float),실내온도 우상 1(℃),온실 내부 우상단 위치의 온도 센서값,2.3,48.3,22.64,22.13
+7,in_temp2,varchar(10),in env state,연속형(float),실내온도 좌상 2(℃),온실 내부 좌상단 위치의 온도 센서값,2.3,48.3,22.32,21.65
+8,in_water_hot,varchar(10),in env state,연속형(float),온수(℃),온수 배관 또는 난방수 온도,-47.19,470.24,32.5,28
+9,in_water_cold,varchar(10),in env state,연속형(float),냉수(℃),냉수 배관 또는 냉방수 온도,-19.38,475.68,23.06,20.01
+10,in_hum,varchar(10),in env state,연속형(float),실내습도 우상 1(%),온실 내부 우상단 위치의 습도,7.8,83.85,47.4,47.18
+11,in_hum2,varchar(10),in env state,연속형(float),실내습도 좌상 2(%),온실 내부 좌상단 위치의 습도,8.75,89.63,48.97,48.43
+12,in_medium_hum1,varchar(10),in env state,연속형(float),배지수분 1(%),배지 수분 센서 1번 값,0,82.3,17.5,0.2
+13,in_medium_hum2,varchar(10),in env state,연속형(float),배지수분 2(%),배지 수분 센서 2번 값,0,88.11,9.21,0
+14,in_co2,varchar(10),in env state,연속형(int),실내 CO2 우상 1(ppm),내부 CO₂ 센서 1번 값,118,4766,441.22,395
+15,in_co2_2,varchar(10),in env state,연속형(int),실내 CO2 좌상 2(ppm),내부 CO₂ 센서 2번 값,90,4402,456.92,411
+16,in_medium_ec1,varchar(10),in env state,연속형(float),배지EC 1(dS/m),배지 EC 센서 1번 값. 배지 내 양분 농도 수준을 보는 값,0,9.4,0.85,0
+17,in_medium_ec2,varchar(10),in env state,연속형(float),배지EC 2(dS/m),배지 EC 센서 2번 값,0,8.29,0.39,0
+18,out_temp,varchar(10),out env state,연속형(float),외부 온도(℃),,-10,47.75,13.66,14
+19,out_hum,varchar(10),out env state,연속형(float),외부 습도(%),,12,100,68.45,71
+20,out_winddirec,varchar(10),out env state,연속형(int),외부 풍향(°),외부 풍향. 0~360도 방향값,0,360,184.32,198
+21,out_windsp,varchar(10),out env state,연속형(float),외부 풍속(m/s),,0,81.71,2.16,0.5
+22,out_light,int(11),out env state,연속형(int),외부 광도(W/m^2),외부 순간 광도/일사량,0,3000,208.77,9
+23,out_light_sum,varchar(10),out env state,연속형(int),누적 광량(J/cm^2),시간에 따라 누적되는 일사 에너지 값,0,6415,250.77,0
+24,out_rainfall,varchar(10),out env state,연속형(float),외부 강우량(mm/h),,0,100,1.18,0
+25,out_rain,varchar(10),out env state,이산형(0/1),외부 감우(Y/N),,0,1,0.07,0
+26,out_airpress,varchar(10),out env state,연속형(int),기압(hpa),외부 기압,490,1902,1006.59,1006
+27,etc_blackout,varchar(10),system state,이산형(0/1),정전(On/Off),"정전 발생 여부 (실제 DB에서는 1,160,519행 전체에서 항상 0으로, 미설치/미수집 가능성 있음)",0,0,0,0
+28,etc_plc_abnorm,varchar(10),system state,이산형(0/1),PLC 배터리 이상(On/Off),"PLC 배터리 이상 여부 (실제 DB에서는 1,160,519행 전체에서 항상 0으로, 미설치/미수집 가능성 있음)",0,0,0,0
+29,etc_plc_norm,varchar(10),system state,이산형(0/1),PLC 정상(On/Off),PLC 정상 상태 여부,0,1,0.53,1
+30,cont_skyl_vol,varchar(10),action,연속형(int),천창 좌(%),좌측 천창 개도율,0,100,31.31,0
+31,cont_skyr_vol,varchar(10),action,연속형(int),천창 우(%),우측 천창 개도율,0,100,31.08,0
+32,cont_cur_vol,varchar(10),action,연속형(int),차광스크린(%),차광스크린 개도율,0,100,83.92,100
+33,cont_kwcur_vol,varchar(10),action,연속형(int),보온스크린(%),보온스크린 개도율,0,100,63.97,100
+34,cont_heater_run,varchar(10),action,이산형(0/1),FCU 난방(On/Off),FCU 난방 작동 여부,0,1,0.47,0
+35,cont_cooler_run,varchar(10),action,이산형(0/1),FCU 냉방(On/Off),FCU 냉방 작동 여부,0,1,0.26,0
+36,cont_co2_run,varchar(10),action,이산형(0/1),CO2(On/Off),"CO₂ 공급장치 작동 여부 (실제 DB에서는 1,160,519행 전체에서 항상 0으로, 미설치/미수집 가능성 있음)",0,0,0,0
+37,cont_3way1_vol,varchar(10),action,연속형(int),레일 3-WAY 밸브(난방)(%),레일 난방용 3-way 밸브 개도율,0,100,27.7,0
+38,cont_3way2_vol,varchar(10),action,연속형(int),FCU 3-WAY 밸브(%),FCU용 3-way 밸브 개도율,0,100,26.63,0
+39,cont_pump1_run,varchar(10),action,이산형(0/1),레일 순환펌프(난방)(On/Off),레일 난방 순환펌프 작동 여부,0,1,0.32,0
+40,cont_pump2_run,varchar(10),action,이산형(0/1),FCU 순환펌프(On/Off),FCU 순환펌프 작동 여부,0,1,0.3,0
+41,cont_fan_run,varchar(10),action,이산형(0/1),유동팬(On/Off),유동팬 작동 여부,0,1,0.61,1
