@@ -1,0 +1,17 @@
+crop,subj_cd,stage_order,stage_name,dat_start,dat_end,day_temp_min_c,day_temp_max_c,day_cloudy_temp_min_c,day_cloudy_temp_max_c,night_temp_min_c,night_temp_max_c,night_early_temp_min_c,night_early_temp_max_c,night_late_temp_min_c,night_late_temp_max_c,root_temp_min_c,root_temp_max_c,notes
+strawberry,01,1,establishment,1,14,,25,,,10,13,,,,,18,20,night target 10-13 C during transplanting and establishment
+strawberry,01,2,vegetative_flower_induction,15,30,28,30,,,10,13,,,,,15,15,
+strawberry,01,3,bud_emergence,31,45,25,26,,,8,10,,,,,15,15,
+strawberry,01,4,flowering,46,60,23,25,,,5,8,,,,,17,17,
+strawberry,01,5,fruit_enlargement,61,80,20,23,,,5,7,,,,,17,19,
+strawberry,01,6,harvest,81,,20,23,,,5,5,,,,,19,19,day ventilation upper bound is 25 C
+melon,05,1,establishment,1,7,30,33,,,20,25,,,,,20,25,root minimum 15 C
+melon,05,2,vine_extension,8,25,28,28,,,12,14,,,,,18,20,
+melon,05,3,flowering_fruit_set,26,35,25,30,,,18,22,,,,,18,20,
+melon,05,4,fruit_enlargement,36,45,28,30,,,18,22,,,,,20,25,
+melon,05,5,net_formation,46,55,28,30,,,18,20,,,,,18,20,
+melon,05,6,maturity_harvest,56,,26,28,,,14,16,,,,,15,,DAT 75+ remains in this final stage
+cucumber,04,1,establishment,1,7,25,28,,,13,15,,,,,20,23,root minimum 15 C
+cucumber,04,2,early_growth,8,25,24,25,,,14,16,,,,,18,20,
+cucumber,04,3,main_harvest,26,69,25,28,20,25,13,18,15,18,13,15,18,20,partly cloudy and cloudy day range 20-25 C
+cucumber,04,4,late_harvest,70,,23,26,,,11,16,13,16,11,13,15,18,late harvest night is split into early night and late night ranges

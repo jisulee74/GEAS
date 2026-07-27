@@ -1,0 +1,13 @@
+﻿{
+  "source": "datasets\\iot97_historical\\1_raw",
+  "output": "datasets\\iot97_historical\\2_resampled_5min",
+  "grid_freq": "5min",
+  "max_segment_gap_min": 10.0,
+  "gap_rule": "dt <= 10 minutes is aligned onto 5-minute grid; dt > 10 starts a new segment candidate",
+  "minimum_segment_rows": 288,
+  "minimum_segment_duration": "at least one 24h day on 5-minute grid",
+  "inserted_row_policy": "values introduced by 5-minute grid insertion are left as NaN",
+  "sensor_fill": "none at this stage; missing sensor values remain NaN",
+  "action_fill": "none at this stage; missing action values remain NaN",
+  "raw_is_not_modified": true
+}

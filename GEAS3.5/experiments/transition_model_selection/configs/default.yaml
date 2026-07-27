@@ -1,0 +1,32 @@
+dataset:
+  crop: cucumber
+  train: ../../../offline_dataset_preparation/datasets/5_rl_dataset/cucumber/train.parquet
+  validation: ../../../offline_dataset_preparation/datasets/5_rl_dataset/cucumber/validation.parquet
+  test: ../../../offline_dataset_preparation/datasets/5_rl_dataset/cucumber/test.parquet
+
+experiment:
+  output_dir: artifacts/default
+  random_seed: 42
+
+models:
+  candidates:
+    - name: linear_regression
+      params: {}
+    - name: knn
+      params:
+        n_neighbors: 5
+    - name: mlp
+      params:
+        multi_output_strategy: independent
+        hidden_layer_sizes: [64, 32]
+        max_iter: 300
+        random_state: 42
+
+selection:
+  strategy: mean_rmse
+  params: {}
+
+rollout:
+  enabled: true
+  horizon_steps: [3, 6, 12]
+  step_minutes: 5

@@ -1,0 +1,8 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.env
+
+experiments/**/artifacts/
+offline_dataset_preparation/datasets/03_quality_controlled/
+offline_dataset_preparation/datasets/5_rl_dataset/

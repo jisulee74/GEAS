@@ -1,0 +1,8 @@
+﻿series_id,crop,geas_version,actual_start,actual_end,row_count,n_segments,n_inserted_rows,file_paths
+strawberry_geas2_0,strawberry,2.0,2024-03-13 05:20:00,2025-05-07 23:55:00,114789,29,25404,offline_dataset_preparation\datasets\01_resampled\strawberry\strawberry_geas2_0.parquet
+melon_geas2_0,melon,2.0,2025-05-08 00:00:00,2025-09-09 13:55:00,33297,7,3,offline_dataset_preparation\datasets\01_resampled\melon\melon_geas2_0.parquet
+melon_geas2_5,melon,2.5,2025-09-09 14:00:00,2025-10-16 23:55:00,10732,3,1,offline_dataset_preparation\datasets\01_resampled\melon\melon_geas2_5.parquet
+strawberry_geas2_5,strawberry,2.5,2025-10-17 00:00:00,2026-02-12 10:40:00,18976,8,4,offline_dataset_preparation\datasets\01_resampled\strawberry\strawberry_geas2_5.parquet
+strawberry_geas3_0,strawberry,3.0,2025-12-01 08:30:00,2026-01-22 09:05:00,14051,2,1,offline_dataset_preparation\datasets\01_resampled\strawberry\strawberry_geas3_0.parquet
+cucumber_geas2_5,cucumber,2.5,2026-03-05 00:00:00,2026-06-30 23:55:00,33984,1,1,offline_dataset_preparation\datasets\01_resampled\cucumber\cucumber_geas2_5.parquet
+
