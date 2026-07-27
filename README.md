@@ -1,77 +1,87 @@
-# GEAS Repository Layout
+# GEAS Repository
 
-Last updated: 2026-06-25
+Last updated: 2026-07-27
 
-This repository is organized into preserved source materials, the active GEAS 3.0 working tree, an offline predictor benchmark workspace, and the main technical document.
+This repository keeps the legacy GEAS 3.0 materials, the current GEAS 3.5
+experiment-ready project, and reference archives used during GEAS 3.5
+development.
 
-## Root Items
+The active project for current work is `GEAS3.5/`.
 
-- `GEAS3.0_incomplete/`: preserved GEAS 3.0 source tree with missing or incomplete implementation pieces
-- `GEAS3.0/`: reorganized and completed working tree for the current GEAS 3.0 runtime and evaluation code
-- `geas_predictor_benchmark/`: offline predictor comparison workspace for inner-layer temperature forecasting
-- `AI 자율제어기(GEAS Ver3.0) 기술문서.pdf`: technical document used as the main reference for code and methodology mapping
-
-## Directory Structure
+## Root Layout
 
 ```text
-GEAS3.0_incomplete/
-  source/
-  R_to_python/
-
-GEAS3.0/
-  source/
-    controller_layer/
-    inner_layer/
-    outer_layer/
-  evaluation/
-
-geas_predictor_benchmark/
-  benchmark.py
-  plot_from_csv.py
-  results/
+GEAS3.5/                         Active GEAS 3.5 project
+archive/
+  GEAS3.5_backup_20260708/        Reference backup from 2026-07-08
+  GEAS3.5_backup_20260727/        Reference backup from 2026-07-27
+GEAS3.0/                          Legacy GEAS 3.0 working tree
+GEAS3.0_incomplete/               Preserved incomplete GEAS 3.0 source tree
+geas_predictor_benchmark/         Legacy predictor benchmark workspace
+AI 자율제어기(GEAS Ver3.0) 기술문서.pdf
 ```
 
-## GEAS3.0_incomplete/
+## Active GEAS 3.5 Project
 
-`GEAS3.0_incomplete/` keeps the incomplete source materials separated from the reorganized runtime tree.
+`GEAS3.5/` is organized around offline dataset preparation and the two GPU
+experiment workflows that are currently ready to run:
 
-- `GEAS3.0_incomplete/source/`: GEAS 3.0 runtime-oriented source code with missing or incomplete implementation pieces
-- `GEAS3.0_incomplete/R_to_python/`: converted and reference scripts, including the `3_6_*` methodology modules
+1. quality model training, comparison, manual selection, and application
+   artifact handoff;
+2. transition model training, validation-based selection, and selected-model
+   test evaluation.
 
-## GEAS3.0/
+Key directories:
 
-`GEAS3.0/` contains the actively reorganized and completed structure.
+```text
+GEAS3.5/
+  offline_dataset_preparation/      Dataset extraction, preprocessing, QC, and RL-ready dataset scripts
+  experiments/
+    quality_control_model_selection/
+    transition_model_selection/
+  src/geas35/                       Reusable importable implementation
+  configs/                          Shared and experiment configuration
+  tests/                            Smoke and contract tests
+```
 
-- `GEAS3.0/source/controller_layer/`: orchestration and controller entrypoints
-- `GEAS3.0/source/inner_layer/`: core control logic, feature generation, repository access, utilities
-- `GEAS3.0/source/outer_layer/`: daily modeling, policy update, and supporting outer-loop runtime logic
-- `GEAS3.0/evaluation/`: offline evaluation scripts, period-selection helpers, and generated evaluation outputs separated from the runtime layers
+The intended data flow is:
 
-## evaluation/
+```text
+02_split
+  -> quality experiment
+  -> manually selected quality_model_application.json
+  -> 03_control_quality.py --quality-model-artifact
+  -> 03_quality_controlled
+  -> 04_prepare_rl_dataset.py
+  -> 5_rl_dataset
+  -> transition experiment
+  -> selected_transition_model.json
+  -> selected_transition_model_test_metrics.json
+```
 
-`GEAS3.0/evaluation/` now centers on the current offline evaluation entrypoints rather than the earlier `3_6_*` filenames.
+See `GEAS3.5/README.md` for the GEAS 3.5 entrypoints, artifact contracts, and
+the deferred online/RL boundary.
 
-Current evaluation files include:
+## Database Configuration
 
-- `limited_data_eval.py`
-- `no_data_eval.py`
-- `sufficient_data_eval.py`
+`GEAS3.5/offline_dataset_preparation/scripts/00_extract_raw.py` reads database
+settings from `GEAS3.5/.env`.
 
-Additional evaluation-related directories include:
+`GEAS3.5/.env` is intentionally ignored by Git because it contains local
+credentials. Use `GEAS3.5/.env.example` as the shareable template.
 
-- `eval_period_selection/`: helper scripts and saved outputs for representative period selection
-- `eval_results/`: generated evaluation artifacts for no-data, limited-data, and sufficient-data runs
+## Archives
 
-## geas_predictor_benchmark/
+The `archive/` directory stores historical GEAS 3.5 backup code for reference
+while the active implementation continues in `GEAS3.5/`.
 
-`geas_predictor_benchmark/` is an offline experiment workspace for swapping only the inner-layer next-step temperature predictor while keeping the surrounding GEAS control flow fixed.
+Generated artifacts, cache folders, and local `.env` files under `archive/` are
+ignored by `archive/.gitignore`.
 
-- `benchmark.py`: runs predictor comparison experiments against the shared replay pipeline
-- `plot_from_csv.py`: regenerates plots from saved benchmark CSV outputs
-- `results/`: saved reports, CSV summaries, JSON metadata, and PNG charts from benchmark runs
+## Legacy Areas
 
-## Notes
+`GEAS3.0/` and `GEAS3.0_incomplete/` are preserved for reference and are not the
+current target of the GEAS 3.5 restructuring work.
 
-- The repository was restructured so that `main` exposes the high-level layout directly.
-- The previous root README can still be recovered from commit `9f22911` if needed.
-- Local backup folders such as `_restructure_backup/` are intentionally not tracked in GitHub.
+`geas_predictor_benchmark/` remains as an older offline benchmark workspace for
+inner-layer temperature predictor experiments.
