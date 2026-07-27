@@ -1,0 +1,80 @@
+dataset:
+  train: ../datasets/iot97_historical/4_preprocessed/4_outliers_flagged/cucumber/train.parquet
+  validation: ../datasets/iot97_historical/4_preprocessed/4_outliers_flagged/cucumber/validation.parquet
+  test: ../datasets/iot97_historical/4_preprocessed/4_outliers_flagged/cucumber/test.parquet
+
+experiment:
+  output_dir: artifacts/experiments/quality/default
+  random_seed: 42
+
+hpo:
+  budget: 8
+  models: [modern_tcn, timesnet, patch_tst]
+  early_stopping:
+    monitor: validation_reconstruction_loss
+    mode: min
+    patience: 5
+    min_delta: 0.0
+  search_spaces:
+    common:
+      lookback:
+        values: [6, 12]
+      mask_fraction:
+        values: [0.1, 0.2, 0.3]
+      batch_size:
+        values: [16, 32]
+      epochs:
+        values: [20, 40]
+      learning_rate:
+        type: float
+        low: 0.0001
+        high: 0.001
+        log: true
+      weight_decay:
+        values: [0.0, 0.0001]
+      dropout:
+        values: [0.0, 0.1]
+      random_state:
+        value: 42
+      expected_frequency:
+        value: 5min
+    model_specific:
+      modern_tcn:
+        channel_width:
+          values: [16, 32, 64]
+        depth:
+          values: [1, 2, 3]
+        kernel_size:
+          values: [3, 5]
+      timesnet:
+        temporal_blocks:
+          values: [1, 2, 3]
+        top_k_periods:
+          values: [1, 2, 3]
+        period_embedding_dim:
+          values: [16, 32, 64]
+      patch_tst:
+        patch_length:
+          values: [2, 3, 4]
+        patch_stride:
+          values: [1, 2]
+        transformer_depth:
+          values: [1, 2, 3]
+        attention_heads:
+          values: [1, 2, 4]
+        embedding_dim:
+          values: [16, 32, 64]
+
+threshold:
+  enabled: true
+  candidates: [0.25, 0.5, 0.75, 1.0, 1.5, 2.0, 3.0]
+
+evaluation:
+  mask_fraction: 0.1
+  anomaly_fraction: 0.1
+  anomaly_scale: 8.0
+  random_seed: 42
+  efficiency_repeats: 3
+
+report:
+  generate_figures: true

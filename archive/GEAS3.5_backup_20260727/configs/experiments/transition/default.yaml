@@ -1,0 +1,32 @@
+dataset:
+  crop: tomato
+  train: ../datasets/iot97_historical/rl_mdp_v1/tomato/train.parquet
+  validation: ../datasets/iot97_historical/rl_mdp_v1/tomato/validation.parquet
+  test: ../datasets/iot97_historical/rl_mdp_v1/tomato/test.parquet
+
+experiment:
+  output_dir: artifacts/experiments/transition/default
+  random_seed: 42
+
+models:
+  candidates:
+    - name: linear_regression
+      params: {}
+    - name: knn
+      params:
+        n_neighbors: 5
+    - name: mlp
+      params:
+        multi_output_strategy: independent
+        hidden_layer_sizes: [64, 32]
+        max_iter: 300
+        random_state: 42
+
+selection:
+  strategy: mean_rmse
+  params: {}
+
+rollout:
+  enabled: true
+  horizon_steps: [3, 6, 12]
+  step_minutes: 5
