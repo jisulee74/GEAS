@@ -1,0 +1,11 @@
+{
+  "temp_viol_rate": 0.639,
+  "temp_viol_maxrun": 198.833,
+  "cond_viol_rate": 0.122,
+  "cond_viol_maxrun": 59.5,
+  "rh_viol_rate": 0.186,
+  "vpd_viol_rate": 0.419,
+  "hv_ineff_rate": 0.0,
+  "tv_vent": 0.582,
+  "sw_heat": 1372.333
+}
