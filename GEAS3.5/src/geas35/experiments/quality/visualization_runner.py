@@ -1,7 +1,7 @@
 """Visualization runner for quality-model experiments.
 
 This module implements Experiment Plan v1.1 Step 7 only. It generates
-publication-oriented PNG/PDF figures from existing experiment artifacts.
+publication-oriented PNG figures from existing experiment artifacts.
 Artifact integrity checks and end-to-end CLI orchestration are intentionally
 left to later experiment steps.
 """

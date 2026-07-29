@@ -4,36 +4,45 @@ dataset:
   test: ../../../offline_dataset_preparation/datasets/02_split/cucumber/test.parquet
 
 experiment:
-  output_dir: artifacts/default
+  output_dir: artifacts/cucumber
   random_seed: 42
 
 hpo:
-  budget: 8
+  budget: 50
   models: [modern_tcn, timesnet, patch_tst]
+  model_random_seeds:
+    modern_tcn: 42
+    timesnet: 42
+    patch_tst: 42
   early_stopping:
     monitor: validation_reconstruction_loss
     mode: min
-    patience: 5
+    patience: 10
     min_delta: 0.0
   search_spaces:
     common:
       lookback:
-        values: [6, 12]
+        value: 288
       mask_fraction:
-        values: [0.1, 0.2, 0.3]
+        values: [0.30, 0.40, 0.50]
       batch_size:
-        values: [16, 32]
+        values: [32, 64, 128]
       epochs:
-        values: [20, 40]
+        value: 100
       learning_rate:
         type: float
         low: 0.0001
-        high: 0.001
+        high: 0.01
         log: true
       weight_decay:
-        values: [0.0, 0.0001]
+        type: float
+        low: 0.000001
+        high: 0.01
+        log: true
       dropout:
-        values: [0.0, 0.1]
+        type: float
+        low: 0.0
+        high: 0.3
       random_state:
         value: 42
       expected_frequency:
@@ -41,33 +50,32 @@ hpo:
     model_specific:
       modern_tcn:
         channel_width:
-          values: [16, 32, 64]
+          values: [32, 64, 128]
         depth:
-          values: [1, 2, 3]
+          values: [[1, 1, 1], [2, 2, 2]]
         kernel_size:
-          values: [3, 5]
+          values: [13, 31, 51]
       timesnet:
         temporal_blocks:
           values: [1, 2, 3]
         top_k_periods:
-          values: [1, 2, 3]
+          values: [2, 3, 5]
         period_embedding_dim:
-          values: [16, 32, 64]
+          values: [32, 64, 128]
       patch_tst:
         patch_length:
-          values: [2, 3, 4]
-        patch_stride:
-          values: [1, 2]
+          values: [8, 16, 24, 32]
         transformer_depth:
-          values: [1, 2, 3]
+          values: [2, 3, 4]
         attention_heads:
-          values: [1, 2, 4]
+          values: [4, 8, 16]
         embedding_dim:
-          values: [16, 32, 64]
+          values: [32, 64, 128, 256]
 
 threshold:
   enabled: true
-  candidates: [0.25, 0.5, 0.75, 1.0, 1.5, 2.0, 3.0]
+  candidate_generation: validation_reconstruction_error_linspace
+  candidate_count: 100
 
 evaluation:
   mask_fraction: 0.1

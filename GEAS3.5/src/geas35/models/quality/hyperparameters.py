@@ -268,6 +268,7 @@ class GridSearchHyperparameterOptimizer(HyperparameterOptimizer):
         *,
         objective: HyperparameterObjective | None = None,
         early_stopping: EarlyStoppingConfig | None = None,
+        progress_context: str | None = None,
     ) -> None:
         if not candidates:
             raise ValueError("candidates must not be empty.")
@@ -275,6 +276,7 @@ class GridSearchHyperparameterOptimizer(HyperparameterOptimizer):
         self.train_candidate = train_candidate
         self.objective = objective or HyperparameterObjective()
         self.early_stopping = early_stopping or EarlyStoppingConfig()
+        self.progress_context = progress_context
 
     def optimize(
         self,
@@ -283,16 +285,32 @@ class GridSearchHyperparameterOptimizer(HyperparameterOptimizer):
         observation_columns: Iterable[str],
     ) -> HyperparameterOptimizationResult:
         columns = validate_observation_columns(observation_columns)
-        results = [
-            self.train_candidate(
+        results = []
+        total = len(self.candidates)
+        for index, candidate in enumerate(self.candidates, start=1):
+            if self.progress_context is not None:
+                print(
+                    f"[{self.progress_context}] HPO trial 시작 "
+                    f"({index}/{total}): {candidate.name}",
+                    flush=True,
+                )
+            result = self.train_candidate(
                 candidate,
                 train_df,
                 validation_df,
                 columns,
                 self.early_stopping,
             )
-            for candidate in self.candidates
-        ]
+            results.append(result)
+            if self.progress_context is not None:
+                rmse = result.validation_metrics.get(
+                    "validation_synthetic_masking_rmse"
+                )
+                print(
+                    f"[{self.progress_context}] HPO trial 완료 "
+                    f"({index}/{total}), validation_rmse={rmse}",
+                    flush=True,
+                )
         best = max(
             results,
             key=lambda result: self.objective.ranking_key(result.validation_metrics),

@@ -50,14 +50,14 @@ def load_quality_experiment_config(path: str | Path) -> LoadedQualityExperimentC
     random_seed = int(experiment.get("random_seed", 0))
 
     models = _model_specs(hpo, random_seed=random_seed)
-    threshold_candidates = _threshold_candidates(threshold)
+    threshold_candidate_count = _threshold_candidate_count(threshold)
     early_stopping = _early_stopping_config(hpo)
     observation_columns = _optional_observation_columns(dataset)
 
     experiment_config = QualityExperimentConfig(
         output_root=output_root,
         models=models,
-        threshold_candidates=threshold_candidates,
+        threshold_candidate_count=threshold_candidate_count,
         early_stopping=early_stopping,
         mask_fraction=float(evaluation.get("mask_fraction", 0.1)),
         anomaly_fraction=float(evaluation.get("anomaly_fraction", 0.1)),
@@ -140,14 +140,21 @@ def _model_specs(
     return tuple(specs)
 
 
-def _threshold_candidates(threshold: Mapping[str, Any]) -> tuple[float, ...]:
+def _threshold_candidate_count(threshold: Mapping[str, Any]) -> int:
     if not bool(threshold.get("enabled", True)):
         raise ValueError("threshold.enabled must remain true for v1.4 experiments.")
-    candidates = threshold.get("candidates", ())
-    values = tuple(float(value) for value in _sequence(candidates))
-    if not values:
-        raise ValueError("threshold.candidates must define at least one value.")
-    return values
+    generation = str(threshold.get(
+        "candidate_generation", "validation_reconstruction_error_linspace"
+    ))
+    if generation != "validation_reconstruction_error_linspace":
+        raise ValueError(
+            "threshold.candidate_generation must be "
+            "validation_reconstruction_error_linspace."
+        )
+    count = int(threshold.get("candidate_count", 100))
+    if count < 2:
+        raise ValueError("threshold.candidate_count must be >= 2.")
+    return count
 
 
 def _early_stopping_config(hpo: Mapping[str, Any]) -> EarlyStoppingConfig:

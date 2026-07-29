@@ -7,16 +7,16 @@ from typing import Any
 
 from geas35.models.transition.base import BaseTransitionModel
 from geas35.models.transition.boosting_models import (
-    CatBoostTransitionModel,
     LightGBMTransitionModel,
     XGBoostTransitionModel,
 )
-from geas35.models.transition.deep import TCNTransitionModel
 from geas35.models.transition.sklearn_models import (
+    ExtraTreesTransitionModel,
     KNNTransitionModel,
     LinearRegressionTransitionModel,
     LinearSVRTransitionModel,
     MLPTransitionModel,
+    PersistenceTransitionModel,
 )
 from geas35.models.transition.trainer import TransitionCandidateSpec
 
@@ -27,14 +27,14 @@ def default_transition_model_registry() -> dict[str, TransitionModelFactory]:
     """Return built-in transition model factories available to configs."""
 
     return {
+        "persistence": PersistenceTransitionModel,
         "linear_regression": LinearRegressionTransitionModel,
         "linear_svr": LinearSVRTransitionModel,
         "knn": KNNTransitionModel,
-        "mlp": MLPTransitionModel,
+        "extra_trees": ExtraTreesTransitionModel,
         "lightgbm": LightGBMTransitionModel,
-        "catboost": CatBoostTransitionModel,
         "xgboost": XGBoostTransitionModel,
-        "tcn": TCNTransitionModel,
+        "mlp": MLPTransitionModel,
     }
 
 

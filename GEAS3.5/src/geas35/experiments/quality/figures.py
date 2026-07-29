@@ -426,7 +426,7 @@ def _empty_axes(ax, title: str, message: str) -> None:
 
 
 def _save_figure(fig, figures_dir: Path, stem: str) -> list[Path]:
-    outputs = [figures_dir / f"{stem}.png", figures_dir / f"{stem}.pdf"]
+    outputs = [figures_dir / f"{stem}.png"]
     fig.tight_layout()
     for path in outputs:
         fig.savefig(path, bbox_inches="tight")

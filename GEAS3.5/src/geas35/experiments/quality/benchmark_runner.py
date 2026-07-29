@@ -101,6 +101,11 @@ def run_model_online_benchmark(
     """Measure online benchmark metrics for one calibrated model."""
 
     columns = tuple(observation_columns)
+    crop_name = Path(output_root).name
+    print(
+        f"[{crop_name}][{model_result.model_name}] Online Benchmark 시작",
+        flush=True,
+    )
     model_dir = Path(output_root) / model_result.model_name
     model_dir.mkdir(parents=True, exist_ok=True)
     threshold = model_result.threshold_result.best_threshold
@@ -134,6 +139,10 @@ def run_model_online_benchmark(
         artifact_dir=str(model_dir),
     )
     _write_json(model_dir / "online_benchmark.json", _model_benchmark_payload(result))
+    print(
+        f"[{crop_name}][{model_result.model_name}] Online Benchmark 완료",
+        flush=True,
+    )
     return result
 
 

@@ -1,0 +1,88 @@
+dataset:
+  train: ../../../offline_dataset_preparation/datasets/02_split/melon/train.parquet
+  validation: ../../../offline_dataset_preparation/datasets/02_split/melon/validation.parquet
+  test: ../../../offline_dataset_preparation/datasets/02_split/melon/test.parquet
+
+experiment:
+  output_dir: artifacts/melon
+  random_seed: 42
+
+hpo:
+  budget: 50
+  models: [modern_tcn, timesnet, patch_tst]
+  model_random_seeds:
+    modern_tcn: 42
+    timesnet: 42
+    patch_tst: 42
+  early_stopping:
+    monitor: validation_reconstruction_loss
+    mode: min
+    patience: 10
+    min_delta: 0.0
+  search_spaces:
+    common:
+      lookback:
+        value: 288
+      mask_fraction:
+        values: [0.30, 0.40, 0.50]
+      batch_size:
+        values: [32, 64, 128]
+      epochs:
+        value: 100
+      learning_rate:
+        type: float
+        low: 0.0001
+        high: 0.01
+        log: true
+      weight_decay:
+        type: float
+        low: 0.000001
+        high: 0.01
+        log: true
+      dropout:
+        type: float
+        low: 0.0
+        high: 0.3
+      random_state:
+        value: 42
+      expected_frequency:
+        value: 5min
+    model_specific:
+      modern_tcn:
+        channel_width:
+          values: [32, 64, 128]
+        depth:
+          values: [[1, 1, 1], [2, 2, 2]]
+        kernel_size:
+          values: [13, 31, 51]
+      timesnet:
+        temporal_blocks:
+          values: [1, 2, 3]
+        top_k_periods:
+          values: [2, 3, 5]
+        period_embedding_dim:
+          values: [32, 64, 128]
+      patch_tst:
+        patch_length:
+          values: [8, 16, 24, 32]
+        transformer_depth:
+          values: [2, 3, 4]
+        attention_heads:
+          values: [4, 8, 16]
+        embedding_dim:
+          values: [32, 64, 128, 256]
+
+threshold:
+  enabled: true
+  candidate_generation: validation_reconstruction_error_linspace
+  candidate_count: 100
+
+evaluation:
+  mask_fraction: 0.1
+  anomaly_fraction: 0.1
+  anomaly_scale: 8.0
+  random_seed: 42
+  efficiency_repeats: 3
+
+report:
+  generate_figures: true

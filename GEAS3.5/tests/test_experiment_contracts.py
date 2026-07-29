@@ -49,7 +49,7 @@ def test_default_experiment_configs_load_without_reading_datasets() -> None:
         / "experiments"
         / "quality_control_model_selection"
         / "configs"
-        / "default.yaml"
+        / "cucumber.yaml"
     )
     transition = load_transition_experiment_config(
         PROJECT_ROOT
@@ -67,7 +67,7 @@ def test_default_experiment_configs_load_without_reading_datasets() -> None:
         / "experiments"
         / "quality_control_model_selection"
         / "artifacts"
-        / "default"
+        / "cucumber"
     )
 
     assert transition.train_path.name == "train.parquet"

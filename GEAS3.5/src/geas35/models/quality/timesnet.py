@@ -22,13 +22,13 @@ from geas35.models.quality.modern_tcn import (
 class TimesNetConfig:
     """Configuration for the initial TimesNet quality model implementation."""
 
-    lookback: int = 6
-    mask_fraction: float = 0.2
+    lookback: int = 288
+    mask_fraction: float = 0.3
     batch_size: int = 32
-    epochs: int = 20
+    epochs: int = 100
     learning_rate: float = 1e-3
-    weight_decay: float = 0.0
-    temporal_blocks: int = 2
+    weight_decay: float = 1e-6
+    temporal_blocks: int = 1
     top_k_periods: int = 2
     period_embedding_dim: int = 32
     dropout: float = 0.0
@@ -65,7 +65,7 @@ class TimesNetConfig:
         return cls(**filtered)
 
     def to_artifact(self) -> dict[str, object]:
-        return dict(asdict(self))
+        return {**asdict(self), "d_ff": 2 * self.period_embedding_dim}
 
 
 class TimesNetQualityModel(ModernTCNQualityModel):
@@ -126,6 +126,7 @@ def _build_timesnet_network(
     dropout: float,
 ):
     kernels = _period_kernels(lookback, top_k_periods)
+    d_ff = 2 * period_embedding_dim
 
     class _TimesBlock(nn.Module):
         def __init__(self, channels: int) -> None:
@@ -141,8 +142,9 @@ def _build_timesnet_network(
                 ]
             )
             self.mix = nn.Sequential(
-                nn.Conv1d(channels, channels, kernel_size=1),
+                nn.Conv1d(channels, d_ff, kernel_size=1),
                 nn.GELU(),
+                nn.Conv1d(d_ff, channels, kernel_size=1),
             )
 
         def forward(self, x):

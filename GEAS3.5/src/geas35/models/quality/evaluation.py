@@ -83,6 +83,18 @@ def _normal_candidate_mask(
     return mask
 
 
+def _numeric_observation_frame(
+    df: pd.DataFrame,
+    columns: tuple[str, ...],
+) -> pd.DataFrame:
+    """Copy a frame with model observation columns normalized to float dtype."""
+
+    result = df.copy()
+    for col in columns:
+        result[col] = pd.to_numeric(df[col], errors="coerce").astype(float)
+    return result
+
+
 def _binary_metrics(
     y_true: np.ndarray,
     y_score: np.ndarray,
@@ -215,7 +227,7 @@ def make_synthetic_anomaly_injection(
     candidates = _normal_candidate_mask(df, columns)
     candidate_positions = np.argwhere(candidates.to_numpy(dtype=bool))
     anomaly_mask = pd.DataFrame(False, index=df.index, columns=list(columns))
-    injected = df.copy()
+    injected = _numeric_observation_frame(df, columns)
     if len(candidate_positions) == 0:
         return SyntheticAnomalyInjection(
             frame=injected,
@@ -268,7 +280,7 @@ def evaluate_synthetic_masking(
         random_state=random_state,
     )
 
-    masked_df = validation_df.copy()
+    masked_df = _numeric_observation_frame(validation_df, columns)
     for col in columns:
         masked_df.loc[synthetic_mask[col], col] = np.nan
 

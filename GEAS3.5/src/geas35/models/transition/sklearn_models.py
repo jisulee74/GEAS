@@ -24,6 +24,49 @@ class OptionalDependencyError(ImportError):
 EstimatorFactory = Callable[[], Any]
 
 
+class PersistenceTransitionModel(BaseTransitionModel):
+    """No-training baseline that carries each dynamic observation forward."""
+
+    model_name = "persistence"
+    capabilities = TransitionModelCapabilities(multi_output_strategy="deterministic")
+
+    def fit(
+        self,
+        dataset: TransitionDataset,
+        validation_dataset: TransitionDataset | None = None,
+    ) -> "PersistenceTransitionModel":
+        del validation_dataset
+        missing_targets = [
+            column for column in dataset.target_columns if column not in dataset.input_columns
+        ]
+        if missing_targets:
+            raise ValueError(
+                "PersistenceTransitionModel requires every target in the current "
+                f"observation inputs: {missing_targets[0]}"
+            )
+        self.input_columns_ = dataset.input_columns
+        self.target_columns_ = dataset.target_columns
+        return self
+
+    def predict(
+        self,
+        dataset_or_frame: TransitionDataset | pd.DataFrame,
+    ) -> TransitionPrediction:
+        _, target_columns = self._require_fitted()
+        frame = (
+            dataset_or_frame.x
+            if isinstance(dataset_or_frame, TransitionDataset)
+            else dataset_or_frame
+        )
+        missing = [column for column in target_columns if column not in frame.columns]
+        if missing:
+            raise KeyError(f"Missing persistence input column: {missing[0]}")
+        return TransitionPrediction(
+            next_observation=frame.loc[:, list(target_columns)].copy(),
+            target_columns=target_columns,
+        )
+
+
 class IndependentTargetTransitionModel(BaseTransitionModel):
     """Fit one independent estimator per transition target column."""
 
@@ -161,6 +204,32 @@ class KNNTransitionModel(IndependentTargetTransitionModel):
         return sklearn_neighbors.KNeighborsRegressor(**self.estimator_kwargs)
 
 
+class ExtraTreesTransitionModel(IndependentTargetTransitionModel):
+    """Independent-target wrapper around sklearn ExtraTreesRegressor."""
+
+    model_name = "extra_trees"
+    capabilities = TransitionModelCapabilities(
+        supports_native_multi_output=True,
+        multi_output_strategy="independent",
+        optional_dependency="scikit-learn",
+    )
+
+    def __init__(self, **estimator_kwargs: Any) -> None:
+        self.estimator_kwargs = dict(estimator_kwargs)
+        super().__init__(
+            self._build_estimator,
+            model_name=self.model_name,
+            capabilities=self.capabilities,
+        )
+
+    def _build_estimator(self) -> Any:
+        try:
+            sklearn_ensemble = importlib.import_module("sklearn.ensemble")
+        except ModuleNotFoundError as exc:
+            raise _sklearn_unavailable("ExtraTreesTransitionModel") from exc
+        return sklearn_ensemble.ExtraTreesRegressor(**self.estimator_kwargs)
+
+
 class MLPTransitionModel(BaseTransitionModel):
     """Sklearn MLP transition wrapper with selectable multi-output strategy."""
 
@@ -278,11 +347,13 @@ def optional_dependency_unavailable(
 
 
 __all__ = [
+    "ExtraTreesTransitionModel",
     "IndependentTargetTransitionModel",
     "KNNTransitionModel",
     "LinearRegressionTransitionModel",
     "LinearSVRTransitionModel",
     "MLPTransitionModel",
     "OptionalDependencyError",
+    "PersistenceTransitionModel",
     "optional_dependency_unavailable",
 ]

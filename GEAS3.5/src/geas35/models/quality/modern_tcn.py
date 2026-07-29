@@ -30,15 +30,15 @@ from geas35.models.quality.rule_only import RuleOnlyQualityModel
 class ModernTCNConfig:
     """Configuration for the initial ModernTCN quality model implementation."""
 
-    lookback: int = 6
-    mask_fraction: float = 0.2
+    lookback: int = 288
+    mask_fraction: float = 0.3
     batch_size: int = 32
-    epochs: int = 20
+    epochs: int = 100
     learning_rate: float = 1e-3
-    weight_decay: float = 0.0
+    weight_decay: float = 1e-6
     channel_width: int = 32
-    depth: int = 2
-    kernel_size: int = 3
+    depth: tuple[int, ...] = (1, 1, 1)
+    kernel_size: int = 13
     dropout: float = 0.0
     random_state: int = 0
     expected_frequency: str | pd.Timedelta | None = "5min"
@@ -58,8 +58,10 @@ class ModernTCNConfig:
             raise ValueError("weight_decay must be >= 0.")
         if self.channel_width < 1:
             raise ValueError("channel_width must be >= 1.")
-        if self.depth < 1:
-            raise ValueError("depth must be >= 1.")
+        normalized_depth = tuple(int(value) for value in self.depth)
+        if not normalized_depth or any(value < 1 for value in normalized_depth):
+            raise ValueError("depth must contain positive stage depths.")
+        object.__setattr__(self, "depth", normalized_depth)
         if self.kernel_size < 1:
             raise ValueError("kernel_size must be >= 1.")
         if not 0.0 <= self.dropout < 1.0:
@@ -594,7 +596,7 @@ def _build_modern_tcn_network(
     *,
     n_features: int,
     channel_width: int,
-    depth: int,
+    depth: tuple[int, ...],
     kernel_size: int,
     dropout: float,
 ):
@@ -617,7 +619,10 @@ def _build_modern_tcn_network(
         def __init__(self) -> None:
             super().__init__()
             self.input_projection = nn.Conv1d(n_features, channel_width, kernel_size=1)
-            self.blocks = nn.Sequential(*[_TemporalBlock(channel_width) for _ in range(depth)])
+            total_depth = sum(depth)
+            self.blocks = nn.Sequential(
+                *[_TemporalBlock(channel_width) for _ in range(total_depth)]
+            )
             self.output_projection = nn.Linear(channel_width, n_features)
 
         def forward(self, x):

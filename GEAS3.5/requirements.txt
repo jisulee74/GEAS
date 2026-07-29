@@ -4,5 +4,6 @@ pyarrow
 pymysql
 PyYAML
 scikit-learn
+joblib
 matplotlib
 pytest

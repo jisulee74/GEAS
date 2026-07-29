@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 import json
-import pickle
+from joblib.externals import cloudpickle as pickle
 from pathlib import Path
 from typing import Any, Mapping
 

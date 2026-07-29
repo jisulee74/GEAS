@@ -22,7 +22,6 @@ from geas35.models.transition.base import (
     TransitionPrediction,
 )
 from geas35.models.transition.boosting_models import (
-    CatBoostTransitionModel,
     LightGBMTransitionModel,
     XGBoostTransitionModel,
 )
@@ -56,7 +55,6 @@ from geas35.models.transition.features import (
     is_denied_observation_column,
     resolve_transition_feature_schema,
 )
-from geas35.models.transition.deep import TCNTransitionModel
 from geas35.models.transition.inference import (
     LoadedTransitionModel,
     TransitionRewardPrediction,
@@ -97,12 +95,14 @@ from geas35.models.transition.selector import (
     select_transition_model,
 )
 from geas35.models.transition.sklearn_models import (
+    ExtraTreesTransitionModel,
     IndependentTargetTransitionModel,
     KNNTransitionModel,
     LinearRegressionTransitionModel,
     LinearSVRTransitionModel,
     MLPTransitionModel,
     OptionalDependencyError,
+    PersistenceTransitionModel,
 )
 from geas35.models.transition.trainer import (
     DEFAULT_ROLLOUT_HORIZON_STEPS,
@@ -120,7 +120,6 @@ __all__ = [
     "build_selection_strategy",
     "build_transition_candidate_specs",
     "build_transition_model",
-    "CatBoostTransitionModel",
     "CustomScoreStrategy",
     "DEFAULT_HORIZON_WEIGHTS",
     "DEFAULT_METADATA_COLUMNS",
@@ -163,6 +162,7 @@ __all__ = [
     "build_transition_dataset_from_rl_path",
     "evaluate_transition_model_one_step",
     "evaluate_transition_predictions",
+    "ExtraTreesTransitionModel",
     "HumidityPriorityStrategy",
     "infer_action_columns",
     "infer_observation_columns",
@@ -180,6 +180,7 @@ __all__ = [
     "MeanRmseStrategy",
     "MLPTransitionModel",
     "OptionalDependencyError",
+    "PersistenceTransitionModel",
     "PolicyActionProvider",
     "predict_next_observation",
     "predict_next_observation_reward",
@@ -191,7 +192,6 @@ __all__ = [
     "save_transition_model_artifact",
     "SelectionMetricStrategy",
     "select_transition_model",
-    "TCNTransitionModel",
     "TemperaturePriorityStrategy",
     "train_transition_candidates",
     "transition_model_artifact",

@@ -40,38 +40,6 @@ class LightGBMTransitionModel(IndependentTargetTransitionModel):
         return lightgbm.LGBMRegressor(**self.estimator_kwargs)
 
 
-class CatBoostTransitionModel(IndependentTargetTransitionModel):
-    """Independent-target wrapper around catboost.CatBoostRegressor."""
-
-    model_name = "catboost"
-    capabilities = TransitionModelCapabilities(
-        multi_output_strategy="independent",
-        optional_dependency="catboost",
-    )
-
-    def __init__(self, **estimator_kwargs: Any) -> None:
-        self.estimator_kwargs = {
-            "verbose": False,
-            "allow_writing_files": False,
-            **dict(estimator_kwargs),
-        }
-        super().__init__(
-            self._build_estimator,
-            model_name=self.model_name,
-            capabilities=self.capabilities,
-        )
-
-    def _build_estimator(self) -> Any:
-        try:
-            catboost = importlib.import_module("catboost")
-        except ModuleNotFoundError as exc:
-            raise optional_dependency_unavailable(
-                "CatBoostTransitionModel",
-                "catboost",
-            ) from exc
-        return catboost.CatBoostRegressor(**self.estimator_kwargs)
-
-
 class XGBoostTransitionModel(IndependentTargetTransitionModel):
     """Independent-target wrapper around xgboost.XGBRegressor."""
 
@@ -101,7 +69,6 @@ class XGBoostTransitionModel(IndependentTargetTransitionModel):
 
 
 __all__ = [
-    "CatBoostTransitionModel",
     "LightGBMTransitionModel",
     "XGBoostTransitionModel",
 ]

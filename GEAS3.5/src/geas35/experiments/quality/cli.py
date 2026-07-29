@@ -89,6 +89,11 @@ def run_from_config(
         loaded
     )
     experiment_config = loaded.experiment_config
+    crop_name = experiment_config.output_root.name
+    print(
+        f"[{crop_name}] 전체 파이프라인 시작",
+        flush=True,
+    )
 
     hpo_result = run_quality_hpo(
         config=quality_hpo_config_from_experiment_config(experiment_config),
@@ -97,6 +102,7 @@ def run_from_config(
         observation_columns=observation_columns,
         registry=registry,
     )
+    print(f"[{crop_name}] 전체 모델 HPO 완료", flush=True)
     threshold_result = run_quality_threshold_calibration(
         config=quality_threshold_config_from_experiment_config(experiment_config),
         hpo_result=hpo_result,
@@ -105,6 +111,7 @@ def run_from_config(
         observation_columns=observation_columns,
         registry=registry,
     )
+    print(f"[{crop_name}] 전체 모델 Threshold Calibration 완료", flush=True)
     evaluation_result = run_quality_validation_test_evaluation(
         config=quality_evaluation_config_from_experiment_config(experiment_config),
         calibration_result=threshold_result,
@@ -112,6 +119,7 @@ def run_from_config(
         test_df=test_df,
         observation_columns=observation_columns,
     )
+    print(f"[{crop_name}] 전체 모델 Validation/Test 평가 완료", flush=True)
     online_benchmark_result = run_quality_online_benchmark(
         config=quality_online_benchmark_config_from_experiment_config(
             experiment_config
@@ -121,11 +129,16 @@ def run_from_config(
         test_df=test_df,
         observation_columns=observation_columns,
     )
+    print(f"[{crop_name}] 전체 모델 Online Benchmark 완료", flush=True)
+    print(f"[{crop_name}] Report 생성 시작", flush=True)
     report_result = run_quality_report_generation(
         config=quality_report_config_from_experiment_config(experiment_config),
         evaluation_result=evaluation_result,
         online_benchmark_result=online_benchmark_result,
     )
+    print(f"[{crop_name}] Report 생성 완료", flush=True)
+    if loaded.generate_figures:
+        print(f"[{crop_name}] PNG Figure 생성 시작", flush=True)
     visualization_result = (
         run_quality_visualization_generation(
             config=quality_visualization_config_from_experiment_config(
@@ -135,6 +148,9 @@ def run_from_config(
         if loaded.generate_figures
         else None
     )
+    if visualization_result is not None:
+        print(f"[{crop_name}] PNG Figure 생성 완료", flush=True)
+    print(f"[{crop_name}] Artifact 무결성 검사 시작", flush=True)
     integrity_config = quality_artifact_integrity_config_from_experiment_config(
         experiment_config
     )
@@ -143,6 +159,12 @@ def run_from_config(
         require_figures=loaded.generate_figures,
     )
     integrity_result = run_quality_artifact_integrity_check(config=integrity_config)
+    print(
+        f"[{crop_name}] Artifact 무결성 검사 완료: "
+        f"passed={integrity_result.passed}",
+        flush=True,
+    )
+    print(f"[{crop_name}] 전체 파이프라인 완료", flush=True)
     return QualityEndToEndExperimentResult(
         output_root=str(experiment_config.output_root),
         loaded_config=loaded,

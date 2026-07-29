@@ -252,11 +252,10 @@ def _check_figures(
         errors.append("Missing figures directory.")
         return
     for stem in FIGURE_STEMS:
-        for suffix in ("png", "pdf"):
-            path = figures_dir / f"{stem}.{suffix}"
-            checked.append(path)
-            if not path.exists():
-                errors.append(f"Missing figure artifact: figures/{stem}.{suffix}")
+        path = figures_dir / f"{stem}.png"
+        checked.append(path)
+        if not path.exists():
+            errors.append(f"Missing figure artifact: figures/{stem}.png")
     manifest = payloads.get("visualization_manifest.json", {})
     for figure_path in manifest.get("figure_paths", []) if isinstance(manifest, dict) else []:
         path = Path(str(figure_path))

@@ -22,16 +22,16 @@ from geas35.models.quality.modern_tcn import (
 class PatchTSTConfig:
     """Configuration for the initial PatchTST quality model implementation."""
 
-    lookback: int = 6
-    mask_fraction: float = 0.2
+    lookback: int = 288
+    mask_fraction: float = 0.3
     batch_size: int = 32
-    epochs: int = 20
+    epochs: int = 100
     learning_rate: float = 1e-3
-    weight_decay: float = 0.0
-    patch_length: int = 3
-    patch_stride: int = 1
+    weight_decay: float = 1e-6
+    patch_length: int = 8
+    patch_stride: int | None = None
     transformer_depth: int = 2
-    attention_heads: int = 2
+    attention_heads: int = 4
     embedding_dim: int = 32
     dropout: float = 0.0
     random_state: int = 0
@@ -54,7 +54,9 @@ class PatchTSTConfig:
             raise ValueError("patch_length must be >= 1.")
         if self.patch_length > self.lookback:
             raise ValueError("patch_length must be <= lookback.")
-        if self.patch_stride < 1:
+        derived_stride = self.patch_length // 2
+        object.__setattr__(self, "patch_stride", int(derived_stride))
+        if derived_stride < 1:
             raise ValueError("patch_stride must be >= 1.")
         if self.transformer_depth < 1:
             raise ValueError("transformer_depth must be >= 1.")
@@ -75,7 +77,7 @@ class PatchTSTConfig:
         return cls(**filtered)
 
     def to_artifact(self) -> dict[str, object]:
-        return dict(asdict(self))
+        return {**asdict(self), "d_ff": 2 * self.embedding_dim}
 
 
 class PatchTSTQualityModel(ModernTCNQualityModel):
@@ -144,7 +146,7 @@ def _build_patch_tst_network(
             encoder_layer = nn.TransformerEncoderLayer(
                 d_model=embedding_dim,
                 nhead=attention_heads,
-                dim_feedforward=max(embedding_dim * 4, 4),
+                dim_feedforward=max(embedding_dim * 2, 4),
                 dropout=dropout,
                 activation="gelu",
                 batch_first=True,

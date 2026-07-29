@@ -76,7 +76,7 @@ class QualityExperimentConfig:
 
     output_root: Path
     models: tuple[ModelExperimentSpec, ...]
-    threshold_candidates: tuple[float, ...]
+    threshold_candidate_count: int
     early_stopping: EarlyStoppingConfig = field(default_factory=EarlyStoppingConfig)
     mask_fraction: float = 0.1
     anomaly_fraction: float = 0.1
@@ -191,11 +191,12 @@ def run_quality_model_experiment(
             config.early_stopping,
         )
         threshold_result = GridSearchThresholdOptimizer(
-            config.threshold_candidates,
+            candidate_count=config.threshold_candidate_count,
             anomaly_fraction=config.anomaly_fraction,
             anomaly_scale=config.anomaly_scale,
             mask_fraction=config.mask_fraction,
             random_state=config.evaluation_random_seed,
+            progress_context=f"{Path(config.output_root).name}][{model_spec.model_name}",
         ).optimize(final_model, validation_df, columns)
         write_json(
             model_dir / "threshold_calibration.json",
@@ -383,7 +384,8 @@ def _config_payload(config: QualityExperimentConfig, columns: tuple[str, ...]) -
     return {
         "observation_columns": list(columns),
         "models": [asdict(model) for model in config.models],
-        "threshold_candidates": list(config.threshold_candidates),
+        "threshold_candidate_generation": "validation_reconstruction_error_linspace",
+        "threshold_candidate_count": config.threshold_candidate_count,
         "early_stopping": config.early_stopping.to_artifact(),
         "mask_fraction": config.mask_fraction,
         "anomaly_fraction": config.anomaly_fraction,
@@ -402,6 +404,11 @@ def _threshold_payload(result: ThresholdOptimizationResult) -> dict[str, Any]:
         "best_threshold": result.best_threshold,
         "best_objective_value": result.best_objective_value,
         "objective_metric": result.objective_metric,
+        "candidate_generation": result.candidate_generation,
+        "validation_error_min": result.validation_error_min,
+        "validation_error_max": result.validation_error_max,
+        "requested_candidate_count": result.requested_candidate_count,
+        "actual_candidate_count": result.actual_candidate_count,
         "threshold_calibration_after_hpo": True,
         "threshold_is_hpo_parameter": False,
         "precision": metrics.precision,

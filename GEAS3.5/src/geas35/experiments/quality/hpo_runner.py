@@ -121,6 +121,12 @@ def run_model_hpo(
     columns = tuple(observation_columns)
     model_dir = Path(output_root) / model_spec.model_name
     model_dir.mkdir(parents=True, exist_ok=True)
+    crop_name = Path(output_root).name
+    print(
+        f"[{crop_name}][{model_spec.model_name}] HPO 시작 "
+        f"({model_spec.hpo_budget} trials)",
+        flush=True,
+    )
     candidates = RandomSearchCandidateGenerator(
         model_name=model_spec.model_name,
         search_space=SearchSpace.from_config(model_spec.search_space),
@@ -131,12 +137,18 @@ def run_model_hpo(
         candidates,
         implementation.train_candidate,
         early_stopping=early_stopping,
+        progress_context=f"{crop_name}][{model_spec.model_name}",
     ).optimize(train_df, validation_df, columns)
     _write_json(model_dir / "hpo_results.json", hpo_result.to_artifact())
     _write_json(model_dir / "best_config.json", hpo_result.best_candidate.to_artifact())
     _write_training_history_csv(
         model_dir / "training_history.csv",
         hpo_result.best_result.training_history,
+    )
+    print(
+        f"[{crop_name}][{model_spec.model_name}] HPO 완료: "
+        f"best={hpo_result.best_candidate.name}",
+        flush=True,
     )
     return ModelHPOResult(
         model_name=model_spec.model_name,

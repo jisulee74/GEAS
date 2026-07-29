@@ -25,7 +25,7 @@ def main(argv: list[str] | None = None) -> int:
     _ensure_src_on_path()
     args = [] if argv is None else list(argv)
     if "--config" not in args:
-        args = ["--config", str(_experiment_root() / "configs" / "default.yaml"), *args]
+        args = ["--config", str(_experiment_root() / "configs" / "cucumber.yaml"), *args]
     os.chdir(_experiment_root())
 
     from geas35.experiments.quality.cli import main as quality_main

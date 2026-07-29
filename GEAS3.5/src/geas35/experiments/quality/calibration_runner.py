@@ -36,7 +36,7 @@ class QualityThresholdCalibrationConfig:
     """Configuration required by the Step 3 threshold calibration runner."""
 
     output_root: Path
-    threshold_candidates: tuple[float, ...]
+    threshold_candidate_count: int
     early_stopping: EarlyStoppingConfig = field(default_factory=EarlyStoppingConfig)
     objective_metric: str = "f1_score"
     mask_fraction: float = 0.1
@@ -124,6 +124,12 @@ def run_model_threshold_calibration(
     """Calibrate one model's threshold after fixing its HPO best config."""
 
     columns = tuple(observation_columns)
+    crop_name = Path(output_root).name
+    print(
+        f"[{crop_name}][{model_hpo_result.model_name}] "
+        "Threshold Calibration 시작",
+        flush=True,
+    )
     model_dir = Path(output_root) / model_hpo_result.model_name
     model_dir.mkdir(parents=True, exist_ok=True)
     model = implementation.build_model(model_hpo_result.hpo_result.best_candidate)
@@ -135,13 +141,14 @@ def run_model_threshold_calibration(
         config.early_stopping,
     )
     threshold_result = GridSearchThresholdOptimizer(
-        config.threshold_candidates,
+        candidate_count=config.threshold_candidate_count,
         objective_metric=config.objective_metric,
         anomaly_fraction=config.anomaly_fraction,
         anomaly_scale=config.anomaly_scale,
         mask_fraction=config.mask_fraction,
         random_state=config.random_state,
         include_masking=config.include_masking,
+        progress_context=f"{crop_name}][{model_hpo_result.model_name}",
     ).optimize(model, validation_df, columns)
     _write_json(
         model_dir / "threshold_calibration.json",
@@ -156,6 +163,15 @@ def run_model_threshold_calibration(
             "source": "quality_threshold_calibration",
             "hpo_best_candidate": model_hpo_result.hpo_result.best_candidate.to_artifact(),
         },
+    )
+    print(
+        f"[{crop_name}][{model_hpo_result.model_name}] "
+        f"Threshold Calibration 완료: "
+        f"range=[{threshold_result.validation_error_min}, "
+        f"{threshold_result.validation_error_max}], "
+        f"best_threshold={threshold_result.best_threshold}, "
+        f"best_f1={threshold_result.best_objective_value}",
+        flush=True,
     )
     return ModelThresholdCalibrationResult(
         model_name=model_hpo_result.model_name,
@@ -174,7 +190,7 @@ def quality_threshold_config_from_experiment_config(
 
     return QualityThresholdCalibrationConfig(
         output_root=Path(config.output_root),
-        threshold_candidates=tuple(config.threshold_candidates),
+        threshold_candidate_count=int(config.threshold_candidate_count),
         early_stopping=config.early_stopping,
         mask_fraction=config.mask_fraction,
         anomaly_fraction=config.anomaly_fraction,
@@ -223,7 +239,8 @@ def _config_payload(
     return {
         "stage": "quality_model_threshold_calibration",
         "observation_columns": list(columns),
-        "threshold_candidates": list(config.threshold_candidates),
+        "threshold_candidate_generation": "validation_reconstruction_error_linspace",
+        "threshold_candidate_count": config.threshold_candidate_count,
         "early_stopping": config.early_stopping.to_artifact(),
         "objective_metric": config.objective_metric,
         "mask_fraction": config.mask_fraction,
@@ -260,6 +277,11 @@ def _threshold_payload(result: ThresholdOptimizationResult) -> dict[str, Any]:
         "best_threshold": result.best_threshold,
         "best_objective_value": result.best_objective_value,
         "objective_metric": result.objective_metric,
+        "candidate_generation": result.candidate_generation,
+        "validation_error_min": result.validation_error_min,
+        "validation_error_max": result.validation_error_max,
+        "requested_candidate_count": result.requested_candidate_count,
+        "actual_candidate_count": result.actual_candidate_count,
         "threshold_calibration_after_hpo": True,
         "threshold_is_hpo_parameter": False,
         "precision": metrics.precision,
