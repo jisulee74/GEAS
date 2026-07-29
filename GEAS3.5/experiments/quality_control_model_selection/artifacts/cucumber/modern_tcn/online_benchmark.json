@@ -1,0 +1,20 @@
+{
+  "model_name": "modern_tcn",
+  "validation": {
+    "inference_latency_ms_per_row": 0.43179345223849763,
+    "peak_memory_bytes": 65876929,
+    "model_size_bytes": 1261032,
+    "measured_rows": 4896,
+    "repeats": 3
+  },
+  "test": {
+    "inference_latency_ms_per_row": 0.4613093837104433,
+    "peak_memory_bytes": 72787608,
+    "model_size_bytes": 1261032,
+    "measured_rows": 5472,
+    "repeats": 3
+  },
+  "online_benchmark_included": true,
+  "automatic_best_model_selection": false,
+  "test_used_for_selection": false
+}

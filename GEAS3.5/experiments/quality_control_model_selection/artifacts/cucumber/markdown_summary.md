@@ -1,0 +1,11 @@
+# GEAS AI Quality Model Experiment Summary
+
+This report does not automatically select a best model.
+
+Online benchmark included: True
+
+| Model | Validation RMSE | Validation MAE | Validation F1 | Validation PR-AUC | Test RMSE | Test F1 | Validation Latency ms/row |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| modern_tcn | 27.017356609105576 | 6.167693524946182 | 0.49662832209440705 | 0.35477127720323215 | 35.00339564255299 | 0.4680447787715453 | 0.43179345223849763 |
+| timesnet | 28.1162418749483 | 5.886162802928861 | 0.4841573867854492 | 0.35658782092653246 | 35.499161837937876 | 0.4793514997887621 | 0.4376413956008576 |
+| patch_tst | 25.38510484397972 | 5.4660106088566485 | 0.5498468393205235 | 0.424452720089136 | 34.341744483216324 | 0.542247219736674 | 0.4538569892584174 |

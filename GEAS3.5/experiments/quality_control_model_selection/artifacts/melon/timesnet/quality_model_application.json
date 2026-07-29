@@ -1,0 +1,60 @@
+{
+  "stage": "quality_model_application_artifact",
+  "model_name": "timesnet",
+  "model_pickle_path": "quality_model.pkl",
+  "artifact_format": "pickle",
+  "threshold": 30.3278406966338,
+  "observation_columns": [
+    "in_medium_temp1",
+    "in_medium_temp2",
+    "in_temp",
+    "in_temp2",
+    "in_water_hot",
+    "in_water_cold",
+    "in_hum",
+    "in_hum2",
+    "in_medium_hum1",
+    "in_medium_hum2",
+    "in_co2",
+    "in_co2_2",
+    "in_medium_ec1",
+    "in_medium_ec2",
+    "etc_blackout",
+    "etc_plc_abnorm",
+    "etc_plc_norm",
+    "out_temp",
+    "out_hum",
+    "out_winddirec",
+    "out_windsp",
+    "out_light",
+    "out_light_sum",
+    "out_rainfall",
+    "out_rain",
+    "out_airpress"
+  ],
+  "imputation_confidence_threshold": null,
+  "automatic_best_model_selection": false,
+  "test_used_for_selection": false,
+  "metadata": {
+    "source": "quality_threshold_calibration",
+    "hpo_best_candidate": {
+      "name": "timesnet_seed42_candidate038",
+      "common": {
+        "lookback": 288,
+        "mask_fraction": 0.3,
+        "batch_size": 64,
+        "epochs": 100,
+        "learning_rate": 0.0024463853722533654,
+        "weight_decay": 0.00021108940555349793,
+        "dropout": 0.05993269549801728,
+        "random_state": 42,
+        "expected_frequency": "5min"
+      },
+      "model_specific": {
+        "temporal_blocks": 3,
+        "top_k_periods": 5,
+        "period_embedding_dim": 32
+      }
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "name": "modern_tcn_seed42_candidate022",
+  "common": {
+    "lookback": 288,
+    "mask_fraction": 0.3,
+    "batch_size": 64,
+    "epochs": 100,
+    "learning_rate": 0.00014753281949461195,
+    "weight_decay": 4.6049997258974536e-05,
+    "dropout": 0.012484252158567744,
+    "random_state": 42,
+    "expected_frequency": "5min"
+  },
+  "model_specific": {
+    "channel_width": 32,
+    "depth": [
+      1,
+      1,
+      1
+    ],
+    "kernel_size": 13
+  }
+}

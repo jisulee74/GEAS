@@ -1,0 +1,68 @@
+{
+  "stage": "best_hyperparameter_configurations",
+  "threshold_calibration_included": false,
+  "models": {
+    "modern_tcn": {
+      "name": "modern_tcn_seed42_candidate009",
+      "common": {
+        "lookback": 288,
+        "mask_fraction": 0.3,
+        "batch_size": 128,
+        "epochs": 100,
+        "learning_rate": 0.00010344858139522908,
+        "weight_decay": 0.001405068540427176,
+        "dropout": 0.19945525697760963,
+        "random_state": 42,
+        "expected_frequency": "5min"
+      },
+      "model_specific": {
+        "channel_width": 32,
+        "depth": [
+          1,
+          1,
+          1
+        ],
+        "kernel_size": 51
+      }
+    },
+    "timesnet": {
+      "name": "timesnet_seed42_candidate038",
+      "common": {
+        "lookback": 288,
+        "mask_fraction": 0.3,
+        "batch_size": 64,
+        "epochs": 100,
+        "learning_rate": 0.0024463853722533654,
+        "weight_decay": 0.00021108940555349793,
+        "dropout": 0.05993269549801728,
+        "random_state": 42,
+        "expected_frequency": "5min"
+      },
+      "model_specific": {
+        "temporal_blocks": 3,
+        "top_k_periods": 5,
+        "period_embedding_dim": 32
+      }
+    },
+    "patch_tst": {
+      "name": "patch_tst_seed42_candidate007",
+      "common": {
+        "lookback": 288,
+        "mask_fraction": 0.4,
+        "batch_size": 128,
+        "epochs": 100,
+        "learning_rate": 0.0004214376026129218,
+        "weight_decay": 0.0021332374807314577,
+        "dropout": 0.24142930724904055,
+        "random_state": 42,
+        "expected_frequency": "5min"
+      },
+      "model_specific": {
+        "patch_length": 32,
+        "transformer_depth": 3,
+        "attention_heads": 16,
+        "embedding_dim": 64
+      }
+    }
+  }
+}

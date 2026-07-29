@@ -1,0 +1,68 @@
+{
+  "stage": "quality_model_online_benchmark",
+  "online_benchmark_included": true,
+  "automatic_best_model_selection": false,
+  "test_used_for_selection": false,
+  "models": {
+    "modern_tcn": {
+      "model_name": "modern_tcn",
+      "validation": {
+        "inference_latency_ms_per_row": 0.3983195915463425,
+        "peak_memory_bytes": 72977617,
+        "model_size_bytes": 1261032,
+        "measured_rows": 6048,
+        "repeats": 3
+      },
+      "test": {
+        "inference_latency_ms_per_row": 0.4126036121815911,
+        "peak_memory_bytes": 83222204,
+        "model_size_bytes": 1261032,
+        "measured_rows": 6624,
+        "repeats": 3
+      },
+      "online_benchmark_included": true,
+      "automatic_best_model_selection": false,
+      "test_used_for_selection": false
+    },
+    "timesnet": {
+      "model_name": "timesnet",
+      "validation": {
+        "inference_latency_ms_per_row": 0.4239543099851533,
+        "peak_memory_bytes": 67222136,
+        "model_size_bytes": 366312,
+        "measured_rows": 6048,
+        "repeats": 3
+      },
+      "test": {
+        "inference_latency_ms_per_row": 0.4295516602062109,
+        "peak_memory_bytes": 77468257,
+        "model_size_bytes": 366312,
+        "measured_rows": 6624,
+        "repeats": 3
+      },
+      "online_benchmark_included": true,
+      "automatic_best_model_selection": false,
+      "test_used_for_selection": false
+    },
+    "patch_tst": {
+      "model_name": "patch_tst",
+      "validation": {
+        "inference_latency_ms_per_row": 0.40650830672506894,
+        "peak_memory_bytes": 73120145,
+        "model_size_bytes": 621672,
+        "measured_rows": 6048,
+        "repeats": 3
+      },
+      "test": {
+        "inference_latency_ms_per_row": 0.42430350691756463,
+        "peak_memory_bytes": 83311974,
+        "model_size_bytes": 621672,
+        "measured_rows": 6624,
+        "repeats": 3
+      },
+      "online_benchmark_included": true,
+      "automatic_best_model_selection": false,
+      "test_used_for_selection": false
+    }
+  }
+}
