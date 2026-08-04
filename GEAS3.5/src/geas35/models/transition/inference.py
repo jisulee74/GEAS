@@ -1,4 +1,4 @@
-"""Inference helpers for selected GEAS transition model artifacts."""
+"""Inference helpers for explicit GEAS transition candidate artifacts."""
 
 from __future__ import annotations
 
@@ -14,7 +14,6 @@ from geas35.models.crop_specific import normalize_required_crop
 from geas35.models.transition.artifacts import (
     TRANSITION_MANIFEST_FILENAME,
     TRANSITION_MODEL_FILENAME,
-    load_selected_transition_model_manifest,
     load_transition_model_artifact,
 )
 from geas35.models.transition.base import (
@@ -31,12 +30,11 @@ from geas35.rl import (
 
 @dataclass(frozen=True)
 class LoadedTransitionModel:
-    """Selected transition model artifact loaded for inference."""
+    """Explicit transition candidate artifact loaded for inference."""
 
     crop: str
     model_name: str
     model: BaseTransitionModel
-    selected_manifest: Mapping[str, Any]
     model_artifact_dir: Path
     model_manifest: Mapping[str, Any] | None = None
 
@@ -51,53 +49,47 @@ class TransitionRewardPrediction:
     reward_terms: dict[str, float]
 
 
-def load_selected_transition_model(
+def load_transition_candidate_model(
     models_root: Path | str,
     crop: str,
+    model_name: str,
 ) -> LoadedTransitionModel:
-    """Load the selected transition model for a crop."""
+    """Load a transition candidate by explicit crop and model name."""
 
     crop_key = normalize_required_crop(crop)
-    selected_manifest = load_selected_transition_model_manifest(models_root, crop_key)
-    model_name = str(selected_manifest.get("selected_model_name", "")).strip()
-    if not model_name:
-        raise ValueError("Selected transition manifest is missing selected_model_name.")
-
-    artifact_dir = _selected_artifact_dir(
-        models_root,
-        crop_key,
-        model_name,
-        selected_manifest,
-    )
-    if artifact_dir is None:
-        model = load_transition_model_artifact(
-            models_root,
-            crop_key,
-            model_name=model_name,
-        )
-        artifact_dir = Path(models_root) / crop_key / model_name
-    else:
-        model_path = artifact_dir / TRANSITION_MODEL_FILENAME
-        if not model_path.exists():
-            raise FileNotFoundError(f"No transition model pickle: {model_path}")
-        with model_path.open("rb") as f:
-            model = pickle.load(f)
-    if not isinstance(model, BaseTransitionModel):
-        raise TypeError("Loaded artifact is not a BaseTransitionModel.")
-
-    model_manifest_path = artifact_dir / TRANSITION_MANIFEST_FILENAME
-    model_manifest = (
-        json.loads(model_manifest_path.read_text(encoding="utf-8"))
-        if model_manifest_path.exists()
-        else None
-    )
-    return LoadedTransitionModel(
+    name = str(model_name).strip()
+    if not name:
+        raise ValueError("model_name is required for transition candidate loading.")
+    model = load_transition_model_artifact(models_root, crop_key, model_name=name)
+    artifact_dir = Path(models_root) / crop_key / name
+    return _loaded_transition_model(
         crop=crop_key,
+        model_name=name,
+        model=model,
+        artifact_dir=artifact_dir,
+    )
+
+
+def load_transition_model_from_artifact_dir(
+    artifact_dir: Path | str,
+) -> LoadedTransitionModel:
+    """Load a transition candidate directly from its artifact directory."""
+
+    path = Path(artifact_dir)
+    model_path = path / TRANSITION_MODEL_FILENAME
+    if not model_path.exists():
+        raise FileNotFoundError(f"No transition model pickle: {model_path}")
+    with model_path.open("rb") as f:
+        model = pickle.load(f)
+    manifest = _model_manifest(path)
+    crop = str(manifest.get("crop", path.parent.name)) if manifest else path.parent.name
+    model_name = str(manifest.get("model_name", path.name)) if manifest else path.name
+    return _loaded_transition_model(
+        crop=normalize_required_crop(crop),
         model_name=model_name,
         model=model,
-        selected_manifest=selected_manifest,
-        model_artifact_dir=artifact_dir,
-        model_manifest=model_manifest,
+        artifact_dir=path,
+        model_manifest=manifest,
     )
 
 
@@ -164,19 +156,33 @@ def predict_next_observation_reward(
     )
 
 
-def _selected_artifact_dir(
-    models_root: Path | str,
+def _loaded_transition_model(
+    *,
     crop: str,
     model_name: str,
-    selected_manifest: Mapping[str, Any],
-) -> Path | None:
-    metadata = selected_manifest.get("metadata", {})
-    if isinstance(metadata, Mapping):
-        artifacts = metadata.get("candidate_artifacts", {})
-        if isinstance(artifacts, Mapping) and model_name in artifacts:
-            return Path(str(artifacts[model_name]))
-    fallback = Path(models_root) / crop / model_name
-    return fallback if fallback.exists() else None
+    model: Any,
+    artifact_dir: Path,
+    model_manifest: Mapping[str, Any] | None = None,
+) -> LoadedTransitionModel:
+    if not isinstance(model, BaseTransitionModel):
+        raise TypeError("Loaded artifact is not a BaseTransitionModel.")
+    manifest = model_manifest if model_manifest is not None else _model_manifest(artifact_dir)
+    return LoadedTransitionModel(
+        crop=crop,
+        model_name=model_name,
+        model=model,
+        model_artifact_dir=artifact_dir,
+        model_manifest=manifest,
+    )
+
+
+def _model_manifest(artifact_dir: Path) -> Mapping[str, Any] | None:
+    model_manifest_path = artifact_dir / TRANSITION_MANIFEST_FILENAME
+    return (
+        json.loads(model_manifest_path.read_text(encoding="utf-8"))
+        if model_manifest_path.exists()
+        else None
+    )
 
 
 def _inference_frame(
@@ -211,7 +217,8 @@ __all__ = [
     "LoadedTransitionModel",
     "TransitionRewardPrediction",
     "build_predicted_next_row",
-    "load_selected_transition_model",
+    "load_transition_candidate_model",
+    "load_transition_model_from_artifact_dir",
     "predict_next_observation",
     "predict_next_observation_reward",
 ]

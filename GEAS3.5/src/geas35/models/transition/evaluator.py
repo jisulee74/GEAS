@@ -82,6 +82,12 @@ def evaluate_transition_predictions(
         pred_df,
         target_columns=columns,
     )
+    target_metrics = _with_normalized_target_metrics(
+        true_df,
+        target_metrics,
+        columns,
+        normalization_scales=normalization_scales,
+    )
     aggregate_metrics = _aggregate_metrics(
         true_df,
         target_metrics,
@@ -158,7 +164,7 @@ def _aggregate_metrics(
 ) -> dict[str, float]:
     aggregate = {
         f"mean_{metric_key}": _mean_metric(target_metrics, metric_key, target_columns)
-        for metric_key in ("r2", "mae", "rmse", "q90", "cvar90")
+        for metric_key in ("r2", "mae", "rmse", "q90", "cvar90", "nrmse")
     }
     normalized_rmse_values = []
     for column in target_columns:
@@ -171,6 +177,7 @@ def _aggregate_metrics(
         if np.isfinite(rmse) and np.isfinite(scale) and scale > 0.0:
             normalized_rmse_values.append(rmse / scale)
     aggregate["normalized_mean_rmse"] = _finite_mean(normalized_rmse_values)
+    aggregate["mean_nrmse"] = aggregate["normalized_mean_rmse"]
 
     if "obs_indoor_temp_c" in target_metrics:
         aggregate["indoor_temp_rmse"] = float(
@@ -200,8 +207,33 @@ def _target_group_metrics(
             continue
         out[group_name] = {
             f"mean_{metric_key}": _mean_metric(target_metrics, metric_key, present)
-            for metric_key in ("r2", "mae", "rmse", "q90", "cvar90")
+            for metric_key in ("r2", "mae", "rmse", "q90", "cvar90", "nrmse")
         }
+    return out
+
+
+def _with_normalized_target_metrics(
+    true_df: pd.DataFrame,
+    target_metrics: Mapping[str, Mapping[str, float]],
+    target_columns: Sequence[str],
+    *,
+    normalization_scales: Mapping[str, float] | None,
+) -> dict[str, dict[str, float]]:
+    out: dict[str, dict[str, float]] = {}
+    for column in target_columns:
+        metrics = dict(target_metrics[column])
+        scale = (
+            float(normalization_scales[column])
+            if normalization_scales is not None and column in normalization_scales
+            else _target_scale(true_df[column])
+        )
+        rmse = float(metrics["rmse"])
+        metrics["nrmse"] = (
+            rmse / scale
+            if np.isfinite(rmse) and np.isfinite(scale) and scale > 0.0
+            else float("nan")
+        )
+        out[str(column)] = metrics
     return out
 
 

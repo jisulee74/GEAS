@@ -187,7 +187,7 @@ class TransitionRolloutSimulator:
             truth=truth,
             actions=actions_frame,
             errors=errors,
-            metrics=_rollout_metrics(errors),
+            metrics=_rollout_metrics(predictions, errors),
         )
 
 
@@ -236,17 +236,27 @@ def _update_previous_action_observations(
             row[obs_column] = float(value)
 
 
-def _rollout_metrics(errors: pd.DataFrame) -> dict[str, float]:
+def _rollout_metrics(predictions: pd.DataFrame, errors: pd.DataFrame) -> dict[str, float]:
     values = errors.to_numpy(dtype=float)
+    prediction_values = predictions.to_numpy(dtype=float)
     abs_values = np.abs(values)
     final_abs = abs_values[-1] if len(abs_values) else np.asarray([], dtype=float)
     step_mae = np.nanmean(abs_values, axis=1) if len(abs_values) else np.asarray([])
+    nan_inf_count = int(np.size(prediction_values) - np.isfinite(prediction_values).sum())
+    total_prediction_values = int(np.size(prediction_values))
     metrics = {
         "trajectory_mae": _finite_mean(abs_values.reshape(-1)),
         "trajectory_rmse": _finite_rmse(values.reshape(-1)),
         "final_step_mae": _finite_mean(final_abs),
         "final_step_rmse": _finite_rmse(values[-1] if len(values) else []),
         "drift_slope_mae": _drift_slope(step_mae),
+        "physical_violation_rate": _physical_violation_rate(predictions),
+        "nan_inf_count": float(nan_inf_count),
+        "nan_inf_rate": (
+            float(nan_inf_count / total_prediction_values)
+            if total_prediction_values
+            else 0.0
+        ),
     }
     for column in errors.columns:
         col_values = errors[column].to_numpy(dtype=float)
@@ -256,6 +266,30 @@ def _rollout_metrics(errors: pd.DataFrame) -> dict[str, float]:
             float(abs(col_values[-1])) if len(col_values) and np.isfinite(col_values[-1]) else float("nan")
         )
     return metrics
+
+
+def _physical_violation_rate(predictions: pd.DataFrame) -> float:
+    if predictions.empty:
+        return 0.0
+    checks = []
+    for column in predictions.columns:
+        values = pd.to_numeric(predictions[column], errors="coerce").to_numpy(dtype=float)
+        finite = np.isfinite(values)
+        violation = ~finite
+        name = str(column).lower()
+        if "humidity" in name or "hum" in name:
+            violation |= finite & ((values < 0.0) | (values > 100.0))
+        elif "rain_flag" in name:
+            violation |= finite & ((values < 0.0) | (values > 1.0))
+        elif "temp" in name or "dewpoint" in name:
+            violation |= finite & ((values < -60.0) | (values > 80.0))
+        elif "vpd" in name:
+            violation |= finite & (values < 0.0)
+        checks.append(violation)
+    if not checks:
+        return 0.0
+    stacked = np.vstack(checks)
+    return float(np.mean(stacked))
 
 
 def _numeric_value(value: object, *, default: float) -> float:

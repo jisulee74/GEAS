@@ -17,8 +17,11 @@ TRANSITION_MANIFEST_FILENAME = "manifest.json"
 FEATURE_SCHEMA_FILENAME = "feature_schema.json"
 ONE_STEP_METRICS_FILENAME = "one_step_metrics.json"
 ROLLOUT_METRICS_FILENAME = "rollout_metrics.json"
+RESOURCE_METRICS_FILENAME = "resource_metrics.json"
 TRAINING_SUMMARY_FILENAME = "training_summary.json"
-SELECTED_TRANSITION_MODEL_FILENAME = "selected_transition_model.json"
+HPO_RESULTS_FILENAME = "hpo_results.json"
+BEST_CONFIG_FILENAME = "best_config.json"
+TEST_METRICS_FILENAME = "test_metrics.json"
 
 
 @dataclass(frozen=True)
@@ -33,7 +36,11 @@ class TransitionModelArtifact:
     feature_schema_path: Path
     one_step_metrics_path: Path
     rollout_metrics_path: Path
+    resource_metrics_path: Path
     training_summary_path: Path
+    hpo_results_path: Path
+    best_config_path: Path
+    test_metrics_path: Path
 
 
 def transition_model_artifact(
@@ -57,7 +64,11 @@ def transition_model_artifact(
         feature_schema_path=artifact_dir / FEATURE_SCHEMA_FILENAME,
         one_step_metrics_path=artifact_dir / ONE_STEP_METRICS_FILENAME,
         rollout_metrics_path=artifact_dir / ROLLOUT_METRICS_FILENAME,
+        resource_metrics_path=artifact_dir / RESOURCE_METRICS_FILENAME,
         training_summary_path=artifact_dir / TRAINING_SUMMARY_FILENAME,
+        hpo_results_path=artifact_dir / HPO_RESULTS_FILENAME,
+        best_config_path=artifact_dir / BEST_CONFIG_FILENAME,
+        test_metrics_path=artifact_dir / TEST_METRICS_FILENAME,
     )
 
 
@@ -70,7 +81,10 @@ def save_transition_model_artifact(
     feature_schema: Any | None = None,
     one_step_report: Any | None = None,
     rollout_metrics: Mapping[str, Any] | None = None,
+    resource_metrics: Mapping[str, Any] | None = None,
     training_summary: Mapping[str, Any] | None = None,
+    hpo_results: Any | None = None,
+    best_config: Mapping[str, Any] | None = None,
     metadata: Mapping[str, Any] | None = None,
 ) -> TransitionModelArtifact:
     """Persist a fitted transition model and its candidate-level artifacts."""
@@ -105,8 +119,14 @@ def save_transition_model_artifact(
         )
     if rollout_metrics is not None:
         write_json(artifact.rollout_metrics_path, rollout_metrics, convert=True)
+    if resource_metrics is not None:
+        write_json(artifact.resource_metrics_path, resource_metrics, convert=True)
     if training_summary is not None:
         write_json(artifact.training_summary_path, training_summary, convert=True)
+    if hpo_results is not None:
+        write_json(artifact.hpo_results_path, _artifact_payload(hpo_results), convert=True)
+    if best_config is not None:
+        write_json(artifact.best_config_path, best_config, convert=True)
     return artifact
 
 
@@ -128,41 +148,14 @@ def load_transition_model_artifact(
         return pickle.load(f)
 
 
-def save_selected_transition_model(
-    models_root: Path | str,
-    crop: str,
-    selection_result: Any,
-    *,
-    metadata: Mapping[str, Any] | None = None,
+def save_transition_resource_metrics(
+    artifact: TransitionModelArtifact,
+    resource_metrics: Mapping[str, Any],
 ) -> Path:
-    """Write the crop-level selected transition model manifest."""
+    """Write candidate-level transition resource metrics."""
 
-    crop_key = normalize_required_crop(crop)
-    path = Path(models_root) / crop_key / SELECTED_TRANSITION_MODEL_FILENAME
-    payload = _artifact_payload(selection_result)
-    if not isinstance(payload, dict):
-        payload = {"selection_result": payload}
-    payload = {
-        **payload,
-        "crop": crop_key,
-        "created_at_utc": datetime.now(timezone.utc).isoformat(),
-        "metadata": dict(metadata or {}),
-    }
-    write_json(path, payload, convert=True)
-    return path
-
-
-def load_selected_transition_model_manifest(
-    models_root: Path | str,
-    crop: str,
-) -> dict[str, Any]:
-    """Load the crop-level selected transition model manifest."""
-
-    crop_key = normalize_required_crop(crop)
-    path = Path(models_root) / crop_key / SELECTED_TRANSITION_MODEL_FILENAME
-    if not path.exists():
-        raise FileNotFoundError(f"No selected transition model manifest: {path}")
-    return json.loads(path.read_text(encoding="utf-8"))
+    write_json(artifact.resource_metrics_path, resource_metrics, convert=True)
+    return artifact.resource_metrics_path
 
 
 def _artifact_payload(value: Any) -> Any:
@@ -173,16 +166,18 @@ def _artifact_payload(value: Any) -> Any:
 
 __all__ = [
     "FEATURE_SCHEMA_FILENAME",
+    "BEST_CONFIG_FILENAME",
+    "HPO_RESULTS_FILENAME",
     "ONE_STEP_METRICS_FILENAME",
+    "RESOURCE_METRICS_FILENAME",
     "ROLLOUT_METRICS_FILENAME",
-    "SELECTED_TRANSITION_MODEL_FILENAME",
+    "TEST_METRICS_FILENAME",
     "TRAINING_SUMMARY_FILENAME",
     "TRANSITION_MANIFEST_FILENAME",
     "TRANSITION_MODEL_FILENAME",
     "TransitionModelArtifact",
-    "load_selected_transition_model_manifest",
     "load_transition_model_artifact",
-    "save_selected_transition_model",
+    "save_transition_resource_metrics",
     "save_transition_model_artifact",
     "transition_model_artifact",
 ]

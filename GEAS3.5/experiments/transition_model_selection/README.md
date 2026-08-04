@@ -1,6 +1,6 @@
-# Transition Model Selection
+# Transition Model Candidate Evaluation
 
-This experiment contains the transition model selection implementation.
+This experiment contains the transition model candidate evaluation implementation.
 
 Default execution:
 
@@ -33,20 +33,46 @@ python ../../offline_dataset_preparation/scripts/04_prepare_rl_dataset.py
   MDP v1 action columns, current `obs_*` columns, and matching `next_*` target columns.
 - Missing files or non-RL-ready inputs fail fast with the prerequisite commands.
 
-Selection contract:
+Candidate evaluation contract:
 
 - Candidate models are fitted on train.
-- Validation metrics select the final transition model.
-- Test metrics are computed once for the selected model only and are not used for re-selection.
-- The selected manifest is written to `artifacts/default/<crop>/selected_transition_model.json`.
-- The selected model test metrics are written to
-  `artifacts/default/<crop>/selected_transition_model_test_metrics.json`.
+- HPO objective, validation metrics, and validation rollout metrics produce candidate ranking information.
+- The framework does not choose the final transition model.
+- Test metrics are computed for every candidate after validation ranking and are descriptive only.
+- Test metrics are not used for HPO, validation ranking, or model selection.
+- Every candidate artifact is written under `artifacts/default/<crop>/<model_name>/`.
+- Downstream inference must be given an explicit candidate model name or artifact directory.
+
+Output contract:
+
+- `candidate_metrics.csv/json`
+- `candidate_rollout_metrics.csv/json`
+- `candidate_resource_metrics.csv/json`
+- `candidate_test_metrics.csv/json`
+- `transition_summary.md`
+- `artifact_integrity.json`
+- `<crop>/<model_name>/model.pkl`
+- `<crop>/<model_name>/manifest.json`
+- `<crop>/<model_name>/feature_schema.json`
+- `<crop>/<model_name>/one_step_metrics.json`
+- `<crop>/<model_name>/rollout_metrics.json`
+- `<crop>/<model_name>/resource_metrics.json`
+- `<crop>/<model_name>/hpo_results.json`
+- `<crop>/<model_name>/best_config.json`
+- `<crop>/<model_name>/training_summary.json`
+- `<crop>/<model_name>/test_metrics.json`
+
+The experiment intentionally does not write selected-model artifacts such as
+`selection_report.json`, `selected_transition_model.json`, selected model
+copies, winner fields, recommended-model fields, or automatic inference handoff
+artifacts.
 
 Local validation before GPU execution:
 
 ```powershell
 python -m pytest -q GEAS3.5/tests/test_transition_experiment_step3.py
 python -m pytest -q GEAS3.5/tests/test_experiment_contracts.py
+python -m pytest -q GEAS3.5/tests/test_transition_step10_contract_migration.py
 ```
 
 The automatic smoke test uses only deterministic synthetic RL-ready parquet

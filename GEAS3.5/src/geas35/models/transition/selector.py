@@ -1,4 +1,4 @@
-"""Model-selection strategies for GEAS transition models."""
+"""Validation-ranking strategies for GEAS transition models."""
 
 from __future__ import annotations
 
@@ -19,8 +19,8 @@ DEFAULT_HORIZON_WEIGHTS = {
 
 
 @dataclass(frozen=True)
-class TransitionModelSelectionCandidate:
-    """One evaluated candidate available for model selection."""
+class TransitionModelRankingCandidate:
+    """One evaluated candidate available for validation ranking."""
 
     model_name: str
     one_step_report: TransitionOneStepEvaluationReport | Mapping[str, Any] | None = None
@@ -30,67 +30,64 @@ class TransitionModelSelectionCandidate:
 
 @dataclass(frozen=True)
 class TransitionModelCandidateScore:
-    """Score assigned to one candidate by a selection strategy."""
+    """Score assigned to one candidate by a ranking strategy."""
 
     model_name: str
     score: float
     rank: int
-    selected: bool = False
 
 
 @dataclass(frozen=True)
-class TransitionModelSelectionResult:
-    """Best-model selection result and full candidate ranking."""
+class TransitionModelRankingResult:
+    """Validation ranking result without automatic model choice."""
 
-    selected_model_name: str
-    selected_score: float
     strategy_name: str
     higher_is_better: bool
     candidate_scores: tuple[TransitionModelCandidateScore, ...]
 
     def to_artifact(self) -> dict[str, Any]:
-        """Return a JSON-safe model selection payload."""
+        """Return a JSON-safe model ranking payload."""
 
         return {
-            "stage": "transition_model_selection",
-            "selected_model_name": self.selected_model_name,
-            "selected_score": _jsonable_float(self.selected_score),
+            "stage": "transition_candidate_validation_ranking",
             "strategy_name": self.strategy_name,
             "higher_is_better": bool(self.higher_is_better),
+            "automatic_model_selection": False,
+            "test_used_for_validation_ranking": False,
+            "test_used_for_selection": False,
             "candidate_scores": [
                 {
                     "model_name": score.model_name,
                     "score": _jsonable_float(score.score),
                     "rank": int(score.rank),
-                    "selected": bool(score.selected),
                 }
                 for score in self.candidate_scores
             ],
         }
 
 
-class SelectionMetricStrategy(ABC):
-    """Pluggable scoring strategy for transition model selection."""
+class RankingMetricStrategy(ABC):
+    """Pluggable scoring strategy for transition candidate ranking."""
 
     name = "base"
     higher_is_better = False
 
     @abstractmethod
-    def score(self, candidate: TransitionModelSelectionCandidate) -> float:
+    def score(self, candidate: TransitionModelRankingCandidate) -> float:
         """Return the candidate score."""
 
 
-class MeanRmseStrategy(SelectionMetricStrategy):
+class MeanRmseStrategy(RankingMetricStrategy):
     """Select by one-step aggregate mean RMSE."""
 
     name = "mean_rmse"
     higher_is_better = False
 
-    def score(self, candidate: TransitionModelSelectionCandidate) -> float:
+    def score(self, candidate: TransitionModelRankingCandidate) -> float:
         return _aggregate_metric(candidate, "mean_rmse")
 
 
-class WeightedRmseStrategy(SelectionMetricStrategy):
+class WeightedRmseStrategy(RankingMetricStrategy):
     """Select by weighted one-step target RMSE."""
 
     name = "weighted_rmse"
@@ -99,7 +96,7 @@ class WeightedRmseStrategy(SelectionMetricStrategy):
     def __init__(self, target_weights: Mapping[str, float] | None = None) -> None:
         self.target_weights = dict(target_weights or {})
 
-    def score(self, candidate: TransitionModelSelectionCandidate) -> float:
+    def score(self, candidate: TransitionModelRankingCandidate) -> float:
         target_metrics = _target_metrics(candidate)
         if not target_metrics:
             return _aggregate_metric(candidate, "mean_rmse")
@@ -140,7 +137,7 @@ class HumidityPriorityStrategy(WeightedRmseStrategy):
         super().__init__(weights)
 
 
-class RolloutWeightedRmseStrategy(SelectionMetricStrategy):
+class RolloutWeightedRmseStrategy(RankingMetricStrategy):
     """Select by weighted rollout RMSE over configured horizons."""
 
     name = "rollout_weighted_rmse"
@@ -155,7 +152,7 @@ class RolloutWeightedRmseStrategy(SelectionMetricStrategy):
         self.horizon_weights = dict(horizon_weights or DEFAULT_HORIZON_WEIGHTS)
         self.metric_key = metric_key
 
-    def score(self, candidate: TransitionModelSelectionCandidate) -> float:
+    def score(self, candidate: TransitionModelRankingCandidate) -> float:
         values = []
         weights = []
         for horizon, weight in self.horizon_weights.items():
@@ -168,7 +165,7 @@ class RolloutWeightedRmseStrategy(SelectionMetricStrategy):
         return float(np.average(values, weights=weights))
 
 
-class CustomScoreStrategy(SelectionMetricStrategy):
+class CustomScoreStrategy(RankingMetricStrategy):
     """Select by a custom score stored in candidate metadata."""
 
     name = "custom_score"
@@ -182,17 +179,17 @@ class CustomScoreStrategy(SelectionMetricStrategy):
         self.score_key = score_key
         self.higher_is_better = higher_is_better
 
-    def score(self, candidate: TransitionModelSelectionCandidate) -> float:
+    def score(self, candidate: TransitionModelRankingCandidate) -> float:
         if self.score_key not in candidate.metadata:
-            raise KeyError(f"Missing custom selection score: {self.score_key}")
+            raise KeyError(f"Missing custom ranking score: {self.score_key}")
         return float(candidate.metadata[self.score_key])
 
 
-StrategyFactory = Callable[..., SelectionMetricStrategy]
+StrategyFactory = Callable[..., RankingMetricStrategy]
 
 
-def default_selection_strategy_registry() -> dict[str, StrategyFactory]:
-    """Return the built-in transition model selection strategy registry."""
+def default_ranking_strategy_registry() -> dict[str, StrategyFactory]:
+    """Return the built-in transition model ranking strategy registry."""
 
     return {
         MeanRmseStrategy.name: MeanRmseStrategy,
@@ -204,21 +201,21 @@ def default_selection_strategy_registry() -> dict[str, StrategyFactory]:
     }
 
 
-def build_selection_strategy(name: str, **kwargs: Any) -> SelectionMetricStrategy:
-    """Build a selection strategy by registry name."""
+def build_ranking_strategy(name: str, **kwargs: Any) -> RankingMetricStrategy:
+    """Build a ranking strategy by registry name."""
 
-    registry = default_selection_strategy_registry()
+    registry = default_ranking_strategy_registry()
     if name not in registry:
-        raise ValueError(f"Unknown transition selection strategy: {name}")
+        raise ValueError(f"Unknown transition ranking strategy: {name}")
     return registry[name](**kwargs)
 
 
-def select_transition_model(
-    candidates: Sequence[TransitionModelSelectionCandidate],
+def rank_transition_models(
+    candidates: Sequence[TransitionModelRankingCandidate],
     *,
-    strategy: SelectionMetricStrategy | None = None,
-) -> TransitionModelSelectionResult:
-    """Select and rank transition model candidates."""
+    strategy: RankingMetricStrategy | None = None,
+) -> TransitionModelRankingResult:
+    """Rank transition candidates without selecting a final model."""
 
     if not candidates:
         raise ValueError("At least one transition model candidate is required.")
@@ -237,14 +234,10 @@ def select_transition_model(
             model_name=candidate.model_name,
             score=score,
             rank=index + 1,
-            selected=index == 0,
         )
         for index, (candidate, score) in enumerate(raw_scores)
     )
-    selected = candidate_scores[0]
-    return TransitionModelSelectionResult(
-        selected_model_name=selected.model_name,
-        selected_score=selected.score,
+    return TransitionModelRankingResult(
         strategy_name=strategy.name,
         higher_is_better=higher_is_better,
         candidate_scores=candidate_scores,
@@ -258,7 +251,7 @@ def _sort_score(score: float, *, higher_is_better: bool) -> float:
 
 
 def _aggregate_metric(
-    candidate: TransitionModelSelectionCandidate,
+    candidate: TransitionModelRankingCandidate,
     key: str,
 ) -> float:
     report = candidate.one_step_report
@@ -274,7 +267,7 @@ def _aggregate_metric(
 
 
 def _target_metrics(
-    candidate: TransitionModelSelectionCandidate,
+    candidate: TransitionModelRankingCandidate,
 ) -> Mapping[str, Mapping[str, float]]:
     report = candidate.one_step_report
     if isinstance(report, TransitionOneStepEvaluationReport):
@@ -285,7 +278,7 @@ def _target_metrics(
 
 
 def _rollout_metric(
-    candidate: TransitionModelSelectionCandidate,
+    candidate: TransitionModelRankingCandidate,
     horizon: str,
     metric_key: str,
 ) -> float:
@@ -314,13 +307,13 @@ __all__ = [
     "HumidityPriorityStrategy",
     "MeanRmseStrategy",
     "RolloutWeightedRmseStrategy",
-    "SelectionMetricStrategy",
+    "RankingMetricStrategy",
     "TemperaturePriorityStrategy",
     "TransitionModelCandidateScore",
-    "TransitionModelSelectionCandidate",
-    "TransitionModelSelectionResult",
+    "TransitionModelRankingCandidate",
+    "TransitionModelRankingResult",
     "WeightedRmseStrategy",
-    "build_selection_strategy",
-    "default_selection_strategy_registry",
-    "select_transition_model",
+    "build_ranking_strategy",
+    "default_ranking_strategy_registry",
+    "rank_transition_models",
 ]
