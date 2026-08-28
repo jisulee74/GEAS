@@ -1,0 +1,44 @@
+{
+  "schema_version": "geas35.rl.step19_5.parallel_readiness.v2",
+  "status": "ready_to_run",
+  "crop": "strawberry",
+  "resume": {
+    "completed_curve_budget": 65536,
+    "completed_curve_rows": 75,
+    "next_budget": 131072,
+    "most_advanced_checkpoint_steps": 110592,
+    "existing_checkpoints_preserved": true
+  },
+  "parallelism": {
+    "primary_workers": 8,
+    "additional_workers": 7,
+    "dynamic_attachment": true,
+    "worker_cpu_threads": 1,
+    "transition_n_jobs": 1
+  },
+  "checks": {
+    "tests": "112 passed, 2 skipped",
+    "gpu_checkpoint_resume": "passed",
+    "v1_artifacts_unchanged": true,
+    "v1_changed_paths": [],
+    "background_training_processes": [],
+    "test_accessed": false
+  },
+  "implementations": {
+    "src/geas35/experiments/rl/checkpoint_v2.py": {
+      "sha256": "271c3977432ddd6c7a57e23902629e11322c32ca0001eb337be7655bfed5a187"
+    },
+    "src/geas35/experiments/rl/step19_5_parallel.py": {
+      "sha256": "a8a1edc80351b0909a1151be5ac9d086fb5b12d15aad25b037f0151644d836e9"
+    },
+    "src/geas35/experiments/rl/step19_5_runner.py": {
+      "sha256": "57d5b0f56d0de2d9d84ffbd485041ae2933764c0c24a83eae2b3131172373401"
+    },
+    "experiments/rl_policy_training/scripts/run_step19_5_calibration_v2.py": {
+      "sha256": "277b4f7200f311cf4c984e7f87a9b078ee5026812b829bd7804cf26fc576e0b0"
+    },
+    "tests/test_rl_step19_5_parallel.py": {
+      "sha256": "dddc79c35c418e7ae7a99b797f5453da32d76cd2c5a4e79216c0ee81ab9a3854"
+    }
+  }
+}

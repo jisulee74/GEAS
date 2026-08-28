@@ -1,0 +1,35 @@
+{
+  "schema_version": "geas35.rl.step15.v1",
+  "hpo": {
+    "trials_per_crop": 30,
+    "environment_steps_per_trial": [
+      1000000,
+      2000000
+    ],
+    "sampler_seed": 42,
+    "test_access": false
+  },
+  "final_training": {
+    "seed_count": 10,
+    "seeds": [
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51
+    ],
+    "test_access": false
+  },
+  "transition_seed": 42,
+  "support_seed": 42,
+  "checkpoint": {
+    "atomic": true,
+    "includes_rng_state": true,
+    "selection_split": "validation"
+  }
+}

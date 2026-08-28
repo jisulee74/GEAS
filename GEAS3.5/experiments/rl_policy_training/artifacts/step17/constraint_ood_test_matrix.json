@@ -1,0 +1,726 @@
+{
+  "schema_version": "geas35.rl.step17.v1",
+  "status": "passed",
+  "crops": {
+    "strawberry": {
+      "status": "passed",
+      "action_and_weather_constraints": {
+        "none": {
+          "raw_action": {
+            "vent_pct": 2.0,
+            "shade_curtain_pct": -1.0,
+            "thermal_curtain_pct": 2.0,
+            "heat_run": 0.9,
+            "cool_run": 0.1,
+            "fan_run": 0.9
+          },
+          "range_projected_action": {
+            "vent_pct": 1.0,
+            "shade_curtain_pct": 0.0,
+            "thermal_curtain_pct": 1.0,
+            "heat_run": 1.0,
+            "cool_run": 0.0,
+            "fan_run": 1.0
+          },
+          "executed_action": {
+            "vent_pct": 1.0,
+            "shade_curtain_pct": 0.0,
+            "thermal_curtain_pct": 1.0,
+            "heat_run": 1.0,
+            "cool_run": 0.0,
+            "fan_run": 1.0
+          },
+          "intervention": {
+            "weather_constraint_applied": false,
+            "rain_vent_constraint_applied": false,
+            "wind_vent_constraint_applied": false,
+            "vent_open_cap": 1.0
+          },
+          "status": "passed"
+        },
+        "rain": {
+          "raw_action": {
+            "vent_pct": 2.0,
+            "shade_curtain_pct": -1.0,
+            "thermal_curtain_pct": 2.0,
+            "heat_run": 0.9,
+            "cool_run": 0.1,
+            "fan_run": 0.9
+          },
+          "range_projected_action": {
+            "vent_pct": 1.0,
+            "shade_curtain_pct": 0.0,
+            "thermal_curtain_pct": 1.0,
+            "heat_run": 1.0,
+            "cool_run": 0.0,
+            "fan_run": 1.0
+          },
+          "executed_action": {
+            "vent_pct": 0.0,
+            "shade_curtain_pct": 0.0,
+            "thermal_curtain_pct": 1.0,
+            "heat_run": 1.0,
+            "cool_run": 0.0,
+            "fan_run": 1.0
+          },
+          "intervention": {
+            "weather_constraint_applied": true,
+            "rain_vent_constraint_applied": true,
+            "wind_vent_constraint_applied": false,
+            "vent_open_cap": 0.0
+          },
+          "status": "passed"
+        },
+        "wind": {
+          "raw_action": {
+            "vent_pct": 2.0,
+            "shade_curtain_pct": -1.0,
+            "thermal_curtain_pct": 2.0,
+            "heat_run": 0.9,
+            "cool_run": 0.1,
+            "fan_run": 0.9
+          },
+          "range_projected_action": {
+            "vent_pct": 1.0,
+            "shade_curtain_pct": 0.0,
+            "thermal_curtain_pct": 1.0,
+            "heat_run": 1.0,
+            "cool_run": 0.0,
+            "fan_run": 1.0
+          },
+          "executed_action": {
+            "vent_pct": 0.2,
+            "shade_curtain_pct": 0.0,
+            "thermal_curtain_pct": 1.0,
+            "heat_run": 1.0,
+            "cool_run": 0.0,
+            "fan_run": 1.0
+          },
+          "intervention": {
+            "weather_constraint_applied": true,
+            "rain_vent_constraint_applied": false,
+            "wind_vent_constraint_applied": true,
+            "vent_open_cap": 0.2
+          },
+          "status": "passed"
+        },
+        "rain_and_wind": {
+          "raw_action": {
+            "vent_pct": 2.0,
+            "shade_curtain_pct": -1.0,
+            "thermal_curtain_pct": 2.0,
+            "heat_run": 0.9,
+            "cool_run": 0.1,
+            "fan_run": 0.9
+          },
+          "range_projected_action": {
+            "vent_pct": 1.0,
+            "shade_curtain_pct": 0.0,
+            "thermal_curtain_pct": 1.0,
+            "heat_run": 1.0,
+            "cool_run": 0.0,
+            "fan_run": 1.0
+          },
+          "executed_action": {
+            "vent_pct": 0.0,
+            "shade_curtain_pct": 0.0,
+            "thermal_curtain_pct": 1.0,
+            "heat_run": 1.0,
+            "cool_run": 0.0,
+            "fan_run": 1.0
+          },
+          "intervention": {
+            "weather_constraint_applied": true,
+            "rain_vent_constraint_applied": true,
+            "wind_vent_constraint_applied": true,
+            "vent_open_cap": 0.0
+          },
+          "status": "passed"
+        }
+      },
+      "ood_response_sequence": {
+        "warning_action": {
+          "status": "passed",
+          "raw_action": {
+            "vent_pct": 0.015289656596711554,
+            "shade_curtain_pct": 0.25404091379263927,
+            "thermal_curtain_pct": 0.6041458545639301,
+            "heat_run": 0.0,
+            "cool_run": 0.0,
+            "fan_run": 1.0
+          },
+          "executed_action": {
+            "vent_pct": 1.0,
+            "shade_curtain_pct": 0.25404091379263927,
+            "thermal_curtain_pct": 0.6041458545639301,
+            "heat_run": 0.0,
+            "cool_run": 0.0,
+            "fan_run": 0.0
+          },
+          "joint_ood_score": 0.6982152269868691,
+          "projection": {
+            "local_support": {
+              "continuous": {
+                "vent_pct": [
+                  1.0,
+                  1.0
+                ],
+                "shade_curtain_pct": [
+                  0.0,
+                  1.0
+                ],
+                "thermal_curtain_pct": [
+                  0.0,
+                  1.0
+                ]
+              },
+              "binary": {
+                "heat_run": [
+                  0
+                ],
+                "cool_run": [
+                  0
+                ],
+                "fan_run": [
+                  0
+                ]
+              }
+            },
+            "changes": {
+              "vent_pct": {
+                "from": 0.015289656596711554,
+                "to": 1.0,
+                "bounds": [
+                  1.0,
+                  1.0
+                ]
+              },
+              "fan_run": {
+                "from": 1.0,
+                "to": 0.0,
+                "allowed": [
+                  0
+                ]
+              }
+            }
+          },
+          "penalty": 0.46717664840240924
+        },
+        "severe_action": {
+          "status": "passed",
+          "raw_action": {
+            "vent_pct": 0.8323461245007039,
+            "shade_curtain_pct": 0.03677735766732482,
+            "thermal_curtain_pct": 0.5675398131484446,
+            "heat_run": 1.0,
+            "cool_run": 1.0,
+            "fan_run": 1.0
+          },
+          "executed_action": {
+            "vent_pct": 1.0,
+            "shade_curtain_pct": 0.0,
+            "thermal_curtain_pct": 0.0,
+            "heat_run": 0.0,
+            "cool_run": 0.0,
+            "fan_run": 0.0
+          },
+          "joint_ood_score": 0.7950088069140502,
+          "fallback": true
+        },
+        "severe_state": {
+          "status": "passed",
+          "termination_reason": "severe_state_ood",
+          "pessimistic_terminal_cost": -286.0,
+          "remaining_scheduled_steps_charged": 286
+        }
+      }
+    },
+    "melon": {
+      "status": "passed",
+      "action_and_weather_constraints": {
+        "none": {
+          "raw_action": {
+            "vent_pct": 2.0,
+            "shade_curtain_pct": -1.0,
+            "thermal_curtain_pct": 2.0,
+            "heat_run": 0.9,
+            "cool_run": 0.1,
+            "fan_run": 0.9
+          },
+          "range_projected_action": {
+            "vent_pct": 1.0,
+            "shade_curtain_pct": 0.0,
+            "thermal_curtain_pct": 1.0,
+            "heat_run": 1.0,
+            "cool_run": 0.0,
+            "fan_run": 1.0
+          },
+          "executed_action": {
+            "vent_pct": 1.0,
+            "shade_curtain_pct": 0.0,
+            "thermal_curtain_pct": 1.0,
+            "heat_run": 1.0,
+            "cool_run": 0.0,
+            "fan_run": 1.0
+          },
+          "intervention": {
+            "weather_constraint_applied": false,
+            "rain_vent_constraint_applied": false,
+            "wind_vent_constraint_applied": false,
+            "vent_open_cap": 1.0
+          },
+          "status": "passed"
+        },
+        "rain": {
+          "raw_action": {
+            "vent_pct": 2.0,
+            "shade_curtain_pct": -1.0,
+            "thermal_curtain_pct": 2.0,
+            "heat_run": 0.9,
+            "cool_run": 0.1,
+            "fan_run": 0.9
+          },
+          "range_projected_action": {
+            "vent_pct": 1.0,
+            "shade_curtain_pct": 0.0,
+            "thermal_curtain_pct": 1.0,
+            "heat_run": 1.0,
+            "cool_run": 0.0,
+            "fan_run": 1.0
+          },
+          "executed_action": {
+            "vent_pct": 0.0,
+            "shade_curtain_pct": 0.0,
+            "thermal_curtain_pct": 1.0,
+            "heat_run": 1.0,
+            "cool_run": 0.0,
+            "fan_run": 1.0
+          },
+          "intervention": {
+            "weather_constraint_applied": true,
+            "rain_vent_constraint_applied": true,
+            "wind_vent_constraint_applied": false,
+            "vent_open_cap": 0.0
+          },
+          "status": "passed"
+        },
+        "wind": {
+          "raw_action": {
+            "vent_pct": 2.0,
+            "shade_curtain_pct": -1.0,
+            "thermal_curtain_pct": 2.0,
+            "heat_run": 0.9,
+            "cool_run": 0.1,
+            "fan_run": 0.9
+          },
+          "range_projected_action": {
+            "vent_pct": 1.0,
+            "shade_curtain_pct": 0.0,
+            "thermal_curtain_pct": 1.0,
+            "heat_run": 1.0,
+            "cool_run": 0.0,
+            "fan_run": 1.0
+          },
+          "executed_action": {
+            "vent_pct": 0.2,
+            "shade_curtain_pct": 0.0,
+            "thermal_curtain_pct": 1.0,
+            "heat_run": 1.0,
+            "cool_run": 0.0,
+            "fan_run": 1.0
+          },
+          "intervention": {
+            "weather_constraint_applied": true,
+            "rain_vent_constraint_applied": false,
+            "wind_vent_constraint_applied": true,
+            "vent_open_cap": 0.2
+          },
+          "status": "passed"
+        },
+        "rain_and_wind": {
+          "raw_action": {
+            "vent_pct": 2.0,
+            "shade_curtain_pct": -1.0,
+            "thermal_curtain_pct": 2.0,
+            "heat_run": 0.9,
+            "cool_run": 0.1,
+            "fan_run": 0.9
+          },
+          "range_projected_action": {
+            "vent_pct": 1.0,
+            "shade_curtain_pct": 0.0,
+            "thermal_curtain_pct": 1.0,
+            "heat_run": 1.0,
+            "cool_run": 0.0,
+            "fan_run": 1.0
+          },
+          "executed_action": {
+            "vent_pct": 0.0,
+            "shade_curtain_pct": 0.0,
+            "thermal_curtain_pct": 1.0,
+            "heat_run": 1.0,
+            "cool_run": 0.0,
+            "fan_run": 1.0
+          },
+          "intervention": {
+            "weather_constraint_applied": true,
+            "rain_vent_constraint_applied": true,
+            "wind_vent_constraint_applied": true,
+            "vent_open_cap": 0.0
+          },
+          "status": "passed"
+        }
+      },
+      "ood_response_sequence": {
+        "warning_action": {
+          "status": "passed",
+          "raw_action": {
+            "vent_pct": 0.060206069546979935,
+            "shade_curtain_pct": 0.5748086563797216,
+            "thermal_curtain_pct": 0.25130740885740865,
+            "heat_run": 1.0,
+            "cool_run": 0.0,
+            "fan_run": 0.0
+          },
+          "executed_action": {
+            "vent_pct": 0.32375000000000015,
+            "shade_curtain_pct": 1.0,
+            "thermal_curtain_pct": 1.0,
+            "heat_run": 1.0,
+            "cool_run": 0.0,
+            "fan_run": 0.0
+          },
+          "joint_ood_score": 0.8139524907734974,
+          "projection": {
+            "local_support": {
+              "continuous": {
+                "vent_pct": [
+                  0.32375000000000015,
+                  1.0
+                ],
+                "shade_curtain_pct": [
+                  1.0,
+                  1.0
+                ],
+                "thermal_curtain_pct": [
+                  1.0,
+                  1.0
+                ]
+              },
+              "binary": {
+                "heat_run": [
+                  0,
+                  1
+                ],
+                "cool_run": [
+                  0,
+                  1
+                ],
+                "fan_run": [
+                  0
+                ]
+              }
+            },
+            "changes": {
+              "vent_pct": {
+                "from": 0.060206069546979935,
+                "to": 0.32375000000000015,
+                "bounds": [
+                  0.32375000000000015,
+                  1.0
+                ]
+              },
+              "shade_curtain_pct": {
+                "from": 0.5748086563797216,
+                "to": 1.0,
+                "bounds": [
+                  1.0,
+                  1.0
+                ]
+              },
+              "thermal_curtain_pct": {
+                "from": 0.25130740885740865,
+                "to": 1.0,
+                "bounds": [
+                  1.0,
+                  1.0
+                ]
+              }
+            }
+          },
+          "penalty": 0.4313589652735007
+        },
+        "severe_action": {
+          "status": "passed",
+          "raw_action": {
+            "vent_pct": 0.3963093669095623,
+            "shade_curtain_pct": 0.019138461500063597,
+            "thermal_curtain_pct": 0.012663819213516003,
+            "heat_run": 0.0,
+            "cool_run": 0.0,
+            "fan_run": 1.0
+          },
+          "executed_action": {
+            "vent_pct": 0.32375000000000015,
+            "shade_curtain_pct": 1.0,
+            "thermal_curtain_pct": 1.0,
+            "heat_run": 0.0,
+            "cool_run": 1.0,
+            "fan_run": 0.0
+          },
+          "joint_ood_score": 0.9408896100002291,
+          "fallback": true
+        },
+        "severe_state": {
+          "status": "passed",
+          "termination_reason": "severe_state_ood",
+          "pessimistic_terminal_cost": -286.0,
+          "remaining_scheduled_steps_charged": 286
+        }
+      }
+    },
+    "cucumber": {
+      "status": "passed",
+      "action_and_weather_constraints": {
+        "none": {
+          "raw_action": {
+            "vent_pct": 2.0,
+            "shade_curtain_pct": -1.0,
+            "thermal_curtain_pct": 2.0,
+            "heat_run": 0.9,
+            "cool_run": 0.1,
+            "fan_run": 0.9
+          },
+          "range_projected_action": {
+            "vent_pct": 1.0,
+            "shade_curtain_pct": 0.0,
+            "thermal_curtain_pct": 1.0,
+            "heat_run": 1.0,
+            "cool_run": 0.0,
+            "fan_run": 1.0
+          },
+          "executed_action": {
+            "vent_pct": 1.0,
+            "shade_curtain_pct": 0.0,
+            "thermal_curtain_pct": 1.0,
+            "heat_run": 1.0,
+            "cool_run": 0.0,
+            "fan_run": 1.0
+          },
+          "intervention": {
+            "weather_constraint_applied": false,
+            "rain_vent_constraint_applied": false,
+            "wind_vent_constraint_applied": false,
+            "vent_open_cap": 1.0
+          },
+          "status": "passed"
+        },
+        "rain": {
+          "raw_action": {
+            "vent_pct": 2.0,
+            "shade_curtain_pct": -1.0,
+            "thermal_curtain_pct": 2.0,
+            "heat_run": 0.9,
+            "cool_run": 0.1,
+            "fan_run": 0.9
+          },
+          "range_projected_action": {
+            "vent_pct": 1.0,
+            "shade_curtain_pct": 0.0,
+            "thermal_curtain_pct": 1.0,
+            "heat_run": 1.0,
+            "cool_run": 0.0,
+            "fan_run": 1.0
+          },
+          "executed_action": {
+            "vent_pct": 0.0,
+            "shade_curtain_pct": 0.0,
+            "thermal_curtain_pct": 1.0,
+            "heat_run": 1.0,
+            "cool_run": 0.0,
+            "fan_run": 1.0
+          },
+          "intervention": {
+            "weather_constraint_applied": true,
+            "rain_vent_constraint_applied": true,
+            "wind_vent_constraint_applied": false,
+            "vent_open_cap": 0.0
+          },
+          "status": "passed"
+        },
+        "wind": {
+          "raw_action": {
+            "vent_pct": 2.0,
+            "shade_curtain_pct": -1.0,
+            "thermal_curtain_pct": 2.0,
+            "heat_run": 0.9,
+            "cool_run": 0.1,
+            "fan_run": 0.9
+          },
+          "range_projected_action": {
+            "vent_pct": 1.0,
+            "shade_curtain_pct": 0.0,
+            "thermal_curtain_pct": 1.0,
+            "heat_run": 1.0,
+            "cool_run": 0.0,
+            "fan_run": 1.0
+          },
+          "executed_action": {
+            "vent_pct": 0.2,
+            "shade_curtain_pct": 0.0,
+            "thermal_curtain_pct": 1.0,
+            "heat_run": 1.0,
+            "cool_run": 0.0,
+            "fan_run": 1.0
+          },
+          "intervention": {
+            "weather_constraint_applied": true,
+            "rain_vent_constraint_applied": false,
+            "wind_vent_constraint_applied": true,
+            "vent_open_cap": 0.2
+          },
+          "status": "passed"
+        },
+        "rain_and_wind": {
+          "raw_action": {
+            "vent_pct": 2.0,
+            "shade_curtain_pct": -1.0,
+            "thermal_curtain_pct": 2.0,
+            "heat_run": 0.9,
+            "cool_run": 0.1,
+            "fan_run": 0.9
+          },
+          "range_projected_action": {
+            "vent_pct": 1.0,
+            "shade_curtain_pct": 0.0,
+            "thermal_curtain_pct": 1.0,
+            "heat_run": 1.0,
+            "cool_run": 0.0,
+            "fan_run": 1.0
+          },
+          "executed_action": {
+            "vent_pct": 0.0,
+            "shade_curtain_pct": 0.0,
+            "thermal_curtain_pct": 1.0,
+            "heat_run": 1.0,
+            "cool_run": 0.0,
+            "fan_run": 1.0
+          },
+          "intervention": {
+            "weather_constraint_applied": true,
+            "rain_vent_constraint_applied": true,
+            "wind_vent_constraint_applied": true,
+            "vent_open_cap": 0.0
+          },
+          "status": "passed"
+        }
+      },
+      "ood_response_sequence": {
+        "warning_action": {
+          "status": "passed",
+          "raw_action": {
+            "vent_pct": 0.3858240375891985,
+            "shade_curtain_pct": 0.42816449909360843,
+            "thermal_curtain_pct": 0.6113431084989805,
+            "heat_run": 0.0,
+            "cool_run": 0.0,
+            "fan_run": 1.0
+          },
+          "executed_action": {
+            "vent_pct": 0.0,
+            "shade_curtain_pct": 1.0,
+            "thermal_curtain_pct": 0.0,
+            "heat_run": 0.0,
+            "cool_run": 0.0,
+            "fan_run": 1.0
+          },
+          "joint_ood_score": 0.5709591411267592,
+          "projection": {
+            "local_support": {
+              "continuous": {
+                "vent_pct": [
+                  0.0,
+                  0.05
+                ],
+                "shade_curtain_pct": [
+                  1.0,
+                  1.0
+                ],
+                "thermal_curtain_pct": [
+                  0.0,
+                  0.0
+                ]
+              },
+              "binary": {
+                "heat_run": [
+                  0
+                ],
+                "cool_run": [
+                  0
+                ],
+                "fan_run": [
+                  0,
+                  1
+                ]
+              }
+            },
+            "changes": {
+              "vent_pct": {
+                "from": 0.3858240375891985,
+                "to": 0.05,
+                "bounds": [
+                  0.0,
+                  0.05
+                ]
+              },
+              "shade_curtain_pct": {
+                "from": 0.42816449909360843,
+                "to": 1.0,
+                "bounds": [
+                  1.0,
+                  1.0
+                ]
+              },
+              "thermal_curtain_pct": {
+                "from": 0.6113431084989805,
+                "to": 0.0,
+                "bounds": [
+                  0.0,
+                  0.0
+                ]
+              }
+            }
+          },
+          "penalty": 0.4366039055599832
+        },
+        "severe_action": {
+          "status": "passed",
+          "raw_action": {
+            "vent_pct": 0.8450747927979015,
+            "shade_curtain_pct": 0.16097309116910696,
+            "thermal_curtain_pct": 0.5577445473656921,
+            "heat_run": 1.0,
+            "cool_run": 0.0,
+            "fan_run": 0.0
+          },
+          "executed_action": {
+            "vent_pct": 0.0,
+            "shade_curtain_pct": 1.0,
+            "thermal_curtain_pct": 0.0,
+            "heat_run": 0.0,
+            "cool_run": 0.0,
+            "fan_run": 0.0
+          },
+          "joint_ood_score": 0.7477839142870826,
+          "fallback": true
+        },
+        "severe_state": {
+          "status": "passed",
+          "termination_reason": "severe_state_ood",
+          "pessimistic_terminal_cost": -285.0,
+          "remaining_scheduled_steps_charged": 285
+        }
+      }
+    }
+  }
+}

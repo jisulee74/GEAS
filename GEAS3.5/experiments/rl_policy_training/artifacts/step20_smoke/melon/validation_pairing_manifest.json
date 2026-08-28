@@ -1,0 +1,15 @@
+{
+  "split": "validation",
+  "paired": true,
+  "episodes": [
+    {
+      "episode_index": 0,
+      "episode_id": "iot97_melon_geas2_0_seg07_20250831",
+      "series_id": "melon_geas2_0",
+      "rollout_id": "1",
+      "scheduled_valid_steps": 286,
+      "seed": 42
+    }
+  ],
+  "test_accessed": false
+}

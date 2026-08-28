@@ -1,0 +1,69 @@
+{
+  "schema_version": "geas35.rl.step18.v1",
+  "step": "18",
+  "status": "passed",
+  "created_at_utc": "2026-08-25T23:49:55.548950Z",
+  "scope": "hybrid_ppo_implementation_only_step19_not_implemented",
+  "runtime": {
+    "python": "3.12.3",
+    "numpy": "2.5.1",
+    "torch": "2.13.0+cpu",
+    "device": "cpu"
+  },
+  "step17_integrity": {
+    "path": "experiments/rl_policy_training/artifacts/step17/step17_integrity_manifest.json",
+    "sha256": "240c7900bc9c39871f7856a2bb28ccc59c1e65e87f59e7fbb41b5f8ad198c992",
+    "size_bytes": 2355
+  },
+  "implementations": {
+    "hybrid_ppo": {
+      "path": "src/geas35/rl/hybrid_ppo.py",
+      "sha256": "bb36fa0de817b471ab4712345b0449a67e7066dcca80a9a7d6b2f9ee206f9e24",
+      "size_bytes": 28711
+    },
+    "artifact_freeze": {
+      "path": "src/geas35/experiments/rl/step18_hybrid_ppo.py",
+      "sha256": "057576ae4c8ef3dd29f867be688f7cc7296e72f008245fc9cb2ba82c9f887391",
+      "size_bytes": 7746
+    },
+    "training_cli": {
+      "path": "experiments/rl_policy_training/scripts/train_hybrid_ppo.py",
+      "sha256": "3b4a36edd22ba7127442c00c36448c3b66891a8b8d84dce5bab6660d7642139f",
+      "size_bytes": 3955
+    }
+  },
+  "artifacts": {
+    "config": {
+      "path": "experiments/rl_policy_training/artifacts/step18/support_aware_ppo_config.json",
+      "sha256": "8f9782c60a42e93e97ef8fecd33d1abe34c9e9e4523701bd8d45ba7cc699372d",
+      "size_bytes": 849
+    },
+    "action_schema": {
+      "path": "experiments/rl_policy_training/artifacts/step18/hybrid_action_schema.json",
+      "sha256": "ff1b1002ce6afa5ee421af212bda30ee9c4f077557ba591ffac94de2f5d29b57",
+      "size_bytes": 797
+    },
+    "checkpoint_smoke": {
+      "path": "experiments/rl_policy_training/artifacts/step18/checkpoint_smoke_report.json",
+      "sha256": "42afb304a65ef3fe85fa70c3611746569b77340a284ab1b2746f9593ea944e85",
+      "size_bytes": 2696
+    }
+  },
+  "checks": {
+    "beta_three_continuous": true,
+    "bernoulli_three_binary": true,
+    "joint_log_probability_and_entropy": true,
+    "local_support_and_dynamic_hard_bounds": true,
+    "raw_and_executed_action_buffered": true,
+    "ood_reward_propagates_through_gae": true,
+    "clipped_ppo_and_value_loss": true,
+    "gradient_clipping": true,
+    "target_kl_early_stop": true,
+    "deterministic_stochastic_modes": true,
+    "atomic_checkpoint_and_rng": true,
+    "artifact_hash_validation": true,
+    "online_observation_normalization": false,
+    "test_accessed": false,
+    "step19_implemented": false
+  }
+}

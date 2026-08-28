@@ -1,0 +1,31 @@
+{
+  "schema_version": "geas35.rl.step19.v1",
+  "status": "passed",
+  "overall_decision": "continue_to_step20_hpo",
+  "scope": "trainability_only_no_baseline_performance_judgment",
+  "crops": {
+    "strawberry": {
+      "decision": "continue_to_step20_hpo",
+      "trainable": true,
+      "baseline_comparison_performed": false,
+      "reward_performance_gate_applied": false,
+      "failed_gates": []
+    },
+    "melon": {
+      "decision": "continue_to_step20_hpo",
+      "trainable": true,
+      "baseline_comparison_performed": false,
+      "reward_performance_gate_applied": false,
+      "failed_gates": []
+    },
+    "cucumber": {
+      "decision": "continue_to_step20_hpo",
+      "trainable": true,
+      "baseline_comparison_performed": false,
+      "reward_performance_gate_applied": false,
+      "failed_gates": []
+    }
+  },
+  "test_accessed": false,
+  "hpo_started": false
+}

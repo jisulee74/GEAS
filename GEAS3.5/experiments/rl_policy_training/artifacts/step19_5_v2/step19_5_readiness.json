@@ -1,0 +1,12 @@
+{
+  "schema_version": "geas35.rl.step19_5.v2",
+  "status": "ready_to_resume",
+  "actual_calibration_started": true,
+  "active_crop": null,
+  "coordinator_pid": 4169476,
+  "workers": 8,
+  "test_accessed": false,
+  "active_workers": 0,
+  "resume_crop": "strawberry",
+  "resume_budget": 262144
+}

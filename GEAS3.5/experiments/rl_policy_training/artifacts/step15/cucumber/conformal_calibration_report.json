@@ -1,0 +1,22 @@
+{
+  "schema_version": "geas35.rl.state_action_support.v1",
+  "crop": "cucumber",
+  "status": "passed",
+  "fit_split": "train_only",
+  "thresholds": {
+    "state_warning": 0.5499597723785856,
+    "state_severe": 0.6132061817305143,
+    "joint_warning": 0.503993823138624,
+    "joint_severe": 0.6573715578206952
+  },
+  "empirical_coverage": {
+    "state_warning": 0.9504246040853799,
+    "state_severe": 0.9903603396832683,
+    "joint_warning": 0.9504246040853799,
+    "joint_severe": 0.9903603396832683
+  },
+  "reference_rows": 10000,
+  "calibration_rows": 4357,
+  "validation_rows_used": 0,
+  "test_rows_used": 0
+}

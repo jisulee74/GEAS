@@ -1,0 +1,156 @@
+{
+  "schema_version": "geas35.rl.step16.v1",
+  "status": "passed",
+  "crops": {
+    "strawberry": {
+      "episode_index": 0,
+      "reset_info": {
+        "environment_version": "geas35.rl.model_driven_env.step16.v1",
+        "event": "reset",
+        "crop": "strawberry",
+        "split": "train",
+        "episode_index": 0,
+        "episode_id": "iot97_strawberry_geas2_0_seg02_20240316",
+        "series_id": "strawberry_geas2_0",
+        "segment_id": "iot97_strawberry_geas2_0_seg02",
+        "rollout_id": "1",
+        "episode_date": "2024-03-16",
+        "scheduled_valid_steps": 286,
+        "executed_steps": 0,
+        "exogenous_provider_mode": "recorded_weather"
+      },
+      "raw_action": {
+        "vent_pct": 1.0,
+        "shade_curtain_pct": 0.0,
+        "thermal_curtain_pct": 0.0,
+        "heat_run": 0.0,
+        "cool_run": 0.0,
+        "fan_run": 0.0
+      },
+      "executed_action": {
+        "vent_pct": 1.0,
+        "shade_curtain_pct": 0.0,
+        "thermal_curtain_pct": 0.0,
+        "heat_run": 0.0,
+        "cool_run": 0.0,
+        "fan_run": 0.0
+      },
+      "state_ood_score": 0.5021868566184815,
+      "joint_ood_score": 0.39429814010583075,
+      "joint_ood_level": "in_support",
+      "prediction_physical": {
+        "obs_indoor_temp_c": 15.468928320557046,
+        "obs_indoor_humidity_pct": 32.21162416079453,
+        "obs_indoor_co2_ppm": 424.99385973817516
+      },
+      "reward": -0.13716268447539143,
+      "terminated": false,
+      "truncated": false,
+      "next_observation_shape": [
+        59
+      ],
+      "one_step_inference_parity": true,
+      "deterministic_replay": true
+    },
+    "melon": {
+      "episode_index": 1,
+      "reset_info": {
+        "environment_version": "geas35.rl.model_driven_env.step16.v1",
+        "event": "reset",
+        "crop": "melon",
+        "split": "train",
+        "episode_index": 1,
+        "episode_id": "iot97_melon_geas2_0_seg01_20250509",
+        "series_id": "melon_geas2_0",
+        "segment_id": "iot97_melon_geas2_0_seg01",
+        "rollout_id": "2",
+        "episode_date": "2025-05-09",
+        "scheduled_valid_steps": 181,
+        "executed_steps": 0,
+        "exogenous_provider_mode": "recorded_weather"
+      },
+      "raw_action": {
+        "vent_pct": 0.0,
+        "shade_curtain_pct": 1.0,
+        "thermal_curtain_pct": 1.0,
+        "heat_run": 0.0,
+        "cool_run": 0.0,
+        "fan_run": 0.0
+      },
+      "executed_action": {
+        "vent_pct": 0.0,
+        "shade_curtain_pct": 1.0,
+        "thermal_curtain_pct": 1.0,
+        "heat_run": 0.0,
+        "cool_run": 0.0,
+        "fan_run": 0.0
+      },
+      "state_ood_score": 0.5543142751063254,
+      "joint_ood_score": 0.5027992759439676,
+      "joint_ood_level": "in_support",
+      "prediction_physical": {
+        "obs_indoor_temp_c": 20.321993143511452,
+        "obs_indoor_humidity_pct": 38.0176209704186,
+        "obs_indoor_co2_ppm": 398.7549300880804
+      },
+      "reward": -0.16666666666666666,
+      "terminated": false,
+      "truncated": false,
+      "next_observation_shape": [
+        59
+      ],
+      "one_step_inference_parity": true,
+      "deterministic_replay": true
+    },
+    "cucumber": {
+      "episode_index": 1,
+      "reset_info": {
+        "environment_version": "geas35.rl.model_driven_env.step16.v1",
+        "event": "reset",
+        "crop": "cucumber",
+        "split": "train",
+        "episode_index": 1,
+        "episode_id": "iot97_cucumber_geas2_5_seg01_20260306",
+        "series_id": "cucumber_geas2_5",
+        "segment_id": "iot97_cucumber_geas2_5_seg01",
+        "rollout_id": "2",
+        "episode_date": "2026-03-06",
+        "scheduled_valid_steps": 285,
+        "executed_steps": 0,
+        "exogenous_provider_mode": "recorded_weather"
+      },
+      "raw_action": {
+        "vent_pct": 0.0,
+        "shade_curtain_pct": 1.0,
+        "thermal_curtain_pct": 0.0,
+        "heat_run": 0.0,
+        "cool_run": 0.0,
+        "fan_run": 0.0
+      },
+      "executed_action": {
+        "vent_pct": 0.0,
+        "shade_curtain_pct": 1.0,
+        "thermal_curtain_pct": 0.0,
+        "heat_run": 0.0,
+        "cool_run": 0.0,
+        "fan_run": 0.0
+      },
+      "state_ood_score": 0.4881886657848086,
+      "joint_ood_score": 0.35853012414258667,
+      "joint_ood_level": "in_support",
+      "prediction_physical": {
+        "obs_indoor_temp_c": 21.59714761904763,
+        "obs_indoor_humidity_pct": 40.75,
+        "obs_indoor_co2_ppm": 383.0
+      },
+      "reward": -0.16666666666666666,
+      "terminated": false,
+      "truncated": false,
+      "next_observation_shape": [
+        59
+      ],
+      "one_step_inference_parity": true,
+      "deterministic_replay": true
+    }
+  }
+}

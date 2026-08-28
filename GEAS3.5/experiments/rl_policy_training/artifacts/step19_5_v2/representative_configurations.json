@@ -1,0 +1,97 @@
+{
+  "schema_version": "geas35.rl.step19_5.v2",
+  "selection": "default_plus_deterministic_maximin",
+  "configurations": [
+    {
+      "config_id": "representative_0",
+      "parameters": {
+        "beta_concentration_floor": 1.01,
+        "clip_range": 0.2,
+        "entropy_coefficient": 0.01,
+        "gae_lambda": 0.95,
+        "gamma": 0.99,
+        "learning_rate": 0.0003,
+        "minibatch_size": 64,
+        "network_depth": 2,
+        "network_width": 128,
+        "rollout_length": 2048,
+        "target_kl": 0.03,
+        "update_epochs": 10,
+        "value_coefficient": 0.5
+      }
+    },
+    {
+      "config_id": "representative_1",
+      "parameters": {
+        "beta_concentration_floor": 1.5,
+        "clip_range": 0.3,
+        "entropy_coefficient": 0.0,
+        "gae_lambda": 0.9,
+        "gamma": 0.99,
+        "learning_rate": 0.001,
+        "minibatch_size": 256,
+        "network_depth": 3,
+        "network_width": 128,
+        "rollout_length": 512,
+        "target_kl": 0.02,
+        "update_epochs": 3,
+        "value_coefficient": 1.0
+      }
+    },
+    {
+      "config_id": "representative_2",
+      "parameters": {
+        "beta_concentration_floor": 1.5,
+        "clip_range": 0.1,
+        "entropy_coefficient": 0.02,
+        "gae_lambda": 0.95,
+        "gamma": 0.95,
+        "learning_rate": 1e-05,
+        "minibatch_size": 256,
+        "network_depth": 3,
+        "network_width": 256,
+        "rollout_length": 4096,
+        "target_kl": 0.05,
+        "update_epochs": 3,
+        "value_coefficient": 0.25
+      }
+    },
+    {
+      "config_id": "representative_3",
+      "parameters": {
+        "beta_concentration_floor": 1.5,
+        "clip_range": 0.1,
+        "entropy_coefficient": 0.001,
+        "gae_lambda": 0.98,
+        "gamma": 0.995,
+        "learning_rate": 0.001,
+        "minibatch_size": 64,
+        "network_depth": 3,
+        "network_width": 256,
+        "rollout_length": 512,
+        "target_kl": 0.01,
+        "update_epochs": 5,
+        "value_coefficient": 0.25
+      }
+    },
+    {
+      "config_id": "representative_4",
+      "parameters": {
+        "beta_concentration_floor": 1.5,
+        "clip_range": 0.3,
+        "entropy_coefficient": 0.01,
+        "gae_lambda": 0.98,
+        "gamma": 0.995,
+        "learning_rate": 0.001,
+        "minibatch_size": 256,
+        "network_depth": 3,
+        "network_width": 64,
+        "rollout_length": 4096,
+        "target_kl": 0.05,
+        "update_epochs": 10,
+        "value_coefficient": 0.25
+      }
+    }
+  ],
+  "outcome_blind": true
+}

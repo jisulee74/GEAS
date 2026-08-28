@@ -1,0 +1,60 @@
+{
+  "schema_version": "geas35.rl.step17.v1",
+  "step": "17",
+  "status": "passed",
+  "created_at_utc": "2026-08-25T23:22:01.585957Z",
+  "scope": "environment_validation_only_step18_not_implemented",
+  "step16_integrity": {
+    "path": "experiments/rl_policy_training/artifacts/step16/step16_integrity_manifest.json",
+    "sha256": "8ac2d115305e3e8a77d70816f1ad330ed6d1d2a27ca38d02915cb0bd060068b4",
+    "size_bytes": 649
+  },
+  "implementations": {
+    "environment": {
+      "path": "src/geas35/rl/model_driven_env.py",
+      "sha256": "78c95a017046c10a7a59f02176072aa9abb24b0a9416a17a76f744d264dd86b0",
+      "size_bytes": 26943
+    },
+    "validation_runner": {
+      "path": "src/geas35/experiments/rl/step17_validation.py",
+      "sha256": "a23f4a889b8bc2926fa10bb3ccc476d76560fbcb358ea2f164e8e8bc10dc62fe",
+      "size_bytes": 22398
+    }
+  },
+  "reports": {
+    "environment_validation": {
+      "path": "experiments/rl_policy_training/artifacts/step17/environment_validation_report.json",
+      "sha256": "173e9d0d02fcce93a3f9c3883d7d0c9157b40afec8844f4213d9a2edeeb94e0b",
+      "size_bytes": 9356
+    },
+    "constraint_ood_test_matrix": {
+      "path": "experiments/rl_policy_training/artifacts/step17/constraint_ood_test_matrix.json",
+      "sha256": "5f32d04e34dfdd2383c8d093c6258943b068bf4f72d9a664ccb0ee164323c90d",
+      "size_bytes": 21077
+    },
+    "rollout_parity": {
+      "path": "experiments/rl_policy_training/artifacts/step17/rollout_parity_report.json",
+      "sha256": "1fed2c5b2efbc9d3dfb264d80b957a8a05cb2b3ec623ca06a5479ea03e8d3a63",
+      "size_bytes": 2144
+    },
+    "support_coverage": {
+      "path": "experiments/rl_policy_training/artifacts/step17/support_coverage_report.json",
+      "sha256": "9d299f51218d8e12feb9721fe067f1b56e9b6dafa0a68fe9b1b33bf75d31ab87",
+      "size_bytes": 7234
+    }
+  },
+  "checks": {
+    "dynamics_action_sensitivity": true,
+    "reward_six_term_parity": true,
+    "weather_and_range_constraints": true,
+    "termination_truncation_distinguished": true,
+    "warning_projection_penalty": true,
+    "severe_fallback_and_pessimistic_termination": true,
+    "step12_rollout_numeric_parity": true,
+    "logged_support_coverage": true,
+    "subgroup_coverage_reported": true,
+    "split_episode_registries_disjoint": true,
+    "test_parquet_opened": false,
+    "step18_implemented": false
+  }
+}

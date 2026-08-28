@@ -1,0 +1,30 @@
+{
+  "schema_version": "geas35.rl.step20.v1",
+  "fit_split": "train_only",
+  "crops": {
+    "strawberry": {
+      "hard_constraint_violations_max": 0,
+      "severe_ood_rate_max": 0.019333333333333313,
+      "severe_ood_derivation": "1 - Step17 Train joint severe coverage",
+      "fallback_rate_max": 0.13797620467498012,
+      "fallback_derivation": "95% Wilson upper bound from Step19 Train pilot",
+      "thresholds_hpo_tunable": false
+    },
+    "melon": {
+      "hard_constraint_violations_max": 0,
+      "severe_ood_rate_max": 0.008000000000000007,
+      "severe_ood_derivation": "1 - Step17 Train joint severe coverage",
+      "fallback_rate_max": 0.13797620467498012,
+      "fallback_derivation": "95% Wilson upper bound from Step19 Train pilot",
+      "thresholds_hpo_tunable": false
+    },
+    "cucumber": {
+      "hard_constraint_violations_max": 0,
+      "severe_ood_rate_max": 0.007333333333333303,
+      "severe_ood_derivation": "1 - Step17 Train joint severe coverage",
+      "fallback_rate_max": 0.13797620467498012,
+      "fallback_derivation": "95% Wilson upper bound from Step19 Train pilot",
+      "thresholds_hpo_tunable": false
+    }
+  }
+}

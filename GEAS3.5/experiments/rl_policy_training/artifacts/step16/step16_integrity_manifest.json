@@ -1,0 +1,20 @@
+{
+  "schema_version": "geas35.rl.step16.v1",
+  "step": "16",
+  "status": "passed",
+  "environment_manifest": {
+    "path": "experiments/rl_policy_training/artifacts/step16/step16_environment_manifest.json",
+    "sha256": "fd55bd6d257e3b51c6eff1741d55a6d8970b6b8418bb3d3a149efaba7db60e86",
+    "size_bytes": 3511
+  },
+  "checks": {
+    "step15_hash_chain_verified": true,
+    "all_crops_extra_trees_loaded": true,
+    "observation_action_shape_finite": true,
+    "one_step_inference_parity": true,
+    "deterministic_seed_action_replay": true,
+    "reward_handoff": true,
+    "candidate_artifact_copy_count": 0,
+    "step17_implemented": false
+  }
+}

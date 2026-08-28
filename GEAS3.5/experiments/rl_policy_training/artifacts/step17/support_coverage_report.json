@@ -1,0 +1,233 @@
+{
+  "schema_version": "geas35.rl.step17.v1",
+  "status": "passed",
+  "fit_split": "train_only",
+  "crops": {
+    "strawberry": {
+      "status": "passed",
+      "sampling": "deterministic_even_positions",
+      "sample_rows_cap": 3000,
+      "threshold_source": "frozen_train_conformal_support",
+      "overall": {
+        "rows": 3000,
+        "state_warning_coverage": 0.947,
+        "state_severe_coverage": 0.9786666666666667,
+        "joint_warning_coverage": 0.955,
+        "joint_severe_coverage": 0.9806666666666667
+      },
+      "subgroups": [
+        {
+          "dimension": "growth_stage",
+          "group": "obs_growth_stage_1",
+          "rows": 152,
+          "state_severe_coverage": 1.0,
+          "joint_severe_coverage": 1.0
+        },
+        {
+          "dimension": "growth_stage",
+          "group": "obs_growth_stage_2",
+          "rows": 268,
+          "state_severe_coverage": 0.9776119402985075,
+          "joint_severe_coverage": 0.9925373134328358
+        },
+        {
+          "dimension": "growth_stage",
+          "group": "obs_growth_stage_3",
+          "rows": 230,
+          "state_severe_coverage": 0.991304347826087,
+          "joint_severe_coverage": 0.9956521739130435
+        },
+        {
+          "dimension": "growth_stage",
+          "group": "obs_growth_stage_4",
+          "rows": 284,
+          "state_severe_coverage": 0.9788732394366197,
+          "joint_severe_coverage": 0.9753521126760564
+        },
+        {
+          "dimension": "growth_stage",
+          "group": "obs_growth_stage_5",
+          "rows": 266,
+          "state_severe_coverage": 0.9398496240601504,
+          "joint_severe_coverage": 0.943609022556391
+        },
+        {
+          "dimension": "growth_stage",
+          "group": "obs_growth_stage_6",
+          "rows": 1800,
+          "state_severe_coverage": 0.9811111111111112,
+          "joint_severe_coverage": 0.9816666666666667
+        },
+        {
+          "dimension": "day_night",
+          "group": "day",
+          "rows": 1468,
+          "state_severe_coverage": 0.9782016348773842,
+          "joint_severe_coverage": 0.9775204359673024
+        },
+        {
+          "dimension": "day_night",
+          "group": "night",
+          "rows": 1532,
+          "state_severe_coverage": 0.97911227154047,
+          "joint_severe_coverage": 0.9836814621409922
+        }
+      ],
+      "subgroup_diagnostic": {
+        "minimum_rows": 30,
+        "comparison_level": 0.9,
+        "hard_gate": false,
+        "flagged_groups": []
+      }
+    },
+    "melon": {
+      "status": "passed_with_subgroup_flags",
+      "sampling": "deterministic_even_positions",
+      "sample_rows_cap": 3000,
+      "threshold_source": "frozen_train_conformal_support",
+      "overall": {
+        "rows": 3000,
+        "state_warning_coverage": 0.9693333333333334,
+        "state_severe_coverage": 0.9873333333333333,
+        "joint_warning_coverage": 0.976,
+        "joint_severe_coverage": 0.992
+      },
+      "subgroups": [
+        {
+          "dimension": "growth_stage",
+          "group": "obs_growth_stage_1",
+          "rows": 208,
+          "state_severe_coverage": 0.8894230769230769,
+          "joint_severe_coverage": 0.8990384615384616
+        },
+        {
+          "dimension": "growth_stage",
+          "group": "obs_growth_stage_2",
+          "rows": 530,
+          "state_severe_coverage": 0.9981132075471698,
+          "joint_severe_coverage": 1.0
+        },
+        {
+          "dimension": "growth_stage",
+          "group": "obs_growth_stage_3",
+          "rows": 297,
+          "state_severe_coverage": 1.0,
+          "joint_severe_coverage": 1.0
+        },
+        {
+          "dimension": "growth_stage",
+          "group": "obs_growth_stage_4",
+          "rows": 268,
+          "state_severe_coverage": 1.0,
+          "joint_severe_coverage": 1.0
+        },
+        {
+          "dimension": "growth_stage",
+          "group": "obs_growth_stage_5",
+          "rows": 179,
+          "state_severe_coverage": 0.994413407821229,
+          "joint_severe_coverage": 0.994413407821229
+        },
+        {
+          "dimension": "growth_stage",
+          "group": "obs_growth_stage_6",
+          "rows": 1518,
+          "state_severe_coverage": 0.9914361001317523,
+          "joint_severe_coverage": 0.9986824769433466
+        },
+        {
+          "dimension": "day_night",
+          "group": "day",
+          "rows": 1696,
+          "state_severe_coverage": 0.9893867924528302,
+          "joint_severe_coverage": 0.9952830188679245
+        },
+        {
+          "dimension": "day_night",
+          "group": "night",
+          "rows": 1304,
+          "state_severe_coverage": 0.9846625766871165,
+          "joint_severe_coverage": 0.9877300613496932
+        }
+      ],
+      "subgroup_diagnostic": {
+        "minimum_rows": 30,
+        "comparison_level": 0.9,
+        "hard_gate": false,
+        "flagged_groups": [
+          {
+            "dimension": "growth_stage",
+            "group": "obs_growth_stage_1",
+            "rows": 208,
+            "state_severe_coverage": 0.8894230769230769,
+            "joint_severe_coverage": 0.8990384615384616,
+            "reason": "joint_severe_coverage_below_subgroup_diagnostic_level"
+          }
+        ]
+      }
+    },
+    "cucumber": {
+      "status": "passed",
+      "sampling": "deterministic_even_positions",
+      "sample_rows_cap": 3000,
+      "threshold_source": "frozen_train_conformal_support",
+      "overall": {
+        "rows": 3000,
+        "state_warning_coverage": 0.9626666666666667,
+        "state_severe_coverage": 0.9863333333333333,
+        "joint_warning_coverage": 0.958,
+        "joint_severe_coverage": 0.9926666666666667
+      },
+      "subgroups": [
+        {
+          "dimension": "growth_stage",
+          "group": "obs_growth_stage_1",
+          "rows": 245,
+          "state_severe_coverage": 0.9918367346938776,
+          "joint_severe_coverage": 0.9959183673469387
+        },
+        {
+          "dimension": "growth_stage",
+          "group": "obs_growth_stage_2",
+          "rows": 687,
+          "state_severe_coverage": 0.9912663755458515,
+          "joint_severe_coverage": 0.9985443959243085
+        },
+        {
+          "dimension": "growth_stage",
+          "group": "obs_growth_stage_3",
+          "rows": 1628,
+          "state_severe_coverage": 0.9864864864864865,
+          "joint_severe_coverage": 0.9914004914004914
+        },
+        {
+          "dimension": "growth_stage",
+          "group": "obs_growth_stage_4",
+          "rows": 440,
+          "state_severe_coverage": 0.975,
+          "joint_severe_coverage": 0.9863636363636363
+        },
+        {
+          "dimension": "day_night",
+          "group": "day",
+          "rows": 1563,
+          "state_severe_coverage": 0.9865642994241842,
+          "joint_severe_coverage": 0.9884836852207294
+        },
+        {
+          "dimension": "day_night",
+          "group": "night",
+          "rows": 1437,
+          "state_severe_coverage": 0.9860821155184412,
+          "joint_severe_coverage": 0.9972164231036882
+        }
+      ],
+      "subgroup_diagnostic": {
+        "minimum_rows": 30,
+        "comparison_level": 0.9,
+        "hard_gate": false,
+        "flagged_groups": []
+      }
+    }
+  }
+}

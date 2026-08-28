@@ -1,0 +1,35 @@
+{
+  "schema_version": "geas35.rl.step18.v1",
+  "continuous": {
+    "columns": [
+      "vent_pct",
+      "shade_curtain_pct",
+      "thermal_curtain_pct"
+    ],
+    "distribution": "independent_beta",
+    "base_support": [
+      0.0,
+      1.0
+    ],
+    "feasibility": "affine_transform_to_local_train_bounds_and_weather_cap"
+  },
+  "binary": {
+    "columns": [
+      "heat_run",
+      "cool_run",
+      "fan_run"
+    ],
+    "distribution": "independent_bernoulli",
+    "support": [
+      0,
+      1
+    ],
+    "feasibility": "local_train_support_mask_with_safe_fallback_for_empty_evidence"
+  },
+  "joint_log_probability": "sum_of_six_component_log_probabilities",
+  "joint_entropy": "sum_of_six_component_entropies",
+  "rollout_action_records": [
+    "policy_action",
+    "executed_action"
+  ]
+}

@@ -1,0 +1,312 @@
+{
+  "schema_version": "geas35.rl.step17.v1",
+  "status": "passed",
+  "crops": {
+    "strawberry": {
+      "status": "passed",
+      "action_sensitivity": {
+        "status": "passed",
+        "actions": {
+          "zero": {
+            "vent_pct": 0.0,
+            "shade_curtain_pct": 0.0,
+            "thermal_curtain_pct": 0.0,
+            "heat_run": 0.0,
+            "cool_run": 0.0,
+            "fan_run": 0.0
+          },
+          "logged": {
+            "vent_pct": 1.0,
+            "shade_curtain_pct": 0.0,
+            "thermal_curtain_pct": 0.0,
+            "heat_run": 0.0,
+            "cool_run": 0.0,
+            "fan_run": 0.0
+          },
+          "extreme": {
+            "vent_pct": 1.0,
+            "shade_curtain_pct": 1.0,
+            "thermal_curtain_pct": 1.0,
+            "heat_run": 1.0,
+            "cool_run": 0.0,
+            "fan_run": 1.0
+          }
+        },
+        "predictions_physical": {
+          "zero": {
+            "obs_indoor_temp_c": 15.470684946421464,
+            "obs_indoor_humidity_pct": 32.21162416079453,
+            "obs_indoor_co2_ppm": 424.6261387183194
+          },
+          "logged": {
+            "obs_indoor_temp_c": 15.468928320557046,
+            "obs_indoor_humidity_pct": 32.21162416079453,
+            "obs_indoor_co2_ppm": 424.99385973817533
+          },
+          "extreme": {
+            "obs_indoor_temp_c": 15.470527856088797,
+            "obs_indoor_humidity_pct": 32.23049974335339,
+            "obs_indoor_co2_ppm": 424.7582962505762
+          }
+        },
+        "max_pairwise_target_delta": 0.3677210198559351,
+        "repeatability": true
+      },
+      "reward_parity": {
+        "status": "passed",
+        "reward": -0.13716268447539162,
+        "base_reward": -0.13716268447539162,
+        "warning_ood_penalty": 0.0,
+        "penalty_terms": {
+          "temp_penalty": 0.13716268447539162,
+          "rh_penalty": 0.0,
+          "vpd_penalty": 0.0,
+          "cond_penalty": 0.0,
+          "hv_penalty": 0.0,
+          "act_penalty": 0.0
+        },
+        "terminated": false,
+        "truncated": false
+      },
+      "termination_truncation": {
+        "data_boundary": {
+          "status": "passed",
+          "terminated": true,
+          "truncated": false,
+          "termination_reason": "episode_boundary",
+          "truncation_reason": null
+        },
+        "severe_ood_reasons": [
+          "severe_state_ood",
+          "repeated_severe_action_ood"
+        ],
+        "time_limit": {
+          "status": "passed",
+          "terminated": false,
+          "truncated": true,
+          "termination_reason": null,
+          "truncation_reason": "training_time_limit"
+        }
+      },
+      "split_registry": {
+        "status": "passed",
+        "episode_manifest": {
+          "path": "offline_dataset_preparation/datasets/02_split/strawberry/episode_manifest.csv",
+          "sha256": "0f601f77efc6fc044fa5e6f7f692014ce497704bc8612aaed13a6ce69f472e5d",
+          "size_bytes": 91626
+        },
+        "episode_counts": {
+          "train": 325,
+          "validation": 69,
+          "test": 71
+        },
+        "pairwise_disjoint": true,
+        "test_parquet_opened": false
+      }
+    },
+    "melon": {
+      "status": "passed",
+      "action_sensitivity": {
+        "status": "passed",
+        "actions": {
+          "zero": {
+            "vent_pct": 0.0,
+            "shade_curtain_pct": 0.0,
+            "thermal_curtain_pct": 0.0,
+            "heat_run": 0.0,
+            "cool_run": 0.0,
+            "fan_run": 0.0
+          },
+          "logged": {
+            "vent_pct": 0.0,
+            "shade_curtain_pct": 1.0,
+            "thermal_curtain_pct": 1.0,
+            "heat_run": 0.0,
+            "cool_run": 0.0,
+            "fan_run": 0.0
+          },
+          "extreme": {
+            "vent_pct": 1.0,
+            "shade_curtain_pct": 1.0,
+            "thermal_curtain_pct": 1.0,
+            "heat_run": 1.0,
+            "cool_run": 0.0,
+            "fan_run": 1.0
+          }
+        },
+        "predictions_physical": {
+          "zero": {
+            "obs_indoor_temp_c": 20.32199314351145,
+            "obs_indoor_humidity_pct": 38.02379226419379,
+            "obs_indoor_co2_ppm": 398.75493008808036
+          },
+          "logged": {
+            "obs_indoor_temp_c": 20.321993143511452,
+            "obs_indoor_humidity_pct": 38.017620970418605,
+            "obs_indoor_co2_ppm": 398.7549300880803
+          },
+          "extreme": {
+            "obs_indoor_temp_c": 20.37986915233314,
+            "obs_indoor_humidity_pct": 38.03356541486304,
+            "obs_indoor_co2_ppm": 398.79493008808043
+          }
+        },
+        "max_pairwise_target_delta": 0.057876008821690306,
+        "repeatability": true
+      },
+      "reward_parity": {
+        "status": "passed",
+        "reward": -0.16666666666666666,
+        "base_reward": -0.16666666666666666,
+        "warning_ood_penalty": 0.0,
+        "penalty_terms": {
+          "temp_penalty": 0.16666666666666666,
+          "rh_penalty": 0.0,
+          "vpd_penalty": 0.0,
+          "cond_penalty": 0.0,
+          "hv_penalty": 0.0,
+          "act_penalty": 0.0
+        },
+        "terminated": false,
+        "truncated": false
+      },
+      "termination_truncation": {
+        "data_boundary": {
+          "status": "passed",
+          "terminated": true,
+          "truncated": false,
+          "termination_reason": "episode_boundary",
+          "truncation_reason": null
+        },
+        "severe_ood_reasons": [
+          "severe_state_ood",
+          "repeated_severe_action_ood"
+        ],
+        "time_limit": {
+          "status": "passed",
+          "terminated": false,
+          "truncated": true,
+          "termination_reason": null,
+          "truncation_reason": "training_time_limit"
+        }
+      },
+      "split_registry": {
+        "status": "passed",
+        "episode_manifest": {
+          "path": "offline_dataset_preparation/datasets/02_split/melon/episode_manifest.csv",
+          "sha256": "306a4cf9636a96ac4642a16d9de2cbfd9d8e5283882333d24a56a4b8f49b5f10",
+          "size_bytes": 25670
+        },
+        "episode_counts": {
+          "train": 101,
+          "validation": 21,
+          "test": 23
+        },
+        "pairwise_disjoint": true,
+        "test_parquet_opened": false
+      }
+    },
+    "cucumber": {
+      "status": "passed",
+      "action_sensitivity": {
+        "status": "passed",
+        "actions": {
+          "zero": {
+            "vent_pct": 0.0,
+            "shade_curtain_pct": 0.0,
+            "thermal_curtain_pct": 0.0,
+            "heat_run": 0.0,
+            "cool_run": 0.0,
+            "fan_run": 0.0
+          },
+          "logged": {
+            "vent_pct": 0.0,
+            "shade_curtain_pct": 1.0,
+            "thermal_curtain_pct": 0.0,
+            "heat_run": 0.0,
+            "cool_run": 0.0,
+            "fan_run": 0.0
+          },
+          "extreme": {
+            "vent_pct": 1.0,
+            "shade_curtain_pct": 1.0,
+            "thermal_curtain_pct": 1.0,
+            "heat_run": 1.0,
+            "cool_run": 0.0,
+            "fan_run": 1.0
+          }
+        },
+        "predictions_physical": {
+          "zero": {
+            "obs_indoor_temp_c": 21.597147619047632,
+            "obs_indoor_humidity_pct": 40.7358,
+            "obs_indoor_co2_ppm": 383.0
+          },
+          "logged": {
+            "obs_indoor_temp_c": 21.59714761904763,
+            "obs_indoor_humidity_pct": 40.75,
+            "obs_indoor_co2_ppm": 383.0
+          },
+          "extreme": {
+            "obs_indoor_temp_c": 21.570100000000004,
+            "obs_indoor_humidity_pct": 40.655,
+            "obs_indoor_co2_ppm": 383.28
+          }
+        },
+        "max_pairwise_target_delta": 0.2799999999999727,
+        "repeatability": true
+      },
+      "reward_parity": {
+        "status": "passed",
+        "reward": -0.16666666666666666,
+        "base_reward": -0.16666666666666666,
+        "warning_ood_penalty": 0.0,
+        "penalty_terms": {
+          "temp_penalty": 0.16666666666666666,
+          "rh_penalty": 0.0,
+          "vpd_penalty": 0.0,
+          "cond_penalty": 0.0,
+          "hv_penalty": 0.0,
+          "act_penalty": 0.0
+        },
+        "terminated": false,
+        "truncated": false
+      },
+      "termination_truncation": {
+        "data_boundary": {
+          "status": "passed",
+          "terminated": true,
+          "truncated": false,
+          "termination_reason": "episode_boundary",
+          "truncation_reason": null
+        },
+        "severe_ood_reasons": [
+          "severe_state_ood",
+          "repeated_severe_action_ood"
+        ],
+        "time_limit": {
+          "status": "passed",
+          "terminated": false,
+          "truncated": true,
+          "termination_reason": null,
+          "truncation_reason": "training_time_limit"
+        }
+      },
+      "split_registry": {
+        "status": "passed",
+        "episode_manifest": {
+          "path": "offline_dataset_preparation/datasets/02_split/cucumber/episode_manifest.csv",
+          "sha256": "bf45440ce33ac000decbe9b5a4538962ee9afd15df3d50f0e101242d200990f0",
+          "size_bytes": 18841
+        },
+        "episode_counts": {
+          "train": 82,
+          "validation": 17,
+          "test": 19
+        },
+        "pairwise_disjoint": true,
+        "test_parquet_opened": false
+      }
+    }
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "schema_version": "geas35.rl.step20.v1",
+  "denominator": "scheduled_valid_steps",
+  "complete": {
+    "mean_reward_per_scheduled_valid_step": -1.0,
+    "mean_reward_per_executed_step": -1.0,
+    "mean_episodic_return": -10.0,
+    "mean_discounted_return": -9.0,
+    "scheduled_valid_steps": 10,
+    "executed_steps": 10,
+    "early_termination_missing_steps": 0,
+    "hard_constraint_violations": 0,
+    "severe_ood_rate": 0.0,
+    "fallback_rate": 0.0,
+    "warning_ood_rate": 0.0,
+    "action_instability": 0.1
+  },
+  "early_terminated": {
+    "mean_reward_per_scheduled_valid_step": -1.0,
+    "mean_reward_per_executed_step": -5.0,
+    "mean_episodic_return": -10.0,
+    "mean_discounted_return": -9.0,
+    "scheduled_valid_steps": 10,
+    "executed_steps": 2,
+    "early_termination_missing_steps": 8,
+    "hard_constraint_violations": 0,
+    "severe_ood_rate": 0.0,
+    "fallback_rate": 0.0,
+    "warning_ood_rate": 0.0,
+    "action_instability": 0.1
+  },
+  "same_primary_for_same_reward_and_schedule": true,
+  "executed_step_metric_not_used_for_ranking": true,
+  "test_accessed": false
+}

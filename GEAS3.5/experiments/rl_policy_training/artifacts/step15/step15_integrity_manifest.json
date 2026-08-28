@@ -1,0 +1,20 @@
+{
+  "schema_version": "geas35.rl.step15.v1",
+  "step": "15",
+  "status": "passed",
+  "protocol_manifest": {
+    "path": "experiments/rl_policy_training/artifacts/step15/rl_protocol_manifest.json",
+    "sha256": "d93170212bc186d14c239ea7c3204db02cfc7924072b8acc3d9f72fa53580b9e",
+    "size_bytes": 8795
+  },
+  "checks": {
+    "step14_passed": true,
+    "all_crops_extra_trees": true,
+    "train_only_support_fit": true,
+    "episode_disjoint_calibration": true,
+    "validation_rows_used_for_support": 0,
+    "test_rows_used_for_support": 0,
+    "test_access_fail_closed": true,
+    "step16_environment_implemented": false
+  }
+}

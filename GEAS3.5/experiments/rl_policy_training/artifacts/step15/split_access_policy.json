@@ -1,0 +1,99 @@
+{
+  "schema_version": "geas35.rl.step15.v1",
+  "created_at_utc": "2026-08-25T09:00:04.232040Z",
+  "fit_permissions": {
+    "train": [
+      "support_fit",
+      "ppo_fit",
+      "hpo_trial_fit"
+    ],
+    "validation": [
+      "hpo_objective",
+      "checkpoint_selection",
+      "policy_comparison"
+    ],
+    "test": [
+      "single_final_evaluation_after_authorization"
+    ]
+  },
+  "support_fit_splits": [
+    "train"
+  ],
+  "support_threshold_refit_on_validation_or_test": false,
+  "test_default_state": "locked_fail_closed",
+  "test_authorization_schema": "geas35.rl.test_access_authorization.v1",
+  "test_used_for_hpo": false,
+  "test_used_for_checkpoint_selection": false,
+  "test_used_for_threshold_calibration": false,
+  "datasets": {
+    "strawberry": {
+      "train": {
+        "path": "/NHNHOME/WORKSPACE/26mafra001_A/BASE/theimc/jslee/GEAS/GEAS3.5/offline_dataset_preparation/datasets/5_rl_dataset/strawberry/train.parquet",
+        "sha256": "91858f587c2379cdaf63aae39f97d5246bad1f396e8333fe9afc7e8ef5cfd060",
+        "size_bytes": 9626339,
+        "row_count": 90861,
+        "column_count": 115
+      },
+      "validation": {
+        "path": "/NHNHOME/WORKSPACE/26mafra001_A/BASE/theimc/jslee/GEAS/GEAS3.5/offline_dataset_preparation/datasets/5_rl_dataset/strawberry/validation.parquet",
+        "sha256": "c1f9bde584ac5dee6ddd1ff998fffa7659da67590c468d39ed135af7f727cf91",
+        "size_bytes": 2403842,
+        "row_count": 18015,
+        "column_count": 115
+      },
+      "test": {
+        "path": "/NHNHOME/WORKSPACE/26mafra001_A/BASE/theimc/jslee/GEAS/GEAS3.5/offline_dataset_preparation/datasets/5_rl_dataset/strawberry/test.parquet",
+        "sha256": "8e57f210e01e1f9c618099177f861b1326284bc651c5c722d774d803733cbaa4",
+        "size_bytes": 2291347,
+        "row_count": 19335,
+        "column_count": 115
+      }
+    },
+    "melon": {
+      "train": {
+        "path": "/NHNHOME/WORKSPACE/26mafra001_A/BASE/theimc/jslee/GEAS/GEAS3.5/offline_dataset_preparation/datasets/5_rl_dataset/melon/train.parquet",
+        "sha256": "da6c6e5d3e00d1f5fce5b79a5bd8531a11bd046623833a73debddcd81939c470",
+        "size_bytes": 3780467,
+        "row_count": 28923,
+        "column_count": 115
+      },
+      "validation": {
+        "path": "/NHNHOME/WORKSPACE/26mafra001_A/BASE/theimc/jslee/GEAS/GEAS3.5/offline_dataset_preparation/datasets/5_rl_dataset/melon/validation.parquet",
+        "sha256": "087e506f013209a3273c0676dc2745d12af7d9757216e1ee20f391a48e7ea276",
+        "size_bytes": 841695,
+        "row_count": 6027,
+        "column_count": 115
+      },
+      "test": {
+        "path": "/NHNHOME/WORKSPACE/26mafra001_A/BASE/theimc/jslee/GEAS/GEAS3.5/offline_dataset_preparation/datasets/5_rl_dataset/melon/test.parquet",
+        "sha256": "6cecb9b81b2c3be42feff8deefd3ae3f90cee23ce0084cadeee62c956acb9585",
+        "size_bytes": 824625,
+        "row_count": 6136,
+        "column_count": 115
+      }
+    },
+    "cucumber": {
+      "train": {
+        "path": "/NHNHOME/WORKSPACE/26mafra001_A/BASE/theimc/jslee/GEAS/GEAS3.5/offline_dataset_preparation/datasets/5_rl_dataset/cucumber/train.parquet",
+        "sha256": "93e21e246e13f1bc49db72538c0202200e66b5a7ead522911236ffbfeeefd3e3",
+        "size_bytes": 2843078,
+        "row_count": 22293,
+        "column_count": 115
+      },
+      "validation": {
+        "path": "/NHNHOME/WORKSPACE/26mafra001_A/BASE/theimc/jslee/GEAS/GEAS3.5/offline_dataset_preparation/datasets/5_rl_dataset/cucumber/validation.parquet",
+        "sha256": "dcc41ab66c1d1a59122bb2c64a8dbea22735f251572842c31bc37edce9ca810b",
+        "size_bytes": 745384,
+        "row_count": 4858,
+        "column_count": 115
+      },
+      "test": {
+        "path": "/NHNHOME/WORKSPACE/26mafra001_A/BASE/theimc/jslee/GEAS/GEAS3.5/offline_dataset_preparation/datasets/5_rl_dataset/cucumber/test.parquet",
+        "sha256": "8954278e8de386bf0b8b67bd07c026a7cd78f9b0ed705e44b19d2a8b0a1a3b1e",
+        "size_bytes": 812588,
+        "row_count": 5430,
+        "column_count": 115
+      }
+    }
+  }
+}
