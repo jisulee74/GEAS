@@ -1,0 +1,123 @@
+{
+  "schema_version": "geas35.rl.step20.config.v1",
+  "trials_per_crop": 30,
+  "sampler_seed": 42,
+  "split_policy": {
+    "fit": "train",
+    "objective": "validation",
+    "test": "locked"
+  },
+  "objective": {
+    "primary": "mean_reward_per_scheduled_valid_step",
+    "aggregation": "scheduled_step_micro_average",
+    "includes_ood_penalty_and_terminal_cost": true,
+    "secondary_only": [
+      "mean_episodic_return",
+      "mean_discounted_return",
+      "mean_reward_per_executed_step"
+    ],
+    "tie_breakers_after_safety_gate": [
+      "warning_ood_rate",
+      "action_instability"
+    ]
+  },
+  "successive_halving": {
+    "rungs_environment_steps": [
+      1000000,
+      2000000
+    ],
+    "promotion_fraction": 0.3333333333333333,
+    "top_configuration_seeds": [
+      42,
+      43,
+      44
+    ],
+    "top_configurations_for_multi_seed": 3
+  },
+  "search_space": {
+    "learning_rate": [
+      1e-05,
+      0.001
+    ],
+    "rollout_length": [
+      512,
+      1024,
+      2048,
+      4096
+    ],
+    "minibatch_size": [
+      64,
+      128,
+      256
+    ],
+    "update_epochs": [
+      3,
+      5,
+      10
+    ],
+    "gamma": [
+      0.95,
+      0.98,
+      0.99,
+      0.995
+    ],
+    "gae_lambda": [
+      0.9,
+      0.95,
+      0.98
+    ],
+    "clip_range": [
+      0.1,
+      0.2,
+      0.3
+    ],
+    "entropy_coefficient": [
+      0.0,
+      0.001,
+      0.01,
+      0.02
+    ],
+    "value_coefficient": [
+      0.25,
+      0.5,
+      1.0
+    ],
+    "target_kl": [
+      0.01,
+      0.02,
+      0.03,
+      0.05
+    ],
+    "network_width": [
+      64,
+      128,
+      256
+    ],
+    "network_depth": [
+      2,
+      3
+    ],
+    "beta_concentration_floor": [
+      1.01,
+      1.1,
+      1.5
+    ]
+  },
+  "safety_gate": {
+    "hard_constraint_violations_max": 0,
+    "severe_ood_limit_source": "step17_train_joint_severe_tail_rate",
+    "fallback_limit_source": "step19_train_pilot_wilson_upper_95pct",
+    "thresholds_are_not_hyperparameters": true
+  },
+  "execution": {
+    "official_trials_required": 30,
+    "official_crops_required": [
+      "strawberry",
+      "melon",
+      "cucumber"
+    ],
+    "smoke_results_eligible_for_selection": false,
+    "resume_database": "sqlite",
+    "test_access": false
+  }
+}

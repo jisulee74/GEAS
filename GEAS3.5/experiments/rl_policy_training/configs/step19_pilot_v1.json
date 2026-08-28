@@ -1,0 +1,33 @@
+{
+  "schema_version": "geas35.rl.step19.pilot_config.v1",
+  "seed": 42,
+  "split": "train",
+  "initial_rollout_steps": 16,
+  "resume_rollout_steps": 8,
+  "update_epochs": 2,
+  "minibatch_size": 8,
+  "representative_state_count": 6,
+  "gates": {
+    "minimum_reward_std": 1e-8,
+    "minimum_raw_advantage_std": 1e-8,
+    "minimum_gradient_norm": 1e-8,
+    "maximum_gradient_norm": 1000.0,
+    "minimum_parameter_update_l2": 1e-10,
+    "maximum_absolute_approx_kl": 1.0,
+    "ratio_mean_range": [0.5, 1.5],
+    "minimum_state_action_response": 1e-6,
+    "minimum_state_value_response": 1e-6,
+    "minimum_in_support_rate": 0.5,
+    "maximum_severe_ood_rate": 0.5,
+    "maximum_projection_rate": 0.99,
+    "maximum_fallback_rate": 0.99,
+    "minimum_support_restriction_rate": 0.01
+  },
+  "selection_rules": {
+    "baseline_comparison": false,
+    "reward_performance_gate": false,
+    "test_access": false,
+    "hpo": false,
+    "decision_scope": "implementation_trainability_only"
+  }
+}

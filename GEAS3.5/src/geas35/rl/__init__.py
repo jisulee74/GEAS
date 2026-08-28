@@ -16,6 +16,7 @@ from geas35.rl.mdp_v1 import (
     MDP_V1_SOLAR_PERIOD_ONEHOT_COLUMNS,
     MDP_V1_STEP_MINUTES,
     MDP_V1_TRANSITION_METRIC_KEYS,
+    MDP_V1_TRANSITION_OBSERVATION_COLUMNS,
     MDP_V1_TRANSITION_TARGET_COLUMNS,
     MDP_V1_VALID_TRANSITION_COLUMN,
     MDP_V1_ZSCORE_OBSERVATION_COLUMNS,
@@ -28,6 +29,8 @@ from geas35.rl.mdp_v1 import (
     fit_mdp_v1_observation_scaler,
     fit_mdp_v1_reward_normalizer,
     logged_mdp_v1_action,
+    normalize_mdp_v1_action,
+    project_mdp_v1_action_constraints,
     mdp_v1_observation_columns,
     prepare_mdp_v1_frame,
 )
@@ -44,7 +47,55 @@ from geas35.rl.datasets import (
     prepare_rl_dataset_splits,
 )
 
+
+from geas35.rl.support_v1 import (
+    SUPPORT_SCHEMA_VERSION,
+    StateActionSupportModel,
+    SupportBuildConfig,
+    build_support_artifact,
+    conformal_quantile,
+)
+
+
+_STEP16_EXPORTS = {
+    "GeasModelDrivenEnv",
+    "ModelDrivenEnvConfig",
+    "STEP16_ENV_VERSION",
+    "load_model_driven_env_from_step15",
+}
+
+_STEP18_EXPORTS = {
+    "FeasibleActionSpec", "HybridActorCritic", "HybridPPOConfig", "HybridPPOTrainer",
+    "RolloutBuffer", "STEP18_PPO_VERSION", "SupportAwareActionAdapter", "collect_rollout",
+    "compute_gae", "load_ppo_checkpoint", "save_ppo_checkpoint", "seed_everything",
+}
+
+
+def __getattr__(name: str):
+    """Load Step 16 lazily so transition feature imports remain acyclic."""
+    if name in _STEP16_EXPORTS:
+        from geas35.rl import model_driven_env
+
+        return getattr(model_driven_env, name)
+    if name in _STEP18_EXPORTS:
+        from geas35.rl import hybrid_ppo
+
+        return getattr(hybrid_ppo, name)
+    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+
 __all__ = [
+    "FeasibleActionSpec", "HybridActorCritic", "HybridPPOConfig", "HybridPPOTrainer",
+    "RolloutBuffer", "STEP18_PPO_VERSION", "SupportAwareActionAdapter", "collect_rollout",
+    "compute_gae", "load_ppo_checkpoint", "save_ppo_checkpoint", "seed_everything",
+    "GeasModelDrivenEnv",
+    "ModelDrivenEnvConfig",
+    "STEP16_ENV_VERSION",
+    "load_model_driven_env_from_step15",
+    "SUPPORT_SCHEMA_VERSION",
+    "StateActionSupportModel",
+    "SupportBuildConfig",
+    "build_support_artifact",
+    "conformal_quantile",
     "MDP_V1_ACTION_COLUMNS",
     "MDP_V1_AGGREGATE_QUALITY_FLAG_COLUMNS",
     "MDP_V1_BINARY_ACTION_COLUMNS",
@@ -60,6 +111,7 @@ __all__ = [
     "MDP_V1_SOLAR_PERIOD_ONEHOT_COLUMNS",
     "MDP_V1_STEP_MINUTES",
     "MDP_V1_TRANSITION_METRIC_KEYS",
+    "MDP_V1_TRANSITION_OBSERVATION_COLUMNS",
     "MDP_V1_TRANSITION_TARGET_COLUMNS",
     "MDP_V1_VALID_TRANSITION_COLUMN",
     "MDP_V1_ZSCORE_OBSERVATION_COLUMNS",
@@ -79,6 +131,8 @@ __all__ = [
     "fit_mdp_v1_observation_scaler",
     "fit_mdp_v1_reward_normalizer",
     "logged_mdp_v1_action",
+    "normalize_mdp_v1_action",
+    "project_mdp_v1_action_constraints",
     "mdp_v1_observation_columns",
     "prepare_mdp_v1_frame",
     "prepare_rl_dataset_frame",
