@@ -1,0 +1,58 @@
+{
+  "schema_version": "geas35.transition.step12.v1",
+  "step": "12",
+  "status": "passed",
+  "created_at_utc": "2026-08-12T01:29:46.028748Z",
+  "automatic_model_selection": false,
+  "candidate_order": [
+    "persistence",
+    "linear_regression",
+    "linear_svr",
+    "knn",
+    "extra_trees",
+    "lightgbm",
+    "xgboost",
+    "mlp"
+  ],
+  "target_columns": [
+    "obs_indoor_temp_c",
+    "obs_indoor_humidity_pct",
+    "obs_indoor_co2_ppm"
+  ],
+  "test_used_for_hpo": false,
+  "test_used_for_validation_ranking": false,
+  "test_used_for_selection": false,
+  "step11_immutable_rl_manifest": {
+    "path": "offline_dataset_preparation/datasets/5_rl_dataset/step11_6_integrity_manifest.json",
+    "sha256": "7f6231f6be94b010f8a6c5510bb6769ced9fa338e378a946664b484b5c1d0145"
+  },
+  "crops": {
+    "strawberry": {
+      "config_path": "experiments/transition_model_selection/configs/strawberry.yaml",
+      "config_sha256": "9ef1f799886405c9cfdd74c803a5550a07eec8a58292ecf35589442767cb155b",
+      "output_root": "experiments/transition_model_selection/artifacts/step12/strawberry",
+      "candidate_count": 8,
+      "status": "passed"
+    },
+    "melon": {
+      "config_path": "experiments/transition_model_selection/configs/melon.yaml",
+      "config_sha256": "2e72a6ece0f515e09e21f84026f5b08ed87324502fade118014992b536cbc1e3",
+      "output_root": "experiments/transition_model_selection/artifacts/step12/melon",
+      "candidate_count": 8,
+      "status": "passed"
+    },
+    "cucumber": {
+      "config_path": "experiments/transition_model_selection/configs/cucumber.yaml",
+      "config_sha256": "2ced4a030553c31206c3c28345a5f5982bc05840eb448cf6099dfaece91f90c0",
+      "output_root": "experiments/transition_model_selection/artifacts/step12/cucumber",
+      "candidate_count": 8,
+      "status": "passed"
+    }
+  },
+  "combined_tables": {
+    "candidate_metrics": "experiments/transition_model_selection/artifacts/step12/all_crop_candidate_metrics.csv",
+    "rollout_metrics": "experiments/transition_model_selection/artifacts/step12/all_crop_candidate_rollout_metrics.csv",
+    "resource_metrics": "experiments/transition_model_selection/artifacts/step12/all_crop_candidate_resource_metrics.csv",
+    "test_metrics": "experiments/transition_model_selection/artifacts/step12/all_crop_candidate_test_metrics.csv"
+  }
+}
