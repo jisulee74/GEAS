@@ -8,4 +8,3 @@ __all__ = [
     "STEP15_VERSION", "Step15ContractError", "authorize_test_access",
     "run_step15_contract",
 ]
-
