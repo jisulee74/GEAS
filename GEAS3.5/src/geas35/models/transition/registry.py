@@ -85,6 +85,13 @@ def build_transition_candidate_specs(
                     params=params,
                     registry=registry,
                 ),
+                build_model_with_params=(
+                    lambda trial_params, name=name: build_transition_model(
+                        name,
+                        params=trial_params,
+                        registry=registry,
+                    )
+                ),
                 metadata=metadata,
             )
         )

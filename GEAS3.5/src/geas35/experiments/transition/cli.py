@@ -31,16 +31,8 @@ class TransitionEndToEndExperimentResult:
         return self.experiment_result.output_root
 
     @property
-    def selected_manifest_path(self) -> str:
-        return self.experiment_result.selected_manifest_path
-
-    @property
     def experiment_summary_path(self) -> str:
         return self.experiment_result.experiment_summary_path
-
-    @property
-    def selected_test_metrics_path(self) -> str | None:
-        return self.experiment_result.selected_test_metrics_path
 
 
 def run_from_config(
@@ -80,9 +72,7 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
     result = run_from_config(args.config)
     print(f"Experiment output: {result.output_root}")
-    print(f"Selected transition model: {result.selected_manifest_path}")
     print(f"Experiment summary: {result.experiment_summary_path}")
-    print(f"Selected model test metrics: {result.selected_test_metrics_path}")
     return 0
 
 

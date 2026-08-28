@@ -1,4 +1,4 @@
-"""Run the transition model-selection experiment from this folder."""
+"""Run the transition candidate-evaluation experiment from this folder."""
 
 from __future__ import annotations
 

@@ -17,6 +17,11 @@ from geas35.experiments.transition.runner import (
     TransitionExperimentConfig,
     TransitionModelExperimentSpec,
 )
+from geas35.models.transition.hyperparameters import (
+    DEFAULT_HPO_BUDGET,
+    DEFAULT_HPO_RANDOM_SEED,
+    TransitionHPOConfig,
+)
 from geas35.rl import MDP_V1_ACTION_COLUMNS
 
 
@@ -54,7 +59,11 @@ def load_transition_experiment_config(
     dataset = _mapping(payload.get("dataset", {}), "dataset")
     experiment = _mapping(payload.get("experiment", {}), "experiment")
     models = _mapping(payload.get("models", {}), "models")
-    selection = _mapping(payload.get("selection", {}), "selection")
+    ranking = _mapping(
+        payload.get("ranking", payload.get("selection", {})),
+        "ranking",
+    )
+    hpo = _mapping(payload.get("hpo", {}), "hpo")
     rollout = _mapping(payload.get("rollout", {}), "rollout")
 
     train_path = _resolve_path(dataset.get("train"), source_path, required=True)
@@ -74,10 +83,11 @@ def load_transition_experiment_config(
         crop=crop,
         output_root=output_root,
         models=_model_specs(models),
-        selection_strategy_name=str(selection.get("strategy", "mean_rmse")),
-        selection_strategy_params=dict(
-            _mapping(selection.get("params", {}), "selection.params")
+        ranking_strategy_name=str(ranking.get("strategy", "mean_rmse")),
+        ranking_strategy_params=dict(
+            _mapping(ranking.get("params", {}), "ranking.params")
         ),
+        hpo_config=_hpo_config(hpo),
         rollout_enabled=bool(rollout.get("enabled", False)),
         rollout_horizon_steps=tuple(
             int(value)
@@ -133,6 +143,27 @@ def _model_specs(models: Mapping[str, Any]) -> tuple[TransitionModelExperimentSp
     if not candidates:
         raise ValueError("models.candidates must define at least one model.")
     return tuple(candidates)
+
+
+def _hpo_config(hpo: Mapping[str, Any]) -> TransitionHPOConfig:
+    objective = _mapping(hpo.get("objective", {}), "hpo.objective")
+    weights = _mapping(objective.get("weights", {}), "hpo.objective.weights")
+    kwargs: dict[str, Any] = {
+        "enabled": bool(hpo.get("enabled", True)),
+        "budget": int(hpo.get("budget", DEFAULT_HPO_BUDGET)),
+        "random_seed": int(hpo.get("random_seed", DEFAULT_HPO_RANDOM_SEED)),
+        "max_train_rows": (None if hpo.get("max_train_rows") is None else int(hpo["max_train_rows"])),
+        "max_validation_rows": (None if hpo.get("max_validation_rows") is None else int(hpo["max_validation_rows"])),
+        "search_spaces": dict(
+            _mapping(hpo.get("search_spaces", {}), "hpo.search_spaces")
+        ),
+        "target_search_spaces": dict(
+            _mapping(hpo.get("target_search_spaces", {}), "hpo.target_search_spaces")
+        ),
+    }
+    if weights:
+        kwargs["objective_weights"] = dict(weights)
+    return TransitionHPOConfig(**kwargs)
 
 
 def _load_yaml_mapping(path: Path) -> dict[str, Any]:

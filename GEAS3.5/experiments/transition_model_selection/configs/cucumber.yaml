@@ -1,0 +1,26 @@
+dataset:
+  crop: cucumber
+  train: ../../../offline_dataset_preparation/datasets/5_rl_dataset/cucumber/train.parquet
+  validation: ../../../offline_dataset_preparation/datasets/5_rl_dataset/cucumber/validation.parquet
+  test: ../../../offline_dataset_preparation/datasets/5_rl_dataset/cucumber/test.parquet
+experiment: {output_dir: artifacts/step12/cucumber, random_seed: 42}
+provenance:
+  immutable_rl_manifest: {path: ../../../offline_dataset_preparation/datasets/5_rl_dataset/step11_6_integrity_manifest.json, sha256: 7f6231f6be94b010f8a6c5510bb6769ced9fa338e378a946664b484b5c1d0145}
+models:
+  candidates: [{name: persistence, params: {}}, {name: linear_regression, params: {}}, {name: linear_svr, params: {random_state: 42}}, {name: knn, params: {n_neighbors: 5}}, {name: extra_trees, params: {n_estimators: 100, random_state: 42, n_jobs: 1}}, {name: lightgbm, params: {random_state: 42, verbosity: -1, n_jobs: 1}}, {name: xgboost, params: {random_state: 42, verbosity: 0, n_jobs: 1}}, {name: mlp, params: {hidden_layer_sizes: [64, 32], max_iter: 300, random_state: 42}}]
+ranking: {strategy: mean_rmse, params: {}}
+hpo:
+  enabled: true
+  budget: 20
+  random_seed: 42
+  max_train_rows: 12000
+  max_validation_rows: 3000
+  target_search_spaces:
+    linear_regression: {obs_indoor_temp_c: {fit_intercept: {values: [true, false]}}, obs_indoor_humidity_pct: {fit_intercept: {values: [true, false]}}, obs_indoor_co2_ppm: {fit_intercept: {values: [true, false]}}}
+    linear_svr: {obs_indoor_temp_c: {C: {values: [0.1, 1.0, 10.0]}}, obs_indoor_humidity_pct: {C: {values: [0.1, 1.0, 10.0]}}, obs_indoor_co2_ppm: {C: {values: [0.1, 1.0, 10.0]}}}
+    knn: {obs_indoor_temp_c: {n_neighbors: {values: [3, 5, 7, 11]}}, obs_indoor_humidity_pct: {n_neighbors: {values: [3, 5, 7, 11]}}, obs_indoor_co2_ppm: {n_neighbors: {values: [3, 5, 7, 11]}}}
+    extra_trees: {obs_indoor_temp_c: {min_samples_leaf: {values: [1, 2, 4]}}, obs_indoor_humidity_pct: {min_samples_leaf: {values: [1, 2, 4]}}, obs_indoor_co2_ppm: {min_samples_leaf: {values: [1, 2, 4]}}}
+    lightgbm: {obs_indoor_temp_c: {num_leaves: {values: [15, 31, 63]}}, obs_indoor_humidity_pct: {num_leaves: {values: [15, 31, 63]}}, obs_indoor_co2_ppm: {num_leaves: {values: [15, 31, 63]}}}
+    xgboost: {obs_indoor_temp_c: {max_depth: {values: [3, 5, 7]}}, obs_indoor_humidity_pct: {max_depth: {values: [3, 5, 7]}}, obs_indoor_co2_ppm: {max_depth: {values: [3, 5, 7]}}}
+    mlp: {obs_indoor_temp_c: {alpha: {values: [0.0001, 0.001, 0.01]}}, obs_indoor_humidity_pct: {alpha: {values: [0.0001, 0.001, 0.01]}}, obs_indoor_co2_ppm: {alpha: {values: [0.0001, 0.001, 0.01]}}}
+rollout: {enabled: true, horizon_steps: [3, 6, 12], step_minutes: 5}

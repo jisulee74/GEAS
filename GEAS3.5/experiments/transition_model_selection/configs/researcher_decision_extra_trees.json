@@ -1,0 +1,145 @@
+{
+  "schema_version": "geas35.transition.researcher_decision.v1",
+  "decision_author": "GEAS research team",
+  "decided_at_utc": "2026-08-25T00:00:00Z",
+  "decision_source": "researcher",
+  "framework_generated_recommendation": false,
+  "decisions": {
+    "strawberry": {
+      "candidate_name": "extra_trees",
+      "rationale": "The researcher selected ExtraTrees after reviewing the complete candidate comparison. It ranked first on the precommitted Validation rollout weighted score (2.0028858366424998) and improved that score over Persistence by 23.24720110668984%, while providing strong temperature and humidity Validation accuracy.",
+      "validation_evidence": [
+        {
+          "table": "candidate_metrics",
+          "metric": "validation_rollout_weighted_score",
+          "value": 2.0028858366424998
+        },
+        {
+          "table": "candidate_metrics",
+          "metric": "validation_rollout_weighted_score_rank",
+          "value": 1
+        },
+        {
+          "table": "candidate_metrics",
+          "metric": "persistence_improvement_relative",
+          "value": 0.2324720110668984
+        },
+        {
+          "table": "candidate_metrics",
+          "metric": "validation_indoor_temp_c_rmse",
+          "value": 0.5095022384931637
+        },
+        {
+          "table": "candidate_metrics",
+          "metric": "validation_indoor_humidity_pct_rmse",
+          "value": 0.8763992192573655
+        },
+        {
+          "table": "resource_metrics",
+          "metric": "inference_latency_p95_ms",
+          "value": 198.89583811163905
+        },
+        {
+          "table": "resource_metrics",
+          "metric": "serialized_model_size_bytes",
+          "value": 17382679
+        }
+      ],
+      "resource_tradeoff": "ExtraTrees has the slowest measured candidate inference rank for this crop (p95 198.89583811163905 ms) and a 17382679-byte serialized model, but the researcher accepts this cost in exchange for the best Validation rollout weighted score.",
+      "deployment_constraints": [
+        "Load the existing candidate artifact by its explicit crop and model path; do not copy or rename it as a selected model.",
+        "Verify the recorded model hash, feature schema, observation scaler, and three-target output before inference.",
+        "Benchmark latency on the actual downstream host before online use."
+      ]
+    },
+    "melon": {
+      "candidate_name": "extra_trees",
+      "rationale": "The researcher selected ExtraTrees after reviewing the complete candidate comparison. It ranked first on the precommitted Validation rollout weighted score (1.512312335708339) and improved that score over Persistence by 83.82081469781822%, with strong temperature, humidity, and CO2 one-step accuracy.",
+      "validation_evidence": [
+        {
+          "table": "candidate_metrics",
+          "metric": "validation_rollout_weighted_score",
+          "value": 1.512312335708339
+        },
+        {
+          "table": "candidate_metrics",
+          "metric": "validation_rollout_weighted_score_rank",
+          "value": 1
+        },
+        {
+          "table": "candidate_metrics",
+          "metric": "persistence_improvement_relative",
+          "value": 0.8382081469781822
+        },
+        {
+          "table": "candidate_metrics",
+          "metric": "validation_one_step_rmse",
+          "value": 1.8072404590150648
+        },
+        {
+          "table": "resource_metrics",
+          "metric": "inference_latency_p95_ms",
+          "value": 63.88396378606558
+        },
+        {
+          "table": "resource_metrics",
+          "metric": "serialized_model_size_bytes",
+          "value": 4947637
+        }
+      ],
+      "resource_tradeoff": "ExtraTrees has the slowest measured candidate inference rank for this crop (p95 63.88396378606558 ms), while its 4947637-byte serialized artifact remains manageable; the researcher accepts the latency trade-off for the best Validation rollout weighted score.",
+      "deployment_constraints": [
+        "Load the existing candidate artifact by its explicit crop and model path; do not copy or rename it as a selected model.",
+        "Verify the recorded model hash, feature schema, observation scaler, and three-target output before inference.",
+        "Benchmark latency on the actual downstream host before online use."
+      ]
+    },
+    "cucumber": {
+      "candidate_name": "extra_trees",
+      "rationale": "The researcher selected ExtraTrees after reviewing the complete candidate comparison. It ranked first on the precommitted Validation rollout weighted score (0.8576563792923165) and improved that score over Persistence by 89.0250832803331%, while maintaining zero reported physical violations and NaN/Inf events in the rollout benchmark.",
+      "validation_evidence": [
+        {
+          "table": "candidate_metrics",
+          "metric": "validation_rollout_weighted_score",
+          "value": 0.8576563792923165
+        },
+        {
+          "table": "candidate_metrics",
+          "metric": "validation_rollout_weighted_score_rank",
+          "value": 1
+        },
+        {
+          "table": "candidate_metrics",
+          "metric": "persistence_improvement_relative",
+          "value": 0.890250832803331
+        },
+        {
+          "table": "rollout_metrics",
+          "metric": "physical_violation_rate",
+          "value": 0.0
+        },
+        {
+          "table": "rollout_metrics",
+          "metric": "nan_inf_count",
+          "value": 0.0
+        },
+        {
+          "table": "resource_metrics",
+          "metric": "inference_latency_p95_ms",
+          "value": 72.06746060401201
+        },
+        {
+          "table": "resource_metrics",
+          "metric": "serialized_model_size_bytes",
+          "value": 349783923
+        }
+      ],
+      "resource_tradeoff": "The 349783923-byte cucumber ExtraTrees artifact is the largest candidate artifact and its p95 inference latency is 72.06746060401201 ms. The researcher accepts these costs for the best Validation rollout weighted score, subject to capacity checks.",
+      "deployment_constraints": [
+        "Load the existing candidate artifact by its explicit crop and model path; do not copy or rename it as a selected model.",
+        "Verify the recorded model hash, feature schema, observation scaler, and three-target output before inference.",
+        "Provision sufficient memory for the 349783923-byte model and benchmark latency on the actual downstream host before online use."
+      ]
+    }
+  }
+}
