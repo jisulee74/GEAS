@@ -15,7 +15,7 @@ if str(SRC_ROOT) not in sys.path:
 from geas35.models.transition import (
     LoggedActionProvider,
     PolicyActionProvider,
-    load_selected_transition_model,
+    load_transition_candidate_model,
     predict_next_observation_reward,
 )
 from geas35.realtime import sanitize_for_controller
@@ -35,5 +35,5 @@ def test_transition_reward_prediction_requires_explicit_action() -> None:
 
 def test_future_online_boundary_exports_existing_reusable_helpers() -> None:
     assert inspect.isclass(LoggedActionProvider)
-    assert callable(load_selected_transition_model)
+    assert callable(load_transition_candidate_model)
     assert callable(sanitize_for_controller)
