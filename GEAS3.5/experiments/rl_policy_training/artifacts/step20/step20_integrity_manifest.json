@@ -1,0 +1,73 @@
+{
+  "schema_version": "geas35.rl.step20.v1",
+  "step": "20",
+  "status": "protocol_ready_official_trials_pending",
+  "created_at_utc": "2026-08-26T04:40:28.522841Z",
+  "scope": "step20_only_step21_not_started",
+  "config": {
+    "path": "experiments/rl_policy_training/configs/step20_hpo_v1.json",
+    "sha256": "7129077e5302e6a24ccc9a592f9dd3954a182c0f61301520783ef2346a3b86d9",
+    "size_bytes": 2246
+  },
+  "step15": {
+    "path": "experiments/rl_policy_training/artifacts/step15/rl_protocol_manifest.json",
+    "sha256": "d93170212bc186d14c239ea7c3204db02cfc7924072b8acc3d9f72fa53580b9e",
+    "size_bytes": 8795
+  },
+  "step19": {
+    "path": "experiments/rl_policy_training/artifacts/step19/step19_integrity_manifest.json",
+    "sha256": "7c5070c0e6a1b320d988f55788760dc74f9610b28b16a4740fa5ee635be0b5e3",
+    "size_bytes": 2092
+  },
+  "implementations": {
+    "hpo": {
+      "path": "src/geas35/experiments/rl/step20_hpo.py",
+      "sha256": "ad54c5bc22352fa8906f97f4c521f6fce559f2962ee3d14e1d20060f57290ca8",
+      "size_bytes": 14720
+    },
+    "protocol": {
+      "path": "src/geas35/experiments/rl/step20_protocol.py",
+      "sha256": "595edc88b8308043f8a7b49576cacafdeea4641490fe07b0f28a0f668386e74f",
+      "size_bytes": 6090
+    },
+    "runner": {
+      "path": "src/geas35/experiments/rl/step20_runner.py",
+      "sha256": "5c6bfca188b63df9855271f129fe1b26710d46babf61b17d504f721f5627a8e3",
+      "size_bytes": 23070
+    },
+    "cli": {
+      "path": "experiments/rl_policy_training/scripts/run_step20_hpo.py",
+      "sha256": "3f9ece578e34cb66fd97e84dc04c45fb2a9ef250482796c55da544e466f808de",
+      "size_bytes": 2478
+    }
+  },
+  "artifacts": {
+    "safety_gates": {
+      "path": "experiments/rl_policy_training/artifacts/step20/train_derived_safety_gates.json",
+      "sha256": "8bf3601828a8af2a45a5a6b689658210ddd9aeb872c55f2d370f2418ba6dbe55",
+      "size_bytes": 1162
+    },
+    "objective_audit": {
+      "path": "experiments/rl_policy_training/artifacts/step20/normalized_objective_audit.json",
+      "sha256": "a8c7c5169b3cd0299140e7e5bd4b724952cd70037f39a9ccdb03a793f04cec97",
+      "size_bytes": 1099
+    },
+    "execution_status": {
+      "path": "experiments/rl_policy_training/artifacts/step20/hpo_execution_status.json",
+      "sha256": "d21f469ff04c60e1cf2d98fe799094a475738d0d8a33ba436b82fbb06beed494",
+      "size_bytes": 362
+    }
+  },
+  "database": {
+    "path": "experiments/rl_policy_training/artifacts/step20/hpo_study.sqlite3",
+    "format": "sqlite3",
+    "study_id": "geas35.rl.step20.v1",
+    "mutable_resumable_artifact": true
+  },
+  "checks": {
+    "test_accessed": false,
+    "step21_started": false,
+    "official_hpo_complete": false,
+    "best_config_selected": false
+  }
+}

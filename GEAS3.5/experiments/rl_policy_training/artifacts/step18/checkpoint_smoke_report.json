@@ -1,0 +1,63 @@
+{
+  "schema_version": "geas35.rl.step18.v1",
+  "status": "passed",
+  "crops": {
+    "strawberry": {
+      "status": "passed",
+      "checkpoint": {
+        "path": "experiments/rl_policy_training/artifacts/step18/strawberry/initialization_checkpoint.pt",
+        "sha256": "665bbf2f2a8c1543df85de70809a241ae2927dd2800f9ece0729fc74af45aad6",
+        "size_bytes": 122059
+      },
+      "artifact_hashes": {
+        "observation_scaler": "f0236634917f1c53c4646b69f69c4aadf1789e49b54916f4ab64d9877282308d",
+        "environment": "78c95a017046c10a7a59f02176072aa9abb24b0a9416a17a76f744d264dd86b0",
+        "transition_model": "1a5ebc2fda896caae4844f8c04836fe2b5424753a400a9da3aadded529c0ddb2",
+        "support": "c2741209b8e1dc3de22225f4e1f42e5e538c7cafe31b1c73da521d31a3cdecd7"
+      },
+      "deterministic_action_equal": true,
+      "value_equal": true,
+      "optimizer_restored": true,
+      "rng_state_present": true,
+      "training_steps": 0
+    },
+    "melon": {
+      "status": "passed",
+      "checkpoint": {
+        "path": "experiments/rl_policy_training/artifacts/step18/melon/initialization_checkpoint.pt",
+        "sha256": "aebc8459a1c5c6e4aebedc6a974cfd2646f7b3ff546c27fc0615e39fe77322e7",
+        "size_bytes": 122059
+      },
+      "artifact_hashes": {
+        "observation_scaler": "bd71f600779c3d39396b495cb00b8fb7140def6d5843c1d2e843d70dd010ccbc",
+        "environment": "78c95a017046c10a7a59f02176072aa9abb24b0a9416a17a76f744d264dd86b0",
+        "transition_model": "c2bc3456568ee91dc07f03d44d8a4ddcd17961089d5f8a196d9f6aa70bab83c5",
+        "support": "b172ba598461b1b1541d94bface9ce0d641389eaf2d6b9746bcad5b09c4ec4f7"
+      },
+      "deterministic_action_equal": true,
+      "value_equal": true,
+      "optimizer_restored": true,
+      "rng_state_present": true,
+      "training_steps": 0
+    },
+    "cucumber": {
+      "status": "passed",
+      "checkpoint": {
+        "path": "experiments/rl_policy_training/artifacts/step18/cucumber/initialization_checkpoint.pt",
+        "sha256": "545e8c870946d685876b76a36f4e09eb3b53a778423015984d1da1bf6525be17",
+        "size_bytes": 122059
+      },
+      "artifact_hashes": {
+        "observation_scaler": "f46e7f0123aa64d98daacabddbd27cc4a972a49e5171321ae80fa4e7336b6b19",
+        "environment": "78c95a017046c10a7a59f02176072aa9abb24b0a9416a17a76f744d264dd86b0",
+        "transition_model": "bea320f50be6a1daca3f80ee43d6887f905e74fde859c5f1b487547981b2bc2f",
+        "support": "522d04fcdf3af8bba2b4080be629bf724087808b1a3ca6b48a2486f108de9161"
+      },
+      "deterministic_action_equal": true,
+      "value_equal": true,
+      "optimizer_restored": true,
+      "rng_state_present": true,
+      "training_steps": 0
+    }
+  }
+}

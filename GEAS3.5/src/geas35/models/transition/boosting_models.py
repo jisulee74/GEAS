@@ -21,12 +21,18 @@ class LightGBMTransitionModel(IndependentTargetTransitionModel):
         optional_dependency="lightgbm",
     )
 
-    def __init__(self, **estimator_kwargs: Any) -> None:
+    def __init__(
+        self,
+        *,
+        target_estimator_kwargs: dict[str, dict[str, Any]] | None = None,
+        **estimator_kwargs: Any,
+    ) -> None:
         self.estimator_kwargs = dict(estimator_kwargs)
         super().__init__(
             self._build_estimator,
             model_name=self.model_name,
             capabilities=self.capabilities,
+            target_estimator_kwargs=target_estimator_kwargs,
         )
 
     def _build_estimator(self) -> Any:
@@ -49,12 +55,18 @@ class XGBoostTransitionModel(IndependentTargetTransitionModel):
         optional_dependency="xgboost",
     )
 
-    def __init__(self, **estimator_kwargs: Any) -> None:
+    def __init__(
+        self,
+        *,
+        target_estimator_kwargs: dict[str, dict[str, Any]] | None = None,
+        **estimator_kwargs: Any,
+    ) -> None:
         self.estimator_kwargs = dict(estimator_kwargs)
         super().__init__(
             self._build_estimator,
             model_name=self.model_name,
             capabilities=self.capabilities,
+            target_estimator_kwargs=target_estimator_kwargs,
         )
 
     def _build_estimator(self) -> Any:

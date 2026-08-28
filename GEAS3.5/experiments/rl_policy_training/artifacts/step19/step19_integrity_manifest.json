@@ -1,0 +1,57 @@
+{
+  "schema_version": "geas35.rl.step19.v1",
+  "step": "19",
+  "status": "passed",
+  "created_at_utc": "2026-08-25T23:57:37.645892Z",
+  "scope": "ppo_trainability_pilot_only_step20_not_implemented",
+  "runtime": {
+    "python": "3.12.3",
+    "numpy": "2.5.1",
+    "torch": "2.13.0+cpu",
+    "device": "cpu"
+  },
+  "step18_integrity": {
+    "path": "experiments/rl_policy_training/artifacts/step18/step18_integrity_manifest.json",
+    "sha256": "c372995856faa37599ae3bf6ba0a591fdc524805c2d5f442190901a1585ef557",
+    "size_bytes": 2498
+  },
+  "pilot_config": {
+    "path": "experiments/rl_policy_training/configs/step19_pilot_v1.json",
+    "sha256": "078cbd4bf3f5ee8837d2c008e0f1034e7f8c99a9b87ab9748f5e8b1f3868eea9",
+    "size_bytes": 986
+  },
+  "implementation": {
+    "path": "src/geas35/experiments/rl/step19_pilot.py",
+    "sha256": "a982b2c53433c099d7d587b118f50fb80614666fd6b260629754b54cac0c7146",
+    "size_bytes": 17975
+  },
+  "artifacts": {
+    "diagnostics": {
+      "path": "experiments/rl_policy_training/artifacts/step19/pilot_learning_diagnostics.json",
+      "sha256": "239d9fe63773c8b9aab9e97934cf979d00e46b9727c1f612fe54b95b52f15bc0",
+      "size_bytes": 11278
+    },
+    "ood_intervention_curves": {
+      "path": "experiments/rl_policy_training/artifacts/step19/ood_intervention_curves.json",
+      "sha256": "f9107a3d7be9226ce3dc204c55183fc93864bb68ef1d708cf19f42e347ea67c0",
+      "size_bytes": 2773
+    },
+    "trainability_decision": {
+      "path": "experiments/rl_policy_training/artifacts/step19/trainability_decision.json",
+      "sha256": "29dfbe3d8ee288801942a987ea3815cd8ce565cce77356da6dca98aa967692fd",
+      "size_bytes": 886
+    }
+  },
+  "checks": {
+    "all_crop_updates_finite": true,
+    "reward_and_advantage_signal": true,
+    "kl_entropy_gradient_sane": true,
+    "state_dependent_action_and_value": true,
+    "support_layer_not_blocking_or_inactive": true,
+    "checkpoint_resume_and_seed_reproducibility": true,
+    "baseline_performance_gate_used": false,
+    "test_accessed": false,
+    "hpo_started": false,
+    "step20_implemented": false
+  }
+}

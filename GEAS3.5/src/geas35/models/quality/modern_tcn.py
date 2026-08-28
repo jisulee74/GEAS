@@ -325,6 +325,9 @@ class ModernTCNQualityModel(BaseQualityModel):
         for col in columns:
             if col not in result.columns or col not in prediction_df.columns:
                 continue
+            # Reconstruction values are floats even when the raw sensor column
+            # was inferred as an integer dtype. Cast before assignment.
+            result[col] = pd.to_numeric(result[col], errors="coerce").astype(float)
             mask = invalid_mask[col].astype(bool) if col in invalid_mask.columns else False
             replacement = pd.to_numeric(prediction_df[col], errors="coerce")
             result.loc[mask, col] = replacement.loc[mask]

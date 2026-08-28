@@ -20,6 +20,7 @@ from geas35.models.transition.base import (
     BaseTransitionModel,
     TransitionPrediction,
 )
+from geas35.models.transition.features import OFFICIAL_TRANSITION_TARGET_COLUMNS
 from geas35.rl import (
     MDP_V1_ACTION_COLUMNS,
     MdpV1Config,
@@ -53,6 +54,8 @@ def load_transition_candidate_model(
     models_root: Path | str,
     crop: str,
     model_name: str,
+    *,
+    official: bool = True,
 ) -> LoadedTransitionModel:
     """Load a transition candidate by explicit crop and model name."""
 
@@ -67,11 +70,14 @@ def load_transition_candidate_model(
         model_name=name,
         model=model,
         artifact_dir=artifact_dir,
+        official=official,
     )
 
 
 def load_transition_model_from_artifact_dir(
     artifact_dir: Path | str,
+    *,
+    official: bool = True,
 ) -> LoadedTransitionModel:
     """Load a transition candidate directly from its artifact directory."""
 
@@ -90,6 +96,7 @@ def load_transition_model_from_artifact_dir(
         model=model,
         artifact_dir=path,
         model_manifest=manifest,
+        official=official,
     )
 
 
@@ -97,6 +104,8 @@ def predict_next_observation(
     model_or_bundle: BaseTransitionModel | LoadedTransitionModel,
     current_observation: pd.Series | pd.DataFrame | Mapping[str, Any],
     action: Mapping[str, float] | Sequence[float] | None = None,
+    *,
+    official: bool = True,
 ) -> TransitionPrediction:
     """Predict the next dynamic observation from current observation and action."""
 
@@ -106,7 +115,10 @@ def predict_next_observation(
         else model_or_bundle
     )
     frame = _inference_frame(current_observation, action)
-    return model.predict(frame)
+    prediction = model.predict(frame)
+    if official and tuple(prediction.target_columns) != OFFICIAL_TRANSITION_TARGET_COLUMNS:
+        raise ValueError("Official inference requires exactly temperature, humidity, and CO2 outputs.")
+    return prediction
 
 
 def build_predicted_next_row(
@@ -135,10 +147,13 @@ def predict_next_observation_reward(
     prev_prev_action: Mapping[str, float] | None = None,
     config: MdpV1Config | None = None,
     reward_normalizer: MdpV1RewardNormalizer | None = None,
+    official: bool = True,
 ) -> TransitionRewardPrediction:
     """Predict next observation and compute reward with the existing MDP v1 reward."""
 
-    prediction = predict_next_observation(model_or_bundle, current_row, action)
+    prediction = predict_next_observation(
+        model_or_bundle, current_row, action, official=official
+    )
     next_row = build_predicted_next_row(current_row, prediction)
     reward, terms = compute_mdp_v1_reward(
         next_row,
@@ -163,10 +178,17 @@ def _loaded_transition_model(
     model: Any,
     artifact_dir: Path,
     model_manifest: Mapping[str, Any] | None = None,
+    official: bool = True,
 ) -> LoadedTransitionModel:
     if not isinstance(model, BaseTransitionModel):
         raise TypeError("Loaded artifact is not a BaseTransitionModel.")
     manifest = model_manifest if model_manifest is not None else _model_manifest(artifact_dir)
+    fitted_targets = tuple(getattr(model, "target_columns_", ()) or ())
+    if official and fitted_targets != OFFICIAL_TRANSITION_TARGET_COLUMNS:
+        raise ValueError(
+            "Official transition artifact requires exactly temperature, humidity, and CO2 targets; "
+            "pass official=False only for isolated legacy compatibility."
+        )
     return LoadedTransitionModel(
         crop=crop,
         model_name=model_name,

@@ -27,8 +27,15 @@ Data contract:
 python ../../offline_dataset_preparation/scripts/03_control_quality.py `
   --quality-model-artifact ../quality_control_model_selection/artifacts/default/<model_name>/quality_model_application.json
 python ../../offline_dataset_preparation/scripts/04_prepare_rl_dataset.py
+python scripts/finalize_step11_integrity.py
 ```
 
+- `finalize_step11_integrity.py` is the Step 11.6 fail-closed gate. It writes
+  `5_rl_dataset/step11_6_integrity_manifest.json` and `step12_handoff.json` only
+  after all three crops and all Train/Validation/Test hashes, schemas, scalers,
+  row counts, QC artifacts, and parent manifests agree.
+- Step 12 consumes the immutable manifest path and SHA-256 from
+  `step12_handoff.json`.
 - The transition runner expects RL-ready columns such as `rl_valid_transition`,
   MDP v1 action columns, current `obs_*` columns, and matching `next_*` target columns.
 - Missing files or non-RL-ready inputs fail fast with the prerequisite commands.
@@ -67,6 +74,19 @@ The experiment intentionally does not write selected-model artifacts such as
 copies, winner fields, recommended-model fields, or automatic inference handoff
 artifacts.
 
+Official Step 12 execution:
+
+```powershell
+python scripts/run_step12_real_data_benchmark.py
+```
+
+This validates each crop config and parquet hash against Step 11.6, then runs
+the ordered eight candidates in independent `artifacts/step12/<crop>` roots.
+Target-specific and aggregate Validation/Test ranks, 15/30/60-minute rollout
+and drift, resource metrics, and Persistence improvements are retained. The
+all-crop tables and `step12_benchmark_manifest.json` are written under
+`artifacts/step12`. Test remains descriptive and no model is selected.
+
 Local validation before GPU execution:
 
 ```powershell
@@ -84,3 +104,30 @@ $env:GEAS35_TRANSITION_SMOKE_CONFIG = "GEAS3.5/experiments/transition_model_sele
 python -m pytest -q GEAS3.5/tests/test_optional_real_data_contracts.py
 Remove-Item Env:\GEAS35_TRANSITION_SMOKE_CONFIG
 ```
+
+Step 13 reproducibility and integrity review:
+
+```powershell
+python scripts/run_step13_reproducibility_review.py
+```
+
+The review verifies the immutable Step 11/12 hash chain, crop configs and seeds,
+dependency/device records, official three-target schemas, observation scalers,
+recorded/forecast exogenous-provider contract, all candidate file hashes,
+comparison reports against raw artifacts, and explicit cold-load
+inference/reward for all 24 candidates. Outputs are written under
+`artifacts/step13`. It does not create a Step 14 decision or deployment handoff.
+
+Step 14 researcher decision and explicit deployment handoff:
+
+```powershell
+python scripts/run_step14_deployment_handoff.py `
+  --researcher-decision <researcher-authored-decision.json>
+```
+
+The external decision must follow `configs/researcher_decision.schema.json` and
+contain one explicit candidate, rationale, Validation evidence, resource
+trade-off, and deployment constraints for every crop. The command validates
+those values against Step 12/13 and writes references to the existing candidate
+artifact directories under `artifacts/step14`. It never chooses a candidate,
+creates the researcher decision, or copies a model artifact.

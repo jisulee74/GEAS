@@ -4,6 +4,9 @@ pyarrow
 pymysql
 PyYAML
 scikit-learn
+lightgbm
+xgboost
 joblib
 matplotlib
 pytest
+torch

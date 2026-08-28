@@ -22,6 +22,11 @@ GROWTH_STAGE_DAT_COLUMN = "growth_stage_dat"
 GROWTH_STAGE_NAME_COLUMN = "growth_stage_name"
 DEFAULT_TRANSPLANT_DATE_COLUMNS = ("trans_crop_date", "transplant_date")
 
+CROP_CYCLE_ID_COLUMN = "crop_cycle_id"
+TRANSPLANT_DATE_COLUMN = "trans_crop_date"
+EFFECTIVE_CROP_END_DATE_COLUMN = "effective_crop_end_date"
+GROWTH_STAGE_UNMATCHED_FLAG_COLUMN = "growth_stage_unmatched_flag"
+
 
 def growth_stage_rules_sha256(
     path: Path | str = DEFAULT_GROWTH_STAGE_RULE_PATH,
@@ -186,7 +191,111 @@ def add_growth_stage_columns(
     return result
 
 
+def add_growth_stage_columns_from_crop_cycles(
+    df: pd.DataFrame,
+    crop_cycles: pd.DataFrame | str | Path,
+    *,
+    crop_col: str = "crop",
+    time_col: str = "reg_date",
+    iot_data_idx_col: str = "iot_data_idx",
+    rules: Iterable[GrowthStageRule] | None = None,
+    include_stage_name: bool = True,
+) -> pd.DataFrame:
+    """Match rows to crop cycles and add deterministic growth-stage features.
+
+    Missing row-level greenhouse identifiers are filled only when the snapshot
+    contains exactly one greenhouse. Rows outside every effective crop interval
+    remain unmatched; their DAT and growth-stage values stay missing.
+    """
+
+    if time_col not in df.columns:
+        raise KeyError(f"Missing timestamp column: {time_col}")
+
+    cycles = (
+        pd.read_csv(crop_cycles, dtype={"subj_cd": "string", "kind_cd": "string"})
+        if isinstance(crop_cycles, (str, Path))
+        else crop_cycles.copy()
+    )
+    required = {
+        "crop_cycle_id",
+        "iot_data_idx",
+        "crop",
+        "transplant_date",
+        "effective_crop_end_date",
+    }
+    missing = sorted(required.difference(cycles.columns))
+    if missing:
+        raise KeyError(f"Crop-cycle manifest is missing columns: {', '.join(missing)}")
+
+    result = df.copy()
+    parsed_time = pd.to_datetime(result[time_col], errors="coerce")
+    row_crop = (
+        result[crop_col].map(normalize_crop)
+        if crop_col in result.columns
+        else pd.Series(pd.NA, index=result.index, dtype="object")
+    )
+    row_iot = (
+        pd.to_numeric(result[iot_data_idx_col], errors="coerce")
+        if iot_data_idx_col in result.columns
+        else pd.Series(float("nan"), index=result.index)
+    )
+
+    cycle_iot = pd.to_numeric(cycles["iot_data_idx"], errors="coerce")
+    unique_iot = cycle_iot.dropna().unique()
+    if len(unique_iot) == 1:
+        row_iot = row_iot.fillna(float(unique_iot[0]))
+
+    result[CROP_CYCLE_ID_COLUMN] = pd.Series(pd.NA, index=result.index, dtype="Int64")
+    result[TRANSPLANT_DATE_COLUMN] = pd.NaT
+    result[EFFECTIVE_CROP_END_DATE_COLUMN] = pd.NaT
+
+    cycles = cycles.copy()
+    cycles["iot_data_idx"] = cycle_iot
+    cycles["crop"] = cycles["crop"].map(normalize_crop)
+    cycles["transplant_date"] = pd.to_datetime(cycles["transplant_date"], errors="coerce")
+    cycles["effective_crop_end_date"] = pd.to_datetime(
+        cycles["effective_crop_end_date"], errors="coerce"
+    )
+    cycles = cycles.sort_values(["iot_data_idx", "transplant_date", "crop_cycle_id"])
+
+    for cycle in cycles.itertuples(index=False):
+        start = cycle.transplant_date
+        if pd.isna(start):
+            continue
+        mask = (
+            parsed_time.ge(start)
+            & row_iot.eq(float(cycle.iot_data_idx))
+            & row_crop.eq(cycle.crop)
+        )
+        end = cycle.effective_crop_end_date
+        if pd.notna(end):
+            mask &= parsed_time.le(end)
+        matched = result.index[mask.fillna(False)]
+        result.loc[matched, CROP_CYCLE_ID_COLUMN] = int(cycle.crop_cycle_id)
+        result.loc[matched, TRANSPLANT_DATE_COLUMN] = start
+        result.loc[matched, EFFECTIVE_CROP_END_DATE_COLUMN] = end
+
+    result = add_growth_stage_columns(
+        result,
+        crop_col=crop_col,
+        time_col=time_col,
+        transplant_date_columns=(TRANSPLANT_DATE_COLUMN,),
+        rules=rules,
+        include_stage_name=include_stage_name,
+        strict=False,
+    )
+    result[GROWTH_STAGE_UNMATCHED_FLAG_COLUMN] = (
+        result[CROP_CYCLE_ID_COLUMN].isna().astype(int)
+    )
+    return result
+
+
 __all__ = [
+    "CROP_CYCLE_ID_COLUMN",
+    "EFFECTIVE_CROP_END_DATE_COLUMN",
+    "GROWTH_STAGE_UNMATCHED_FLAG_COLUMN",
+    "TRANSPLANT_DATE_COLUMN",
+    "add_growth_stage_columns_from_crop_cycles",
     "DEFAULT_TRANSPLANT_DATE_COLUMNS",
     "GROWTH_STAGE_DAT_COLUMN",
     "GROWTH_STAGE_NAME_COLUMN",

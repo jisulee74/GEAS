@@ -68,6 +68,7 @@ class AnomalyDetectionPerformance:
     pr_auc: float
     confusion_matrix: ConfusionMatrixReport
     per_column: dict[str, dict[str, object]]
+    injection_stats: dict[str, dict[str, object]]
 
 
 @dataclass(frozen=True)
@@ -133,6 +134,7 @@ def evaluate_quality_model_for_report(
     random_state: int | None = 0,
     include_efficiency: bool = True,
     efficiency_repeats: int = 3,
+    reference_df: pd.DataFrame | None = None,
 ) -> QualityModelEvaluationReport:
     """Evaluate one fixed model/config/threshold on one split."""
 
@@ -151,6 +153,7 @@ def evaluate_quality_model_for_report(
         anomaly_fraction=anomaly_fraction,
         anomaly_scale=anomaly_scale,
         random_state=random_state,
+        reference_df=reference_df,
     )
     efficiency = (
         measure_online_inference_efficiency(
@@ -388,6 +391,7 @@ def _anomaly_report(
             col: _metrics_dict(per_col_metrics)
             for col, per_col_metrics in result.per_column.items()
         },
+        injection_stats=result.injection_stats,
     )
 
 

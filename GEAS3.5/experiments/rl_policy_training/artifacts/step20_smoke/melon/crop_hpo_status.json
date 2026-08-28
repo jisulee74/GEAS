@@ -1,0 +1,23 @@
+{
+  "schema_version": "geas35.rl.step20.v1",
+  "crop": "melon",
+  "mode": "smoke",
+  "status": "successive_halving_complete",
+  "trials_requested": 1,
+  "rung_budgets": [
+    1,
+    2
+  ],
+  "rung0_complete": 1,
+  "rung1_complete": 1,
+  "promoted_trial_numbers": [
+    0
+  ],
+  "device": "cpu",
+  "multi_seed_trial_numbers": [
+    0
+  ],
+  "multi_seed_replications_complete": 3,
+  "test_accessed": false,
+  "eligible_for_selection": false
+}

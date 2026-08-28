@@ -1,0 +1,14 @@
+{
+  "schema_version": "geas35.rl.step19_5.v2",
+  "status": "stopped",
+  "crop": "strawberry",
+  "active_budget": 262144,
+  "jobs": 15,
+  "coordinator_pid": 4169476,
+  "primary_workers": 8,
+  "dynamic_workers_supported": true,
+  "test_accessed": false,
+  "stopped_at_utc": "2026-08-28T07:35:18.242393Z",
+  "resume_supported": true,
+  "active_workers": 0
+}

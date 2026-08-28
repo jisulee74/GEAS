@@ -1,0 +1,41 @@
+{
+  "schema_version": "geas35.rl.step15.config.v1",
+  "protocol_version": "geas35.rl.step15.v1",
+  "support": {
+    "seed": 42,
+    "calibration_episode_fraction": 0.2,
+    "warning_coverage": 0.95,
+    "severe_coverage": 0.99,
+    "neighbors": 50,
+    "max_reference_rows": 10000,
+    "max_calibration_rows": 5000
+  },
+  "hpo": {
+    "trials_per_crop": 30,
+    "environment_steps_per_trial": [
+      1000000,
+      2000000
+    ],
+    "sampler_seed": 42
+  },
+  "final_training": {
+    "seeds": [
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51
+    ]
+  },
+  "evaluation": {
+    "primary_metric": "mean_reward_per_scheduled_valid_step",
+    "episodic_return_role": "secondary_metric_only",
+    "confidence_interval": "episode_bootstrap_95pct",
+    "comparison": "paired_by_episode_and_exogenous_trajectory"
+  }
+}

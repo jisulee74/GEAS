@@ -79,8 +79,13 @@ class IndependentTargetTransitionModel(BaseTransitionModel):
         *,
         model_name: str | None = None,
         capabilities: TransitionModelCapabilities | None = None,
+        target_estimator_kwargs: dict[str, dict[str, Any]] | None = None,
     ) -> None:
         self.estimator_factory = estimator_factory
+        self.target_estimator_kwargs = {
+            str(target): dict(params)
+            for target, params in (target_estimator_kwargs or {}).items()
+        }
         if model_name is not None:
             self.model_name = model_name
         if capabilities is not None:
@@ -97,6 +102,14 @@ class IndependentTargetTransitionModel(BaseTransitionModel):
         estimators: dict[str, Any] = {}
         for target in dataset.target_columns:
             estimator = self.estimator_factory()
+            target_kwargs = self.target_estimator_kwargs.get(str(target), {})
+            if target_kwargs:
+                set_params = getattr(estimator, "set_params", None)
+                if not callable(set_params):
+                    raise TypeError(
+                        f"Estimator for {target} does not support target-specific parameters."
+                    )
+                estimator.set_params(**target_kwargs)
             estimator.fit(x, dataset.y[target])
             estimators[target] = estimator
         self.estimators_ = estimators
@@ -137,12 +150,18 @@ class LinearRegressionTransitionModel(IndependentTargetTransitionModel):
         optional_dependency="scikit-learn",
     )
 
-    def __init__(self, **estimator_kwargs: Any) -> None:
+    def __init__(
+        self,
+        *,
+        target_estimator_kwargs: dict[str, dict[str, Any]] | None = None,
+        **estimator_kwargs: Any,
+    ) -> None:
         self.estimator_kwargs = dict(estimator_kwargs)
         super().__init__(
             self._build_estimator,
             model_name=self.model_name,
             capabilities=self.capabilities,
+            target_estimator_kwargs=target_estimator_kwargs,
         )
 
     def _build_estimator(self) -> Any:
@@ -162,12 +181,18 @@ class LinearSVRTransitionModel(IndependentTargetTransitionModel):
         optional_dependency="scikit-learn",
     )
 
-    def __init__(self, **estimator_kwargs: Any) -> None:
+    def __init__(
+        self,
+        *,
+        target_estimator_kwargs: dict[str, dict[str, Any]] | None = None,
+        **estimator_kwargs: Any,
+    ) -> None:
         self.estimator_kwargs = dict(estimator_kwargs)
         super().__init__(
             self._build_estimator,
             model_name=self.model_name,
             capabilities=self.capabilities,
+            target_estimator_kwargs=target_estimator_kwargs,
         )
 
     def _build_estimator(self) -> Any:
@@ -188,12 +213,18 @@ class KNNTransitionModel(IndependentTargetTransitionModel):
         optional_dependency="scikit-learn",
     )
 
-    def __init__(self, **estimator_kwargs: Any) -> None:
+    def __init__(
+        self,
+        *,
+        target_estimator_kwargs: dict[str, dict[str, Any]] | None = None,
+        **estimator_kwargs: Any,
+    ) -> None:
         self.estimator_kwargs = dict(estimator_kwargs)
         super().__init__(
             self._build_estimator,
             model_name=self.model_name,
             capabilities=self.capabilities,
+            target_estimator_kwargs=target_estimator_kwargs,
         )
 
     def _build_estimator(self) -> Any:
@@ -214,12 +245,18 @@ class ExtraTreesTransitionModel(IndependentTargetTransitionModel):
         optional_dependency="scikit-learn",
     )
 
-    def __init__(self, **estimator_kwargs: Any) -> None:
+    def __init__(
+        self,
+        *,
+        target_estimator_kwargs: dict[str, dict[str, Any]] | None = None,
+        **estimator_kwargs: Any,
+    ) -> None:
         self.estimator_kwargs = dict(estimator_kwargs)
         super().__init__(
             self._build_estimator,
             model_name=self.model_name,
             capabilities=self.capabilities,
+            target_estimator_kwargs=target_estimator_kwargs,
         )
 
     def _build_estimator(self) -> Any:
@@ -244,12 +281,17 @@ class MLPTransitionModel(BaseTransitionModel):
         self,
         *,
         multi_output_strategy: str = "independent",
+        target_estimator_kwargs: dict[str, dict[str, Any]] | None = None,
         **estimator_kwargs: Any,
     ) -> None:
         if multi_output_strategy not in {"independent", "native"}:
             raise ValueError("multi_output_strategy must be 'independent' or 'native'.")
         self.multi_output_strategy = multi_output_strategy
         self.estimator_kwargs = dict(estimator_kwargs)
+        self.target_estimator_kwargs = {
+            str(target): dict(params)
+            for target, params in (target_estimator_kwargs or {}).items()
+        }
         self.estimator_: Any | None = None
         self.independent_model_: IndependentTargetTransitionModel | None = None
         self.capabilities = TransitionModelCapabilities(
@@ -269,6 +311,7 @@ class MLPTransitionModel(BaseTransitionModel):
                 self._build_estimator,
                 model_name=self.model_name,
                 capabilities=self.capabilities,
+                target_estimator_kwargs=self.target_estimator_kwargs,
             ).fit(dataset)
             self.input_columns_ = self.independent_model_.input_columns_
             self.target_columns_ = self.independent_model_.target_columns_

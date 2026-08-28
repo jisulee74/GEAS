@@ -1,0 +1,14 @@
+{
+  "schema_version": "geas35.rl.step20.v1",
+  "status": "protocol_ready_official_trials_pending",
+  "official_trials_required_per_crop": 30,
+  "completed_trials": {
+    "strawberry": 0,
+    "melon": 0,
+    "cucumber": 0
+  },
+  "best_config_selected": false,
+  "smoke_results_eligible_for_selection": false,
+  "test_accessed": false,
+  "step21_started": false
+}

@@ -40,7 +40,10 @@ class TransitionHPOConfig:
     enabled: bool = True
     budget: int = DEFAULT_HPO_BUDGET
     random_seed: int = DEFAULT_HPO_RANDOM_SEED
+    max_train_rows: int | None = None
+    max_validation_rows: int | None = None
     search_spaces: Mapping[str, Any] = field(default_factory=dict)
+    target_search_spaces: Mapping[str, Any] = field(default_factory=dict)
     objective_weights: Mapping[str, float] = field(
         default_factory=lambda: dict(DEFAULT_VALIDATION_ROLLOUT_OBJECTIVE_WEIGHTS)
     )
@@ -48,13 +51,20 @@ class TransitionHPOConfig:
     def __post_init__(self) -> None:
         if self.budget <= 0:
             raise ValueError("TransitionHPOConfig.budget must be positive.")
+        for name, value in (("max_train_rows", self.max_train_rows),
+                            ("max_validation_rows", self.max_validation_rows)):
+            if value is not None and int(value) <= 0:
+                raise ValueError(f"TransitionHPOConfig.{name} must be positive.")
 
     def to_artifact(self) -> dict[str, Any]:
         return {
             "enabled": bool(self.enabled),
             "budget": int(self.budget),
             "random_seed": int(self.random_seed),
+            "max_train_rows": self.max_train_rows,
+            "max_validation_rows": self.max_validation_rows,
             "search_spaces": _jsonable(self.search_spaces),
+            "target_search_spaces": _jsonable(self.target_search_spaces),
             "objective_weights": {
                 str(key): float(value)
                 for key, value in self.objective_weights.items()
@@ -199,11 +209,17 @@ def enrich_rollout_metrics_with_normalized_errors(
         finite = values[np.isfinite(values)]
         if len(finite) == 0:
             continue
-        trajectory_nrmse.append(float(np.sqrt(np.mean(finite**2))) / scale)
+        target_trajectory_nrmse = float(np.sqrt(np.mean(finite**2))) / scale
         final = finite[-1]
-        final_step_nrmse.append(float(abs(final)) / scale)
+        target_final_step_nrmse = float(abs(final)) / scale
         step_abs = np.abs(values) / scale
-        drift_nmae.append(_drift_slope(step_abs))
+        target_drift_nmae = _drift_slope(step_abs)
+        out[f"{column}_trajectory_nrmse"] = target_trajectory_nrmse
+        out[f"{column}_final_step_nrmse"] = target_final_step_nrmse
+        out[f"{column}_drift_slope_nmae"] = target_drift_nmae
+        trajectory_nrmse.append(target_trajectory_nrmse)
+        final_step_nrmse.append(target_final_step_nrmse)
+        drift_nmae.append(target_drift_nmae)
     out["trajectory_nrmse"] = _finite_mean(trajectory_nrmse)
     out["final_step_nrmse"] = _finite_mean(final_step_nrmse)
     out["drift_slope_nmae"] = _finite_mean(drift_nmae)
@@ -244,6 +260,8 @@ def sample_transition_hpo_params(
     model_name: str,
     base_params: Mapping[str, Any],
     config: TransitionHPOConfig,
+    *,
+    target_columns: Sequence[str] = (),
 ) -> tuple[dict[str, Any], ...]:
     """Sample random-search parameter dictionaries for one candidate."""
 
@@ -257,8 +275,38 @@ def sample_transition_hpo_params(
         params = dict(base_params)
         for key, spec in space.items():
             params[str(key)] = _sample_value(spec, rng)
+        target_kwargs: dict[str, dict[str, Any]] = {}
+        for target in target_columns:
+            target_space = _configured_target_search_space(
+                model_name, str(target), config.target_search_spaces
+            )
+            if target_space:
+                target_kwargs[str(target)] = {
+                    str(key): _sample_value(spec, rng)
+                    for key, spec in target_space.items()
+                }
+        if target_kwargs:
+            params["target_estimator_kwargs"] = target_kwargs
         trials.append(params)
     return tuple(trials)
+
+
+def _configured_target_search_space(
+    model_name: str,
+    target_column: str,
+    target_search_spaces: Mapping[str, Any],
+) -> dict[str, Any]:
+    if not target_search_spaces:
+        return {}
+    model_spaces = target_search_spaces.get(model_name, {})
+    if not isinstance(model_spaces, Mapping):
+        raise ValueError(f"hpo.target_search_spaces.{model_name} must be a mapping.")
+    value = model_spaces.get(target_column, {})
+    if not isinstance(value, Mapping):
+        raise ValueError(
+            f"hpo.target_search_spaces.{model_name}.{target_column} must be a mapping."
+        )
+    return dict(value)
 
 
 def _configured_search_space(

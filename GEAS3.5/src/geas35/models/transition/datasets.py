@@ -14,7 +14,13 @@ from geas35.models.transition.features import (
     TransitionTargetPolicy,
     resolve_transition_feature_schema,
 )
-from geas35.rl import MDP_V1_ROLLOUT_ID_COLUMN, MDP_V1_VALID_TRANSITION_COLUMN
+from geas35.rl import (
+    MDP_V1_ACTION_COLUMNS,
+    MDP_V1_BINARY_ACTION_COLUMNS,
+    MDP_V1_CONTINUOUS_ACTION_COLUMNS,
+    MDP_V1_ROLLOUT_ID_COLUMN,
+    MDP_V1_VALID_TRANSITION_COLUMN,
+)
 
 RL_VALID_TRANSITION_COLUMN = "rl_valid_transition"
 RL_DONE_COLUMN = "done"
@@ -104,6 +110,7 @@ class TransitionDatasetBuilder:
 
         valid_mask = self._valid_transition_mask(frame)
         valid_frame = frame.loc[valid_mask].reset_index(drop=True)
+        _validate_official_action_contract(valid_frame)
         excluded_invalid = int((~valid_mask).sum())
         if valid_frame.empty:
             raise ValueError("No valid transition rows are available.")
@@ -153,6 +160,21 @@ class TransitionDatasetBuilder:
             .fillna(0)
             .astype(bool)
         )
+
+
+def _validate_official_action_contract(frame: pd.DataFrame) -> None:
+    missing = [column for column in MDP_V1_ACTION_COLUMNS if column not in frame.columns]
+    if missing:
+        raise ValueError(f"Official MDP action contract is incomplete: {missing}")
+    values = frame.loc[:, MDP_V1_ACTION_COLUMNS].apply(pd.to_numeric, errors="coerce")
+    if not values.notna().all().all():
+        raise ValueError("Official MDP actions must be finite and must not be imputed by the model layer.")
+    for column in MDP_V1_CONTINUOUS_ACTION_COLUMNS:
+        if not values[column].between(0.0, 1.0).all():
+            raise ValueError(f"Continuous action {column} must be in [0, 1].")
+    for column in MDP_V1_BINARY_ACTION_COLUMNS:
+        if not values[column].isin((0.0, 1.0)).all():
+            raise ValueError(f"Binary action {column} must be in {{0, 1}}.")
 
 
 def build_transition_dataset_from_rl_frame(

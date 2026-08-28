@@ -1,0 +1,62 @@
+{
+  "schema_version": "geas35.rl.v1_preservation.v2",
+  "status": "superseded_stopped_preserved",
+  "v1_files": [
+    {
+      "path": "experiments/rl_policy_training/artifacts/step20/hpo_execution_status.json",
+      "sha256": "d21f469ff04c60e1cf2d98fe799094a475738d0d8a33ba436b82fbb06beed494",
+      "size_bytes": 362
+    },
+    {
+      "path": "experiments/rl_policy_training/artifacts/step20/hpo_study.sqlite3",
+      "sha256": "0bfbc28b800e7d6e6d6f51ceefa193809bf03eca3302d11c96439d6715119667",
+      "size_bytes": 12288
+    },
+    {
+      "path": "experiments/rl_policy_training/artifacts/step20/normalized_objective_audit.json",
+      "sha256": "a8c7c5169b3cd0299140e7e5bd4b724952cd70037f39a9ccdb03a793f04cec97",
+      "size_bytes": 1099
+    },
+    {
+      "path": "experiments/rl_policy_training/artifacts/step20/step20_integrity_manifest.json",
+      "sha256": "8a804ec710e17081ec45ae228f380a1a6d617fd5c3a4a697670f3ec81bb39d90",
+      "size_bytes": 2723
+    },
+    {
+      "path": "experiments/rl_policy_training/artifacts/step20/strawberry/trial_000/checkpoint.pt",
+      "sha256": "4a6668fea8c1231c6fee48affda51ea112f669b725c361b9700817643018e24f",
+      "size_bytes": 186293
+    },
+    {
+      "path": "experiments/rl_policy_training/artifacts/step20/strawberry/trial_000/checkpoint.rung0_metrics.json",
+      "sha256": "80f647d022821ee1b67760f42cb6b43db11caba7fdf5407415713671e28d47b6",
+      "size_bytes": 1552691
+    },
+    {
+      "path": "experiments/rl_policy_training/artifacts/step20/strawberry/trial_000/checkpoint.training_history.json",
+      "sha256": "561fa0501ddb4f1a9c9d947e187e0ea8fc38af718945d0c1a5a8e353295d298e",
+      "size_bytes": 1552201
+    },
+    {
+      "path": "experiments/rl_policy_training/artifacts/step20/strawberry/trial_001/checkpoint.pt",
+      "sha256": "1bbe3394aceaf007596efca170d6e09eea19846b2ccaeab8a29ffb5463a31570",
+      "size_bytes": 1826805
+    },
+    {
+      "path": "experiments/rl_policy_training/artifacts/step20/strawberry/trial_001/checkpoint.training_history.json",
+      "sha256": "723efe38776f4f89f54efc8385e6561b4fc655edae0d07448c1c1dec15c35de4",
+      "size_bytes": 273583
+    },
+    {
+      "path": "experiments/rl_policy_training/artifacts/step20/strawberry/validation_pairing_manifest.json",
+      "sha256": "bd0488593ec17e1afc9d2c46a4b1ff917059c9d0dc0e9622e578ce8aaa9f9b6c",
+      "size_bytes": 15730
+    },
+    {
+      "path": "experiments/rl_policy_training/artifacts/step20/train_derived_safety_gates.json",
+      "sha256": "8bf3601828a8af2a45a5a6b689658210ddd9aeb872c55f2d370f2418ba6dbe55",
+      "size_bytes": 1162
+    }
+  ],
+  "v1_used_for_v2_selection": false
+}

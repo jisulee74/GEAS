@@ -1,0 +1,30 @@
+{
+  "schema_version": "geas35.transition.step14.v1",
+  "step": "14",
+  "status": "passed",
+  "researcher_decision_supplied_externally": true,
+  "framework_generated_recommendation": false,
+  "automatic_model_selection": false,
+  "candidate_artifact_copy_count": 0,
+  "explicit_candidate_count": 3,
+  "researcher_decision": {
+    "path": "experiments/transition_model_selection/configs/researcher_decision_extra_trees.json",
+    "sha256": "5541b797ca8a8539d22f928e01f80762ddc4c7e5ccc2ac111344f61cb504ff8a",
+    "size_bytes": 6510
+  },
+  "step13_manifest": {
+    "path": "experiments/transition_model_selection/artifacts/step13/step13_reproducibility_manifest.json",
+    "sha256": "18e3c8873ab916465900890135738e1a03b7367d99d1c7177a8b504819426035",
+    "size_bytes": 24505
+  },
+  "deployment_handoff": {
+    "path": "experiments/transition_model_selection/artifacts/step14/explicit_candidate_deployment_handoff.json",
+    "sha256": "ff02ae4b40493230dc25904d0bd7457f092d3f68bcfea17e0c766c41e55d3cfd",
+    "size_bytes": 8991
+  },
+  "completion_audit": {
+    "path": "experiments/transition_model_selection/artifacts/step14/transition_v1_4_completion_audit.json",
+    "sha256": "b763514b48501f5963c5c2c7ce0e1d358f381912bbf62e5661d59bb4d58e8834",
+    "size_bytes": 1635
+  }
+}

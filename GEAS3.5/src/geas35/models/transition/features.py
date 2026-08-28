@@ -19,23 +19,15 @@ from geas35.rl import (
 
 NEXT_OBSERVATION_PREFIX = "next_"
 
-MDP_V1_DYNAMIC_TARGET_BASE_COLUMNS = (
+OFFICIAL_TRANSITION_TARGET_COLUMNS = (
     "obs_indoor_temp_c",
     "obs_indoor_humidity_pct",
-    "obs_outdoor_temp_c",
-    "obs_outdoor_humidity_pct",
-    "obs_outdoor_light",
-    "obs_outdoor_wind_speed",
-    "obs_rain_flag",
-    "obs_current_target_temp_min_c",
-    "obs_current_target_temp_max_c",
-    "obs_current_target_temp_c",
-    "obs_growth_stage_dat",
-    "obs_current_vpd_kpa",
-    "obs_current_dewpoint_c",
-    "obs_current_condensation_margin_c",
-    *MDP_DERIVED_CONTINUOUS_COLUMNS,
+    "obs_indoor_co2_ppm",
 )
+
+# Backward-compatible name; v1.4 official mode deliberately contains only 3 targets.
+MDP_V1_DYNAMIC_TARGET_BASE_COLUMNS = OFFICIAL_TRANSITION_TARGET_COLUMNS
+
 
 DETERMINISTIC_OBSERVATION_COLUMNS = (
     "obs_hour_sin",
@@ -97,6 +89,8 @@ class TransitionTargetPolicy:
 
     dynamic_target_allowlist: tuple[str, ...] = MDP_V1_DYNAMIC_TARGET_BASE_COLUMNS
     next_prefix: str = NEXT_OBSERVATION_PREFIX
+    require_complete: bool = True
+    mode: str = "official_three_target"
 
     def __post_init__(self) -> None:
         invalid = [
@@ -109,6 +103,19 @@ class TransitionTargetPolicy:
             if len(invalid) > 5:
                 preview = f"{preview}, ..."
             raise ValueError(f"Dynamic target allowlist contains denied columns: {preview}")
+        if self.mode == "official_three_target" and self.dynamic_target_allowlist != OFFICIAL_TRANSITION_TARGET_COLUMNS:
+            raise ValueError("Official transition mode requires exactly temperature, humidity, and CO2 targets.")
+
+    @classmethod
+    def legacy_compatibility(
+        cls, dynamic_target_allowlist: Sequence[str]
+    ) -> "TransitionTargetPolicy":
+        """Build an explicitly non-official incomplete/legacy target policy."""
+        return cls(
+            dynamic_target_allowlist=tuple(dynamic_target_allowlist),
+            require_complete=False,
+            mode="legacy_non_official",
+        )
 
     def next_column(self, observation_column: str) -> str:
         return f"{self.next_prefix}{observation_column}"
@@ -140,6 +147,21 @@ class TransitionTargetPolicy:
                 next_targets.append(next_column)
             else:
                 missing_targets.append(column)
+
+        if self.require_complete:
+            absent_observations = [
+                column for column in self.dynamic_target_allowlist if column not in observed_set
+            ]
+            absent_next = [
+                self.next_column(column)
+                for column in self.dynamic_target_allowlist
+                if self.next_column(column) not in frame_columns
+            ]
+            if absent_observations or absent_next:
+                raise ValueError(
+                    "Official three-target transition contract is incomplete; "
+                    f"missing observations={absent_observations}, missing next targets={absent_next}"
+                )
 
         deterministic = tuple(
             column for column in observed if column in DETERMINISTIC_OBSERVATION_COLUMNS
@@ -227,6 +249,7 @@ __all__ = [
     "DETERMINISTIC_OBSERVATION_COLUMNS",
     "MANAGEMENT_COLUMNS",
     "MDP_V1_DYNAMIC_TARGET_BASE_COLUMNS",
+    "OFFICIAL_TRANSITION_TARGET_COLUMNS",
     "NEXT_OBSERVATION_PREFIX",
     "POSTPROCESSED_OBSERVATION_COLUMNS",
     "STATIC_METADATA_COLUMNS",

@@ -1,0 +1,32 @@
+{
+  "schema_version": "geas35.rl.step19_5.config.v2",
+  "protocol_version": "geas35.rl.step19_5.v2",
+  "representative_configurations": 5,
+  "seeds": [42,43,44],
+  "checkpoint_grid": {
+    "base_rule": "maximum_representative_rollout_length",
+    "growth_rule": "multiply_by_two",
+    "numeric_final_budget_precommitted": false
+  },
+  "ranking_stability": {
+    "kendall_tau_min": 0.8,
+    "top_fraction": 0.3333333333333333,
+    "consecutive_intervals": 3
+  },
+  "learning_stability": {
+    "window_intervals": 3,
+    "reward_delta_fraction_of_current_iqr_max": 0.05,
+    "bootstrap_samples": 1000,
+    "bootstrap_confidence": 0.95,
+    "require_slope_ci_contains_zero": true,
+    "require_finite_diagnostics": true,
+    "require_safety_gate": true
+  },
+  "rung_selection": {
+    "insert_middle_if_final_to_first_ratio_exceeds": 4.0,
+    "middle_rule": "closest_observed_stable_checkpoint_to_geometric_midpoint"
+  },
+  "split_policy": {"fit": "train", "evaluate": "validation", "test": "locked"},
+  "operational_wall_clock_target_hours": 24,
+  "wall_clock_is_scientific_stopping_rule": false
+}

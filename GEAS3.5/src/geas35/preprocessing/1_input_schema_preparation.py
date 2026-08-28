@@ -4,7 +4,7 @@ This module is intentionally narrower than scaling/normalization. It only makes
 incoming offline or realtime data conform to the GEAS input contract:
 
 * parse and validate ``reg_date``;
-* ensure the 39 input feature columns exist;
+* ensure the 36 active input feature columns exist;
 * coerce state/action features to numeric values.
 """
 
@@ -36,8 +36,6 @@ INTERNAL_STATE_COLUMNS = [
 ]
 
 SYSTEM_STATE_COLUMNS = [
-    "etc_blackout",
-    "etc_plc_abnorm",
     "etc_plc_norm",
 ]
 
@@ -58,7 +56,6 @@ ACTION_COLUMNS = [
     "cont_skyr_vol",
     "cont_cur_vol",
     "cont_kwcur_vol",
-    "cont_co2_run",
     "cont_pump1_run",
     "cont_pump2_run",
     "cont_heater_run",
@@ -154,7 +151,7 @@ def prepare_geas_input_schema(
     drop_invalid_time: bool = True,
     sort_by_time: bool = True,
 ) -> pd.DataFrame:
-    """Prepare the 39-column GEAS input schema without imputing values.
+    """Prepare the 36-column GEAS input schema without imputing values.
 
     Invalid or missing ``reg_date`` rows are removed by default. Missing
     state/action feature columns are added as NaN, and feature values that

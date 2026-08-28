@@ -1,0 +1,72 @@
+{
+  "schema_version": "geas35.rl.v2.readiness.v1",
+  "status": "ready_to_run",
+  "created_at_utc": "2026-08-26T23:27:40.702001Z",
+  "test_summary": "107 passed, 2 skipped in 110.93s",
+  "stages": {
+    "step15_v2": "implemented_passed",
+    "step19_5": "implemented_not_executed",
+    "step20_v2": "implemented_waiting_for_calibration"
+  },
+  "contracts": {
+    "step15": {
+      "path": "experiments/rl_policy_training/artifacts/step15_v2/rl_protocol_manifest.json",
+      "sha256": "3af4ac324389bdcccc2ae1d56bf23ff80cc0756d6ff358150b72a51db6c632b6",
+      "size_bytes": 7785
+    },
+    "step19_5": {
+      "path": "experiments/rl_policy_training/artifacts/step19_5_v2/step19_5_readiness.json",
+      "sha256": "9c2cdbc730153fef667da2213957acb3c565c7d808c578085f951332dc0e2fe8",
+      "size_bytes": 237
+    },
+    "step20": {
+      "path": "experiments/rl_policy_training/artifacts/step20_v2/step20_v2_readiness.json",
+      "sha256": "d0ee94f13fe3dd4e88c933b77b539602da4609bb7aad08c79a8837327396c95e",
+      "size_bytes": 382
+    },
+    "v1_snapshot": {
+      "path": "experiments/rl_policy_training/artifacts/step19_5_v2/v1_preservation_snapshot.json",
+      "sha256": "ee0376c1ad64aa71326a1377b9c0222b85b414183b5a43611d5818c5022764b6",
+      "size_bytes": 2639
+    }
+  },
+  "implementations": [
+    {
+      "path": "src/geas35/experiments/rl/step15_v2.py",
+      "sha256": "e6750147f45740f12175ffcef2a37c99e65cdffcf296b66a9e4678b12b61932d",
+      "size_bytes": 2855
+    },
+    {
+      "path": "src/geas35/experiments/rl/step19_5_calibration.py",
+      "sha256": "cb9959840d8c1861a72679a609dcc0b7f4697c8eb67bc48656c0459929e3b038",
+      "size_bytes": 9821
+    },
+    {
+      "path": "src/geas35/experiments/rl/step19_5_runner.py",
+      "sha256": "72d85504e8697180723163b6547b383a4523dc6b86c983e52f78633572c7f922",
+      "size_bytes": 7571
+    },
+    {
+      "path": "src/geas35/experiments/rl/step20_v2.py",
+      "sha256": "2fa6ecbd9b84204863027bd1f9f6457fc6a722827001326dd3ace8eb7a7a7673",
+      "size_bytes": 6643
+    },
+    {
+      "path": "src/geas35/experiments/rl/step20_v2_runner.py",
+      "sha256": "6c95b8e903d60af32881abec1311af8fb859bce6a47a9a270ccf6e979aa7c1bf",
+      "size_bytes": 10963
+    },
+    {
+      "path": "src/geas35/rl/parallel_v2.py",
+      "sha256": "ada87c89fe2fc73442d396504d3d34514e13164b42e411cb0dd876f625236905",
+      "size_bytes": 8204
+    }
+  ],
+  "checks": {
+    "v1_preserved": true,
+    "actual_calibration_started": false,
+    "actual_hpo_started": false,
+    "test_accessed": false,
+    "background_process_started": false
+  }
+}

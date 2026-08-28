@@ -1,0 +1,114 @@
+{
+  "schema_version": "geas35.rl.step16.v1",
+  "environment_version": "geas35.rl.model_driven_env.step16.v1",
+  "step": "16",
+  "status": "passed",
+  "created_at_utc": "2026-08-25T23:20:24.061905Z",
+  "scope": "model_driven_environment_only_step17_not_implemented",
+  "runtime": {
+    "python": "3.12.3",
+    "numpy": "2.5.1",
+    "scikit_learn": "1.9.0"
+  },
+  "step15_protocol": {
+    "path": "experiments/rl_policy_training/artifacts/step15/rl_protocol_manifest.json",
+    "sha256": "d93170212bc186d14c239ea7c3204db02cfc7924072b8acc3d9f72fa53580b9e",
+    "size_bytes": 8795
+  },
+  "implementation": {
+    "path": "src/geas35/rl/model_driven_env.py",
+    "sha256": "78c95a017046c10a7a59f02176072aa9abb24b0a9416a17a76f744d264dd86b0",
+    "size_bytes": 26943
+  },
+  "trajectory_trace": {
+    "path": "experiments/rl_policy_training/artifacts/step16/step16_trajectory_trace.json",
+    "sha256": "2826ce314577fd0aef5021aacc4ea2bc858e728647e8e59c9fd35848bfea0305",
+    "size_bytes": 4704
+  },
+  "contracts": {
+    "internal_state": "physical_unscaled",
+    "policy_and_model_observation": "frozen_train_scaled",
+    "transition_input": "scaled_state_plus_executed_action",
+    "transition_output": "physical_temperature_humidity_co2",
+    "step_minutes": 5,
+    "episode_crosses_date_or_series_boundary": false,
+    "recorded_weather_offline": true,
+    "forecast_weather_interface": true,
+    "ood_state_and_joint_recorded_each_step": true,
+    "warning_action_projection_and_penalty": true,
+    "severe_action_safe_fallback": true,
+    "severe_state_or_repeated_severe_pessimistic_termination": true,
+    "scheduled_valid_steps_denominator_exposed": true
+  },
+  "crops": {
+    "strawberry": {
+      "status": "passed",
+      "split": "train",
+      "candidate_name": "extra_trees",
+      "observation_shape": [
+        59
+      ],
+      "action_shape": [
+        6
+      ],
+      "episode_count": 329,
+      "exogenous_provider_mode": "recorded_weather",
+      "three_target_output": true,
+      "support_monitoring": true,
+      "reward_handoff": true,
+      "one_step_inference_parity": true,
+      "deterministic_replay": true,
+      "ood_response_parameters": {
+        "warning_penalty_max": 1.0,
+        "worst_step_reward": -1.0,
+        "repeated_severe_limit": 3
+      }
+    },
+    "melon": {
+      "status": "passed",
+      "split": "train",
+      "candidate_name": "extra_trees",
+      "observation_shape": [
+        59
+      ],
+      "action_shape": [
+        6
+      ],
+      "episode_count": 103,
+      "exogenous_provider_mode": "recorded_weather",
+      "three_target_output": true,
+      "support_monitoring": true,
+      "reward_handoff": true,
+      "one_step_inference_parity": true,
+      "deterministic_replay": true,
+      "ood_response_parameters": {
+        "warning_penalty_max": 1.0,
+        "worst_step_reward": -1.0,
+        "repeated_severe_limit": 3
+      }
+    },
+    "cucumber": {
+      "status": "passed",
+      "split": "train",
+      "candidate_name": "extra_trees",
+      "observation_shape": [
+        59
+      ],
+      "action_shape": [
+        6
+      ],
+      "episode_count": 99,
+      "exogenous_provider_mode": "recorded_weather",
+      "three_target_output": true,
+      "support_monitoring": true,
+      "reward_handoff": true,
+      "one_step_inference_parity": true,
+      "deterministic_replay": true,
+      "ood_response_parameters": {
+        "warning_penalty_max": 1.0,
+        "worst_step_reward": -1.0,
+        "repeated_severe_limit": 3
+      }
+    }
+  }
+}

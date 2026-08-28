@@ -85,7 +85,7 @@ def write_quality_smoke_fixture(root: Path) -> QualitySmokeFixture:
                 "      median_smoke: {}",
                 "threshold:",
                 "  enabled: true",
-                "  candidate_generation: validation_reconstruction_error_linspace",
+                "  candidate_generation: injected_validation_score_linspace",
                 "  candidate_count: 100",
                 "evaluation:",
                 "  mask_fraction: 0.2",
@@ -191,6 +191,7 @@ def transition_rl_ready_frame(*, offset: float) -> pd.DataFrame:
     index = np.arange(rows, dtype=float)
     indoor_temp = 20.0 + offset + index * 0.2
     indoor_humidity = 65.0 + offset + index * 0.3
+    indoor_co2 = 500.0 + offset + index * 2.0
     frame = pd.DataFrame(
         {
             "reg_date": pd.date_range("2024-01-01", periods=rows, freq="5min"),
@@ -204,14 +205,19 @@ def transition_rl_ready_frame(*, offset: float) -> pd.DataFrame:
             "done": 0,
             "obs_indoor_temp_c": indoor_temp,
             "obs_indoor_humidity_pct": indoor_humidity,
+            "obs_indoor_co2_ppm": indoor_co2,
             "next_obs_indoor_temp_c": indoor_temp + 0.15,
             "next_obs_indoor_humidity_pct": indoor_humidity + 0.2,
+            "next_obs_indoor_co2_ppm": indoor_co2 + 2.0,
             "target_next_indoor_temp_c": indoor_temp + 0.15,
             "target_next_indoor_humidity_pct": indoor_humidity + 0.2,
+            "target_next_indoor_co2_ppm": indoor_co2 + 2.0,
         }
     )
-    for action_index, action_col in enumerate(MDP_V1_ACTION_COLUMNS):
+    for action_index, action_col in enumerate(MDP_V1_ACTION_COLUMNS[:3]):
         frame[action_col] = 0.1 * (action_index + 1) + index * 0.01
+    for action_index, action_col in enumerate(MDP_V1_ACTION_COLUMNS[3:]):
+        frame[action_col] = ((index.astype(int) + action_index) % 2).astype(float)
     return frame
 
 

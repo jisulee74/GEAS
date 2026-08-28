@@ -115,6 +115,7 @@ def run_from_config(
     evaluation_result = run_quality_validation_test_evaluation(
         config=quality_evaluation_config_from_experiment_config(experiment_config),
         calibration_result=threshold_result,
+        reference_df=train_df,
         validation_df=validation_df,
         test_df=test_df,
         observation_columns=observation_columns,

@@ -16,6 +16,14 @@ from geas35.models.transition.features import (
 )
 from geas35.rl import MDP_V1_ACTION_COLUMNS
 
+EXOGENOUS_WEATHER_COLUMNS = (
+    "obs_outdoor_temp_c",
+    "obs_outdoor_humidity_pct",
+    "obs_outdoor_light",
+    "obs_outdoor_wind_speed",
+    "obs_rain_flag",
+)
+
 
 @dataclass(frozen=True)
 class RolloutContext:
@@ -86,6 +94,76 @@ class PolicyActionProvider(ActionProvider, ABC):
     """Interface placeholder for future RL policy-backed rollout actions."""
 
 
+class ExogenousProvider(ABC):
+    """Supply weather observations without asking the transition model to predict them."""
+
+    mode: str
+
+    def reset(self, context: RolloutContext) -> None:
+        """Validate provider inputs before a rollout."""
+
+    @abstractmethod
+    def next_row(
+        self,
+        *,
+        source_frame: pd.DataFrame,
+        next_source_position: int,
+        recorded_next_row: pd.Series,
+    ) -> pd.Series:
+        """Return the next row with exogenous weather supplied."""
+
+
+class RecordedWeatherProvider(ExogenousProvider):
+    """Offline provider that uses timestamp-aligned weather recorded in the frame."""
+
+    mode = "recorded_weather"
+
+    def next_row(self, *, source_frame: pd.DataFrame, next_source_position: int,
+                 recorded_next_row: pd.Series) -> pd.Series:
+        del source_frame, next_source_position
+        return recorded_next_row.copy()
+
+
+class ForecastWeatherProvider(ExogenousProvider):
+    """Operating provider using an exact-timestamp short-term weather forecast."""
+
+    mode = "forecast_weather"
+
+    def __init__(self, forecast_frame: pd.DataFrame, *, time_column: str = "reg_date") -> None:
+        self.forecast_frame = forecast_frame.copy()
+        self.time_column = time_column
+        self._indexed: pd.DataFrame | None = None
+
+    def reset(self, context: RolloutContext) -> None:
+        del context
+        if self.time_column not in self.forecast_frame.columns:
+            raise KeyError(f"Forecast frame is missing {self.time_column}.")
+        missing = [column for column in EXOGENOUS_WEATHER_COLUMNS
+                   if column not in self.forecast_frame.columns]
+        if missing:
+            raise KeyError(f"Forecast frame is missing exogenous columns: {missing}")
+        timestamps = pd.to_datetime(self.forecast_frame[self.time_column], errors="coerce")
+        if timestamps.isna().any() or timestamps.duplicated().any():
+            raise ValueError("Forecast timestamps must be valid and unique.")
+        indexed = self.forecast_frame.copy()
+        indexed.index = timestamps
+        self._indexed = indexed
+
+    def next_row(self, *, source_frame: pd.DataFrame, next_source_position: int,
+                 recorded_next_row: pd.Series) -> pd.Series:
+        del source_frame, next_source_position
+        if self._indexed is None:
+            raise RuntimeError("ForecastWeatherProvider.reset must be called before rollout.")
+        timestamp = pd.to_datetime(recorded_next_row.get(self.time_column), errors="coerce")
+        if pd.isna(timestamp) or timestamp not in self._indexed.index:
+            raise KeyError(f"No timestamp-aligned forecast for {timestamp}.")
+        forecast = self._indexed.loc[timestamp]
+        out = recorded_next_row.copy()
+        for column in EXOGENOUS_WEATHER_COLUMNS:
+            out[column] = _numeric_value(forecast[column], default=np.nan)
+        return out
+
+
 @dataclass(frozen=True)
 class TransitionRolloutResult:
     """One rollout trajectory and drift metrics."""
@@ -98,6 +176,7 @@ class TransitionRolloutResult:
     actions: pd.DataFrame
     errors: pd.DataFrame
     metrics: dict[str, float]
+    exogenous_provider_mode: str
 
 
 class TransitionRolloutSimulator:
@@ -107,9 +186,11 @@ class TransitionRolloutSimulator:
         self,
         model: BaseTransitionModel,
         action_provider: ActionProvider | None = None,
+        exogenous_provider: ExogenousProvider | None = None,
     ) -> None:
         self.model = model
         self.action_provider = action_provider or LoggedActionProvider()
+        self.exogenous_provider = exogenous_provider or RecordedWeatherProvider()
 
     def simulate(
         self,
@@ -140,6 +221,7 @@ class TransitionRolloutSimulator:
             target_columns=targets,
         )
         self.action_provider.reset(rollout_context)
+        self.exogenous_provider.reset(rollout_context)
 
         current_row = frame.iloc[start_index].copy()
         prediction_rows: list[dict[str, float]] = []
@@ -160,7 +242,11 @@ class TransitionRolloutSimulator:
             current_input = current_row.copy()
             for column, value in action.items():
                 current_input[column] = value
-            prediction = self.model.predict(current_input.to_frame().T)
+            current_input_frame = pd.DataFrame(
+                [current_input.reindex(input_columns).to_dict()],
+                columns=input_columns,
+            ).apply(pd.to_numeric, errors="coerce")
+            prediction = self.model.predict(current_input_frame)
             predicted_next = _prediction_row(prediction, targets)
             true_next = _true_next_row(frame.iloc[source_position], targets)
 
@@ -169,7 +255,11 @@ class TransitionRolloutSimulator:
             action_rows.append({column: float(action.get(column, np.nan)) for column in actions})
 
             if step < horizon_steps - 1:
-                next_source_row = frame.iloc[source_position + 1].copy()
+                next_source_row = self.exogenous_provider.next_row(
+                    source_frame=frame,
+                    next_source_position=source_position + 1,
+                    recorded_next_row=frame.iloc[source_position + 1].copy(),
+                )
                 for column, value in predicted_next.items():
                     next_source_row[column] = value
                 _update_previous_action_observations(next_source_row, action)
@@ -188,6 +278,7 @@ class TransitionRolloutSimulator:
             actions=actions_frame,
             errors=errors,
             metrics=_rollout_metrics(predictions, errors),
+            exogenous_provider_mode=self.exogenous_provider.mode,
         )
 
 
@@ -283,6 +374,8 @@ def _physical_violation_rate(predictions: pd.DataFrame) -> float:
             violation |= finite & ((values < 0.0) | (values > 1.0))
         elif "temp" in name or "dewpoint" in name:
             violation |= finite & ((values < -60.0) | (values > 80.0))
+        elif "co2" in name:
+            violation |= finite & ((values < 0.0) | (values > 10000.0))
         elif "vpd" in name:
             violation |= finite & (values < 0.0)
         checks.append(violation)
@@ -327,8 +420,12 @@ def _drift_slope(step_mae: np.ndarray) -> float:
 
 __all__ = [
     "ActionProvider",
+    "EXOGENOUS_WEATHER_COLUMNS",
+    "ExogenousProvider",
+    "ForecastWeatherProvider",
     "LoggedActionProvider",
     "PolicyActionProvider",
+    "RecordedWeatherProvider",
     "RolloutContext",
     "RolloutStepContext",
     "TransitionRolloutResult",

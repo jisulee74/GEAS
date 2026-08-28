@@ -47,6 +47,7 @@ MDP_V1_DAYLIGHT_CONDITION_ONEHOT_COLUMNS = [
 MDP_V1_OBSERVATION_COLUMNS = [
     "obs_indoor_temp_c",
     "obs_indoor_humidity_pct",
+    "obs_indoor_co2_ppm",
     "obs_outdoor_temp_c",
     "obs_outdoor_humidity_pct",
     "obs_outdoor_light",
@@ -97,9 +98,16 @@ MDP_V1_BINARY_ACTION_COLUMNS = [
     "fan_run",
 ]
 
+MDP_V1_TRANSITION_OBSERVATION_COLUMNS = [
+    "obs_indoor_temp_c",
+    "obs_indoor_humidity_pct",
+    "obs_indoor_co2_ppm",
+]
+
 MDP_V1_TRANSITION_TARGET_COLUMNS = [
     "target_next_indoor_temp_c",
     "target_next_indoor_humidity_pct",
+    "target_next_indoor_co2_ppm",
 ]
 
 MDP_V1_TRANSITION_METRIC_KEYS = [
@@ -136,6 +144,7 @@ MDP_V1_REWARD_NORMALIZER_QUANTILE = 0.95
 MDP_V1_ZSCORE_OBSERVATION_COLUMNS = [
     "obs_indoor_temp_c",
     "obs_indoor_humidity_pct",
+    "obs_indoor_co2_ppm",
     "obs_outdoor_temp_c",
     "obs_outdoor_humidity_pct",
     "obs_outdoor_light",
@@ -221,6 +230,16 @@ class MdpV1ObservationScaler:
                 continue
             values = pd.to_numeric(out[col], errors="coerce")
             out[col] = (values - float(self.means[col])) / float(self.scales[col])
+        return out
+
+    def inverse_transform_frame(self, frame: pd.DataFrame) -> pd.DataFrame:
+        """Restore physical continuous observations from the frozen Train scaler."""
+        out = frame.copy()
+        for col in self.columns:
+            if col not in out.columns:
+                continue
+            values = pd.to_numeric(out[col], errors="coerce")
+            out[col] = values * float(self.scales[col]) + float(self.means[col])
         return out
 
 
@@ -537,6 +556,22 @@ def _project_action_for_weather_constraints(
     }
 
 
+
+def normalize_mdp_v1_action(
+    action: Mapping[str, float] | Sequence[float],
+) -> dict[str, float]:
+    """Normalize an external action to the official MDP v1 ranges."""
+    return _normalize_action(action)
+
+
+def project_mdp_v1_action_constraints(
+    action: Mapping[str, float],
+    row: pd.Series | Mapping[str, object],
+    config: MdpV1Config | None = None,
+) -> tuple[dict[str, float], dict[str, float | bool]]:
+    """Apply the existing MDP v1 weather-dependent hard action constraints."""
+    return _project_action_for_weather_constraints(action, row, config or MdpV1Config())
+
 def _act_stability_penalty(
     action: Mapping[str, float],
     prev_action: Mapping[str, float],
@@ -799,14 +834,20 @@ def prepare_mdp_v1_frame(
         fallback_daytime,
     )
 
-    indoor_temp = pd.to_numeric(df["in_temp"], errors="coerce")
-    indoor_humidity = pd.to_numeric(df["in_hum"], errors="coerce")
+    indoor_temp = _first_numeric(df, ["in_temp_representative", "in_temp"], default=np.nan)
+    indoor_humidity = _first_numeric(df, ["in_hum_representative", "in_hum"], default=np.nan)
+    if "in_co2_representative" not in df.columns:
+        raise KeyError(
+            "Official MDP v1 requires in_co2_representative from the quality-controlled dataset."
+        )
+    indoor_co2 = pd.to_numeric(df["in_co2_representative"], errors="coerce")
     vpd = _vpd_kpa(indoor_temp, indoor_humidity)
     dewpoint = _dewpoint_c(indoor_temp, indoor_humidity)
     cond_margin = indoor_temp - dewpoint
 
     df["obs_indoor_temp_c"] = indoor_temp
     df["obs_indoor_humidity_pct"] = indoor_humidity
+    df["obs_indoor_co2_ppm"] = indoor_co2
     df["obs_outdoor_temp_c"] = pd.to_numeric(df["out_temp"], errors="coerce")
     df["obs_outdoor_humidity_pct"] = pd.to_numeric(df["out_hum"], errors="coerce")
     df["obs_outdoor_light"] = light
@@ -932,6 +973,9 @@ def prepare_mdp_v1_frame(
         condensation_margin_min_c=config.condensation_margin_min_c,
         rh_high_pct=config.rh_max_pct,
         ramp_limit_pct=config.ramp_limit_pct,
+        latitude=config.latitude,
+        longitude=config.longitude,
+        timezone=config.timezone,
     )
 
     quality_flags = {
@@ -946,6 +990,7 @@ def prepare_mdp_v1_frame(
 
     df["target_next_indoor_temp_c"] = df["obs_indoor_temp_c"].shift(-1)
     df["target_next_indoor_humidity_pct"] = df["obs_indoor_humidity_pct"].shift(-1)
+    df["target_next_indoor_co2_ppm"] = df["obs_indoor_co2_ppm"].shift(-1)
     df[MDP_V1_VALID_TRANSITION_COLUMN] = _build_valid_transition_mask(df).astype(int)
     invalid_previous = ~df[MDP_V1_VALID_TRANSITION_COLUMN].shift(1).fillna(0).astype(bool)
     df[MDP_V1_ROLLOUT_ID_COLUMN] = invalid_previous.cumsum().astype(int)
@@ -1128,6 +1173,7 @@ __all__ = [
     "MDP_V1_SOLAR_PERIOD_ONEHOT_COLUMNS",
     "MDP_V1_STEP_MINUTES",
     "MDP_V1_TRANSITION_METRIC_KEYS",
+    "MDP_V1_TRANSITION_OBSERVATION_COLUMNS",
     "MDP_V1_TRANSITION_TARGET_COLUMNS",
     "MDP_V1_VALID_TRANSITION_COLUMN",
     "MDP_V1_ZSCORE_OBSERVATION_COLUMNS",
@@ -1139,6 +1185,8 @@ __all__ = [
     "fit_mdp_v1_observation_scaler",
     "fit_mdp_v1_reward_normalizer",
     "logged_mdp_v1_action",
+    "normalize_mdp_v1_action",
+    "project_mdp_v1_action_constraints",
     "mdp_v1_observation_columns",
     "prepare_mdp_v1_frame",
 ]

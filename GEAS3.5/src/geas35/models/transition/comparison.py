@@ -70,30 +70,28 @@ def write_transition_candidate_comparison_outputs(
     rollout_rows = _candidate_rollout_rows(training_result)
     resource_rows = _candidate_resource_rows(training_result)
 
-    candidate_rows = _with_ranks(
-        candidate_rows,
-        rank_specs={
-            "validation_rollout_weighted_score": False,
-            "validation_one_step_mae": False,
-            "validation_one_step_rmse": False,
-            "validation_one_step_nrmse": False,
-            "validation_one_step_q90": False,
-            "validation_one_step_cvar90": False,
-            "validation_one_step_r2": True,
-        },
-    )
-    rollout_rows = _with_ranks(
-        rollout_rows,
-        rank_specs={
-            "15min_trajectory_rmse": False,
-            "30min_trajectory_rmse": False,
-            "60min_trajectory_rmse": False,
-            "15min_final_step_rmse": False,
-            "30min_final_step_rmse": False,
-            "60min_final_step_rmse": False,
-            "drift_slope_nmae": False,
-        },
-    )
+    candidate_rank_specs = {
+        "validation_rollout_weighted_score": False,
+        "validation_one_step_mae": False,
+        "validation_one_step_rmse": False,
+        "validation_one_step_nrmse": False,
+        "validation_one_step_q90": False,
+        "validation_one_step_cvar90": False,
+        "validation_one_step_r2": True,
+        **_target_metric_rank_specs(candidate_rows, prefix="validation_"),
+    }
+    candidate_rows = _with_ranks(candidate_rows, rank_specs=candidate_rank_specs)
+    rollout_rank_specs = {
+        "15min_trajectory_rmse": False,
+        "30min_trajectory_rmse": False,
+        "60min_trajectory_rmse": False,
+        "15min_final_step_rmse": False,
+        "30min_final_step_rmse": False,
+        "60min_final_step_rmse": False,
+        "drift_slope_nmae": False,
+        **_target_metric_rank_specs(rollout_rows, prefix="", rollout=True),
+    }
+    rollout_rows = _with_ranks(rollout_rows, rank_specs=rollout_rank_specs)
     resource_rows = _with_ranks(
         resource_rows,
         rank_specs={
@@ -180,20 +178,20 @@ def write_transition_candidate_test_outputs(
         rollout_horizon_steps=rollout_horizon_steps,
         rollout_step_minutes=rollout_step_minutes,
     )
+    test_rank_specs = {
+        "test_one_step_mae": False,
+        "test_one_step_rmse": False,
+        "test_one_step_nrmse": False,
+        "test_one_step_q90": False,
+        "test_one_step_cvar90": False,
+        "test_one_step_r2": True,
+        "test_15min_trajectory_rmse": False,
+        "test_30min_trajectory_rmse": False,
+        "test_60min_trajectory_rmse": False,
+        **_target_metric_rank_specs(rows, prefix="test_", rollout=True),
+    }
     rows = _with_ranks(
-        rows,
-        rank_specs={
-            "test_one_step_mae": False,
-            "test_one_step_rmse": False,
-            "test_one_step_nrmse": False,
-            "test_one_step_q90": False,
-            "test_one_step_cvar90": False,
-            "test_one_step_r2": True,
-            "test_15min_trajectory_rmse": False,
-            "test_30min_trajectory_rmse": False,
-            "test_60min_trajectory_rmse": False,
-        },
-        rank_suffix="_test_descriptive_rank",
+        rows, rank_specs=test_rank_specs, rank_suffix="_test_descriptive_rank"
     )
     csv_path = root / CANDIDATE_TEST_METRICS_CSV
     json_path = root / CANDIDATE_TEST_METRICS_JSON
@@ -291,6 +289,7 @@ def _candidate_test_rows(
             "test_used_for_hpo": False,
             "test_used_for_validation_ranking": False,
             "test_used_for_selection": False,
+            **_flatten_target_metrics(one_step_report.target_metrics, prefix="test_"),
         }
         for horizon in ("15min", "30min", "60min"):
             metrics = rollout_metrics.get(horizon, {})
@@ -302,6 +301,7 @@ def _candidate_test_rows(
                 "physical_violation_rate"
             )
             row[f"test_{horizon}_nan_inf_count"] = metrics.get("nan_inf_count")
+            row.update(_flatten_rollout_target_metrics(metrics, prefix=f"test_{horizon}_"))
         write_json(
             result.artifact.test_metrics_path,
             {
@@ -389,6 +389,9 @@ def _candidate_metric_rows(training_result: TransitionTrainingResult) -> list[di
                 "validation_one_step_q90": aggregate.get("mean_q90"),
                 "validation_one_step_cvar90": aggregate.get("mean_cvar90"),
                 "validation_one_step_nrmse": aggregate.get("mean_nrmse"),
+                **_flatten_target_metrics(
+                    result.one_step_report.target_metrics, prefix="validation_"
+                ),
                 "validation_rollout_weighted_score": score,
                 "persistence_improvement_absolute": improvement_abs,
                 "persistence_improvement_relative": improvement_rel,
@@ -418,6 +421,7 @@ def _candidate_rollout_rows(training_result: TransitionTrainingResult) -> list[d
                 "physical_violation_rate"
             )
             row[f"{horizon}_nan_inf_count"] = metrics.get("nan_inf_count")
+            row.update(_flatten_rollout_target_metrics(metrics, prefix=f"{horizon}_"))
             if metrics.get("drift_slope_nmae") is not None:
                 drift_values.append(metrics.get("drift_slope_nmae"))
             if metrics.get("physical_violation_rate") is not None:
@@ -461,6 +465,63 @@ def _candidate_resource_rows(training_result: TransitionTrainingResult) -> list[
             }
         )
     return rows
+
+
+def _target_label(column: str) -> str:
+    value = str(column)
+    return value[4:] if value.startswith("obs_") else value
+
+
+def _flatten_target_metrics(
+    target_metrics: Mapping[str, Mapping[str, Any]], *, prefix: str
+) -> dict[str, Any]:
+    out: dict[str, Any] = {}
+    for target, metrics in target_metrics.items():
+        label = _target_label(str(target))
+        for metric in ("mae", "rmse", "r2", "q90", "cvar90", "nrmse"):
+            out[f"{prefix}{label}_{metric}"] = metrics.get(metric)
+    return out
+
+
+def _flatten_rollout_target_metrics(
+    metrics: Mapping[str, Any], *, prefix: str
+) -> dict[str, Any]:
+    out: dict[str, Any] = {}
+    suffixes = (
+        "trajectory_mae", "trajectory_rmse", "trajectory_nrmse",
+        "final_abs_error", "final_step_nrmse", "drift_slope_nmae",
+    )
+    for key, value in metrics.items():
+        text = str(key)
+        for suffix in suffixes:
+            marker = f"_{suffix}"
+            if text.startswith("obs_") and text.endswith(marker):
+                target = text[: -len(marker)]
+                out[f"{prefix}{_target_label(target)}_{suffix}"] = value
+                break
+    return out
+
+
+def _target_metric_rank_specs(
+    rows: Sequence[Mapping[str, Any]], *, prefix: str, rollout: bool = False
+) -> dict[str, bool]:
+    keys = {str(key) for row in rows for key in row}
+    specs: dict[str, bool] = {}
+    for key in keys:
+        if prefix and not key.startswith(prefix):
+            continue
+        if rollout:
+            if any(key.endswith(suffix) for suffix in (
+                "_trajectory_mae", "_trajectory_rmse", "_trajectory_nrmse",
+                "_final_abs_error", "_final_step_nrmse", "_drift_slope_nmae",
+            )) and "indoor_" in key:
+                specs[key] = False
+        elif "indoor_" in key and any(
+            key.endswith(f"_{metric}")
+            for metric in ("mae", "rmse", "q90", "cvar90", "nrmse", "r2")
+        ):
+            specs[key] = key.endswith("_r2")
+    return specs
 
 
 def _with_ranks(

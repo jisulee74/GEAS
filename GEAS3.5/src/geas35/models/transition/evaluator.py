@@ -20,6 +20,7 @@ DEFAULT_TARGET_GROUPS = {
     "indoor_environment": (
         "obs_indoor_temp_c",
         "obs_indoor_humidity_pct",
+        "obs_indoor_co2_ppm",
     ),
     "outdoor_environment": (
         "obs_outdoor_temp_c",
@@ -193,6 +194,9 @@ def _aggregate_metrics(
         aggregate["indoor_humidity_mae"] = float(
             target_metrics["obs_indoor_humidity_pct"]["mae"]
         )
+    if "obs_indoor_co2_ppm" in target_metrics:
+        aggregate["indoor_co2_rmse"] = float(target_metrics["obs_indoor_co2_ppm"]["rmse"])
+        aggregate["indoor_co2_mae"] = float(target_metrics["obs_indoor_co2_ppm"]["mae"])
     return aggregate
 
 

@@ -1,0 +1,171 @@
+{
+  "schema_version": "geas35.rl.step15.v2",
+  "step": "15_v2",
+  "status": "passed",
+  "created_at_utc": "2026-08-26T23:30:20.585336Z",
+  "scope": "versioned_contract_only_reuses_frozen_v1_data_model_support",
+  "config": {
+    "path": "experiments/rl_policy_training/configs/step15_protocol_v2.json",
+    "sha256": "8880133445f64d7873a99dd39defe4ac9bc92012fa1e046ad20aea2ffbcdbd5e",
+    "size_bytes": 681
+  },
+  "inherited_v1": {
+    "path": "experiments/rl_policy_training/artifacts/step15/rl_protocol_manifest.json",
+    "sha256": "d93170212bc186d14c239ea7c3204db02cfc7924072b8acc3d9f72fa53580b9e",
+    "size_bytes": 8795
+  },
+  "step19": {
+    "path": "experiments/rl_policy_training/artifacts/step19/step19_integrity_manifest.json",
+    "sha256": "7c5070c0e6a1b320d988f55788760dc74f9610b28b16a4740fa5ee635be0b5e3",
+    "size_bytes": 2092
+  },
+  "hpo": {
+    "trials_per_crop": 30,
+    "sampler_seed": 42,
+    "budget_source_step": "19.5",
+    "budget_status": "pending_calibration",
+    "budget_artifact_schema": "geas35.rl.step19_5.budget.v2",
+    "numeric_budget_precommitted": false
+  },
+  "split_access_policy": {
+    "path": "experiments/rl_policy_training/artifacts/step15/split_access_policy.json",
+    "sha256": "8c5171d4970e9e6681f39210e4168753ef4d732067a5ff5dcddc627a73cbdab0",
+    "size_bytes": 4020
+  },
+  "crops": {
+    "strawberry": {
+      "candidate_name": "extra_trees",
+      "candidate_model": {
+        "path": "experiments/transition_model_selection/artifacts/step12/strawberry/strawberry/extra_trees/model.pkl",
+        "sha256": "1a5ebc2fda896caae4844f8c04836fe2b5424753a400a9da3aadded529c0ddb2",
+        "size_bytes": 17382679
+      },
+      "feature_schema": {
+        "path": "experiments/transition_model_selection/artifacts/step12/strawberry/strawberry/extra_trees/feature_schema.json",
+        "sha256": "4ea77b7969069bbd78bdb9e1d5706790615815967a51784eda1ef405ec71f7a7",
+        "size_bytes": 4330
+      },
+      "observation_scaler": {
+        "path": "offline_dataset_preparation/datasets/5_rl_dataset/strawberry/observation_scaler.json",
+        "sha256": "f0236634917f1c53c4646b69f69c4aadf1789e49b54916f4ab64d9877282308d",
+        "size_bytes": 4904
+      },
+      "train_rl_dataset": {
+        "path": "/NHNHOME/WORKSPACE/26mafra001_A/BASE/theimc/jslee/GEAS/GEAS3.5/offline_dataset_preparation/datasets/5_rl_dataset/strawberry/train.parquet",
+        "sha256": "91858f587c2379cdaf63aae39f97d5246bad1f396e8333fe9afc7e8ef5cfd060",
+        "size_bytes": 9626339,
+        "row_count": 90861,
+        "column_count": 115
+      },
+      "train_valid_rows_used": 90861,
+      "validation_rows_used_for_support": 0,
+      "test_rows_used_for_support": 0,
+      "state_action_support": {
+        "path": "experiments/rl_policy_training/artifacts/step15/strawberry/state_action_support.json",
+        "sha256": "c2741209b8e1dc3de22225f4e1f42e5e538c7cafe31b1c73da521d31a3cdecd7",
+        "size_bytes": 6851
+      },
+      "support_reference": {
+        "path": "experiments/rl_policy_training/artifacts/step15/strawberry/support_reference.npz",
+        "sha256": "e2c8745e10fc75599b56acb7a9698387f964a5e1d6a230d2bdc6649c3d602430",
+        "size_bytes": 1021711
+      },
+      "calibration_report": {
+        "path": "experiments/rl_policy_training/artifacts/step15/strawberry/conformal_calibration_report.json",
+        "sha256": "144a8b226409fbc982d3a046c10c8ff7d96f6999dcbcdd81f9b8e95358fd613e",
+        "size_bytes": 570
+      }
+    },
+    "melon": {
+      "candidate_name": "extra_trees",
+      "candidate_model": {
+        "path": "experiments/transition_model_selection/artifacts/step12/melon/melon/extra_trees/model.pkl",
+        "sha256": "c2bc3456568ee91dc07f03d44d8a4ddcd17961089d5f8a196d9f6aa70bab83c5",
+        "size_bytes": 4947637
+      },
+      "feature_schema": {
+        "path": "experiments/transition_model_selection/artifacts/step12/melon/melon/extra_trees/feature_schema.json",
+        "sha256": "4ea77b7969069bbd78bdb9e1d5706790615815967a51784eda1ef405ec71f7a7",
+        "size_bytes": 4330
+      },
+      "observation_scaler": {
+        "path": "offline_dataset_preparation/datasets/5_rl_dataset/melon/observation_scaler.json",
+        "sha256": "bd71f600779c3d39396b495cb00b8fb7140def6d5843c1d2e843d70dd010ccbc",
+        "size_bytes": 4801
+      },
+      "train_rl_dataset": {
+        "path": "/NHNHOME/WORKSPACE/26mafra001_A/BASE/theimc/jslee/GEAS/GEAS3.5/offline_dataset_preparation/datasets/5_rl_dataset/melon/train.parquet",
+        "sha256": "da6c6e5d3e00d1f5fce5b79a5bd8531a11bd046623833a73debddcd81939c470",
+        "size_bytes": 3780467,
+        "row_count": 28923,
+        "column_count": 115
+      },
+      "train_valid_rows_used": 28923,
+      "validation_rows_used_for_support": 0,
+      "test_rows_used_for_support": 0,
+      "state_action_support": {
+        "path": "experiments/rl_policy_training/artifacts/step15/melon/state_action_support.json",
+        "sha256": "b172ba598461b1b1541d94bface9ce0d641389eaf2d6b9746bcad5b09c4ec4f7",
+        "size_bytes": 6845
+      },
+      "support_reference": {
+        "path": "experiments/rl_policy_training/artifacts/step15/melon/support_reference.npz",
+        "sha256": "daca24d23635c580f120d34cdd07c5c12d73895686a4c9c059c52a07b1d55265",
+        "size_bytes": 1014899
+      },
+      "calibration_report": {
+        "path": "experiments/rl_policy_training/artifacts/step15/melon/conformal_calibration_report.json",
+        "sha256": "7576c7dc31e1815c4fe70478c5dc8c4d3382f501e5d6f484424fa10639fa3040",
+        "size_bytes": 565
+      }
+    },
+    "cucumber": {
+      "candidate_name": "extra_trees",
+      "candidate_model": {
+        "path": "experiments/transition_model_selection/artifacts/step12/cucumber/cucumber/extra_trees/model.pkl",
+        "sha256": "bea320f50be6a1daca3f80ee43d6887f905e74fde859c5f1b487547981b2bc2f",
+        "size_bytes": 349783923
+      },
+      "feature_schema": {
+        "path": "experiments/transition_model_selection/artifacts/step12/cucumber/cucumber/extra_trees/feature_schema.json",
+        "sha256": "4ea77b7969069bbd78bdb9e1d5706790615815967a51784eda1ef405ec71f7a7",
+        "size_bytes": 4330
+      },
+      "observation_scaler": {
+        "path": "offline_dataset_preparation/datasets/5_rl_dataset/cucumber/observation_scaler.json",
+        "sha256": "f46e7f0123aa64d98daacabddbd27cc4a972a49e5171321ae80fa4e7336b6b19",
+        "size_bytes": 4865
+      },
+      "train_rl_dataset": {
+        "path": "/NHNHOME/WORKSPACE/26mafra001_A/BASE/theimc/jslee/GEAS/GEAS3.5/offline_dataset_preparation/datasets/5_rl_dataset/cucumber/train.parquet",
+        "sha256": "93e21e246e13f1bc49db72538c0202200e66b5a7ead522911236ffbfeeefd3e3",
+        "size_bytes": 2843078,
+        "row_count": 22293,
+        "column_count": 115
+      },
+      "train_valid_rows_used": 22293,
+      "validation_rows_used_for_support": 0,
+      "test_rows_used_for_support": 0,
+      "state_action_support": {
+        "path": "experiments/rl_policy_training/artifacts/step15/cucumber/state_action_support.json",
+        "sha256": "522d04fcdf3af8bba2b4080be629bf724087808b1a3ca6b48a2486f108de9161",
+        "size_bytes": 6954
+      },
+      "support_reference": {
+        "path": "experiments/rl_policy_training/artifacts/step15/cucumber/support_reference.npz",
+        "sha256": "565469877f627b03b5f1fba71cf7012b08c45cd60d553f8451213274f85e38f8",
+        "size_bytes": 970663
+      },
+      "calibration_report": {
+        "path": "experiments/rl_policy_training/artifacts/step15/cucumber/conformal_calibration_report.json",
+        "sha256": "dc63e9eadccc5fde1bf8e14f34580eebfc903ec907663bc1d8baa634246ca36b",
+        "size_bytes": 615
+      }
+    }
+  },
+  "checks": {
+    "test_accessed": false,
+    "v1_artifacts_modified": false,
+    "step20_v2_started": false
+  }
+}

@@ -32,6 +32,8 @@ normalize_for_derived = _unit.normalize_for_derived
 
 _quality_stage = import_module("geas35.preprocessing.3_missing_outliers_handling")
 ACTION_CONTROL_LOG_MAP = _quality_stage.ACTION_CONTROL_LOG_MAP
+AI_BASED_OUTLIER_COLUMNS = _quality_stage.AI_BASED_OUTLIER_COLUMNS
+RULE_BASED_OUTLIER_COLUMNS = _quality_stage.RULE_BASED_OUTLIER_COLUMNS
 ACTION_RESTORED_FLAG_SUFFIX = _quality_stage.ACTION_RESTORED_FLAG_SUFFIX
 AI_ANOMALY_SCORE_SUFFIX = _quality_stage.AI_ANOMALY_SCORE_SUFFIX
 AI_CONFIDENCE_SUFFIX = _quality_stage.AI_CONFIDENCE_SUFFIX
@@ -86,11 +88,24 @@ GROWTH_STAGE_DAT_COLUMN = _growth_stage.GROWTH_STAGE_DAT_COLUMN
 GROWTH_STAGE_NAME_COLUMN = _growth_stage.GROWTH_STAGE_NAME_COLUMN
 GROWTH_STAGE_ORDER_COLUMN = _growth_stage.GROWTH_STAGE_ORDER_COLUMN
 add_growth_stage_columns = _growth_stage.add_growth_stage_columns
+add_growth_stage_columns_from_crop_cycles = (
+    _growth_stage.add_growth_stage_columns_from_crop_cycles
+)
+CROP_CYCLE_ID_COLUMN = _growth_stage.CROP_CYCLE_ID_COLUMN
+EFFECTIVE_CROP_END_DATE_COLUMN = _growth_stage.EFFECTIVE_CROP_END_DATE_COLUMN
+GROWTH_STAGE_UNMATCHED_FLAG_COLUMN = _growth_stage.GROWTH_STAGE_UNMATCHED_FLAG_COLUMN
+TRANSPLANT_DATE_COLUMN = _growth_stage.TRANSPLANT_DATE_COLUMN
 growth_stage_rules_sha256 = _growth_stage.growth_stage_rules_sha256
 
 __all__ = [
+    "CROP_CYCLE_ID_COLUMN",
+    "EFFECTIVE_CROP_END_DATE_COLUMN",
+    "GROWTH_STAGE_UNMATCHED_FLAG_COLUMN",
+    "TRANSPLANT_DATE_COLUMN",
+    "add_growth_stage_columns_from_crop_cycles",
     "ACTION_COLUMNS",
     "ACTION_CONTROL_LOG_MAP",
+    "AI_BASED_OUTLIER_COLUMNS",
     "ACTION_RESTORED_FLAG_SUFFIX",
     "AI_ANOMALY_SCORE_SUFFIX",
     "AI_CONFIDENCE_SUFFIX",
@@ -120,6 +135,7 @@ __all__ = [
     "QUALITY_IMPUTED_FLAG_SUFFIX",
     "QUALITY_INVALID_FLAG_COLUMN",
     "RESAMPLED_ROW_COLUMN",
+    "RULE_BASED_OUTLIER_COLUMNS",
     "SEGMENT_COLUMN",
     "STATE_COLUMNS",
     "SYSTEM_STATE_COLUMNS",

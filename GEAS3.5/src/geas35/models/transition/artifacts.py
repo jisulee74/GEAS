@@ -11,6 +11,7 @@ from typing import Any, Mapping
 
 from geas35.io_utils import jsonable, write_json
 from geas35.models.crop_specific import normalize_required_crop
+from geas35.models.transition.features import OFFICIAL_TRANSITION_TARGET_COLUMNS
 
 TRANSITION_MODEL_FILENAME = "model.pkl"
 TRANSITION_MANIFEST_FILENAME = "manifest.json"
@@ -94,8 +95,17 @@ def save_transition_model_artifact(
     with artifact.model_path.open("wb") as f:
         pickle.dump(model, f)
 
+    fitted_targets = tuple(getattr(model, "target_columns_", ()) or ())
+    if fitted_targets and fitted_targets != OFFICIAL_TRANSITION_TARGET_COLUMNS:
+        raise ValueError(
+            "Official transition artifact requires exactly temperature, humidity, and CO2 targets."
+        )
     manifest = {
         "stage": "transition_model_artifact",
+        "schema_version": "geas35.transition.three_target.v1",
+        "target_contract": "official_three_target",
+        "target_columns": list(OFFICIAL_TRANSITION_TARGET_COLUMNS),
+        "multi_output_strategy": getattr(getattr(model, "capabilities", None), "multi_output_strategy", None),
         "crop": artifact.crop,
         "model_name": artifact.model_name,
         "model_filename": artifact.model_path.name,

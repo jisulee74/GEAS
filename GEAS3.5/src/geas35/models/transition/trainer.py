@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Any
 import time
 
+import numpy as np
 import pandas as pd
 
 from geas35.models.crop_specific import normalize_required_crop
@@ -210,6 +211,8 @@ def train_transition_candidates(
                 "target_columns": list(train_dataset.target_columns),
                 "rollout_horizon_steps": list(rollout_horizon_steps),
                 "rollout_step_minutes": int(rollout_step_minutes),
+                "offline_exogenous_provider": "recorded_weather",
+                "operating_exogenous_provider_interface": "forecast_weather",
                 "training_time_seconds": training_time_seconds,
                 "hpo_total_time_seconds": hpo_total_time_seconds,
                 "hpo_status": hpo_result.status,
@@ -329,6 +332,8 @@ def _run_candidate_hpo(
             reason="persistence_baseline_has_no_trainable_hyperparameters",
         )
 
+    hpo_train_dataset = _deterministic_dataset_subset(train_dataset, hpo_config.max_train_rows)
+    hpo_validation_dataset = _deterministic_dataset_subset(validation_dataset, hpo_config.max_validation_rows)
     trials = []
     best_model_score = float("inf")
     best_trial_index: int | None = None
@@ -337,14 +342,15 @@ def _run_candidate_hpo(
         spec.model_name,
         base_params,
         hpo_config,
+        target_columns=train_dataset.target_columns,
     )
     for trial_index, params in enumerate(sampled_params, start=1):
         model = spec.build_with_params(params)
         _require_transition_model(model, spec.model_name)
-        model.fit(train_dataset, validation_dataset=validation_dataset)
+        model.fit(hpo_train_dataset, validation_dataset=hpo_validation_dataset)
         one_step_report = evaluate_transition_model_one_step(
             model,
-            validation_dataset,
+            hpo_validation_dataset,
             normalization_scales=normalization_scales,
         )
         rollout_metrics = _evaluate_rollouts(
@@ -387,6 +393,25 @@ def _run_candidate_hpo(
     )
 
 
+def _deterministic_dataset_subset(
+    dataset: TransitionDataset, max_rows: int | None
+) -> TransitionDataset:
+    """Return an evenly spaced HPO-only subset without changing final evaluation."""
+    row_count = len(dataset.x.index)
+    if max_rows is None or row_count <= int(max_rows):
+        return dataset
+    positions = np.linspace(0, row_count - 1, num=int(max_rows), dtype=int)
+    return TransitionDataset(
+        x=dataset.x.iloc[positions].reset_index(drop=True),
+        y=dataset.y.iloc[positions].reset_index(drop=True),
+        metadata=(None if dataset.metadata is None else dataset.metadata.iloc[positions].reset_index(drop=True)),
+        input_columns=dataset.input_columns,
+        target_columns=dataset.target_columns,
+        observation_columns=dataset.observation_columns,
+        action_columns=dataset.action_columns,
+    )
+
+
 def _candidate_base_params(spec: TransitionCandidateSpec) -> Mapping[str, Any]:
     params = spec.metadata.get("params", {})
     return params if isinstance(params, Mapping) else {}
@@ -403,6 +428,9 @@ def _require_transition_model(model: BaseTransitionModel, model_name: str) -> No
 def _feature_schema_payload(dataset: TransitionDataset) -> dict[str, Any]:
     return {
         "stage": "transition_feature_schema",
+        "schema_version": "geas35.transition.three_target.v1",
+        "target_contract": "official_three_target",
+        "estimator_contract": "independent_per_target_default",
         "input_columns": list(dataset.input_columns),
         "target_columns": list(dataset.target_columns),
         "observation_columns": list(dataset.observation_columns),

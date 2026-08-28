@@ -63,13 +63,13 @@ Artifact:
 ## Threshold Calibration
 Calibration 절차:
 - 고정 threshold 후보 리스트를 사용하지 않는다.
-- 원본 Validation split의 reconstruction-error score 중 유한값의 최소값과 최대값을 계산한다.
-- 최소값부터 최대값까지 정확히 100개 후보를 균등 간격으로 생성한다.
+- 합성 이상치를 주입한 Validation split에서 정상 셀과 주입 셀을 모두 포함한 reconstruction-error score의 유한 최솟값과 최댓값을 변수별로 계산한다.
+- 변수별 최솟값부터 최댓값까지 정확히 100개 후보를 균등 간격으로 생성한다. 원본(clean) Validation score 범위도 진단용으로 함께 저장한다.
 - 각 모델의 best hyperparameter configuration을 고정한다.
 - Train으로 해당 configuration의 model을 학습한다.
 - Validation anomaly score를 계산한다.
 - `ThresholdOptimizer`로 모든 threshold 후보의 Validation synthetic-anomaly F1을 평가한다.
-- Validation F1이 최대인 threshold를 선택하며, 동률이면 오름차순 첫 후보를 선택한다.
+- Validation F1이 최대인 threshold를 선택하며, F1 동률이면 Precision이 높은 후보, 이후 더 높은 threshold 순으로 선택한다.
 - 선택된 threshold와 calibration metrics를 저장한다.
 
 Calibration artifact:

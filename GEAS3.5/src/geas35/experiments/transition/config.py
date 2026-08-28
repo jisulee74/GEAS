@@ -152,8 +152,13 @@ def _hpo_config(hpo: Mapping[str, Any]) -> TransitionHPOConfig:
         "enabled": bool(hpo.get("enabled", True)),
         "budget": int(hpo.get("budget", DEFAULT_HPO_BUDGET)),
         "random_seed": int(hpo.get("random_seed", DEFAULT_HPO_RANDOM_SEED)),
+        "max_train_rows": (None if hpo.get("max_train_rows") is None else int(hpo["max_train_rows"])),
+        "max_validation_rows": (None if hpo.get("max_validation_rows") is None else int(hpo["max_validation_rows"])),
         "search_spaces": dict(
             _mapping(hpo.get("search_spaces", {}), "hpo.search_spaces")
+        ),
+        "target_search_spaces": dict(
+            _mapping(hpo.get("target_search_spaces", {}), "hpo.target_search_spaces")
         ),
     }
     if weights:

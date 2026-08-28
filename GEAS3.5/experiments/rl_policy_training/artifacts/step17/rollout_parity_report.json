@@ -1,0 +1,69 @@
+{
+  "schema_version": "geas35.rl.step17.v1",
+  "status": "passed",
+  "crops": {
+    "strawberry": {
+      "status": "passed",
+      "reference": {
+        "path": "experiments/transition_model_selection/artifacts/step12/strawberry/strawberry/extra_trees/rollout_metrics.json",
+        "sha256": "917f6d41d3355aefdaf80a5b4900291165d1dd58b32d4f49dd6c8cee066d3fc1",
+        "size_bytes": 4751
+      },
+      "source_split": "validation",
+      "horizon_steps": [
+        3,
+        6,
+        12
+      ],
+      "step_minutes": 5,
+      "max_absolute_metric_difference": 1.1368683772161603e-13,
+      "per_horizon_max_absolute_difference": {
+        "15min": 2.842170943040401e-14,
+        "30min": 1.1368683772161603e-13,
+        "60min": 1.1368683772161603e-13
+      }
+    },
+    "melon": {
+      "status": "passed",
+      "reference": {
+        "path": "experiments/transition_model_selection/artifacts/step12/melon/melon/extra_trees/rollout_metrics.json",
+        "sha256": "b292cfa5aadd0b721a81c57951edee83911967290527a974a7e7cc98f45c0adf",
+        "size_bytes": 4752
+      },
+      "source_split": "validation",
+      "horizon_steps": [
+        3,
+        6,
+        12
+      ],
+      "step_minutes": 5,
+      "max_absolute_metric_difference": 5.684341886080802e-14,
+      "per_horizon_max_absolute_difference": {
+        "15min": 5.684341886080802e-14,
+        "30min": 1.4210854715202004e-14,
+        "60min": 5.684341886080802e-14
+      }
+    },
+    "cucumber": {
+      "status": "passed",
+      "reference": {
+        "path": "experiments/transition_model_selection/artifacts/step12/cucumber/cucumber/extra_trees/rollout_metrics.json",
+        "sha256": "24186bc03bdbcb122ff7414979ffa23738093ae6a9e9c8dbce6aba013524c48d",
+        "size_bytes": 4764
+      },
+      "source_split": "validation",
+      "horizon_steps": [
+        3,
+        6,
+        12
+      ],
+      "step_minutes": 5,
+      "max_absolute_metric_difference": 1.4210854715202004e-14,
+      "per_horizon_max_absolute_difference": {
+        "15min": 6.217248937900877e-15,
+        "30min": 1.4210854715202004e-14,
+        "60min": 1.4210854715202004e-14
+      }
+    }
+  }
+}

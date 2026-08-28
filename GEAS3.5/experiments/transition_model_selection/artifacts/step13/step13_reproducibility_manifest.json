@@ -1,0 +1,846 @@
+{
+  "schema_version": "geas35.transition.step13.v1",
+  "step": "13",
+  "status": "passed",
+  "created_at_utc": "2026-08-12T02:36:29.776402Z",
+  "step12_manifest": {
+    "path": "experiments/transition_model_selection/artifacts/step12/step12_benchmark_manifest.json",
+    "sha256": "23c512fe588e7c735ff0b31b14784fc3bc9f1de88596ce0159ace550e66391d8",
+    "size_bytes": 2325
+  },
+  "step11_immutable_rl_manifest": {
+    "path": "offline_dataset_preparation/datasets/5_rl_dataset/step11_6_integrity_manifest.json",
+    "sha256": "7f6231f6be94b010f8a6c5510bb6769ced9fa338e378a946664b484b5c1d0145",
+    "size_bytes": 28626
+  },
+  "dependency_lock": {
+    "path": "experiments/transition_model_selection/artifacts/step13/step13_dependency_lock.json",
+    "sha256": "08b3759566b95a95b8f8124e6a67086d1b23efc667dfebd16c3b7957314d98e2",
+    "size_bytes": 373
+  },
+  "candidate_artifact_hashes": {
+    "path": "experiments/transition_model_selection/artifacts/step13/step13_candidate_artifact_hashes.json",
+    "sha256": "5c9fa796b6c1e789d7d502cb1218a02412910009bd5c69f401d14ecf86579bad",
+    "size_bytes": 68496
+  },
+  "automatic_model_selection": false,
+  "report_raw_artifact_match": true,
+  "all_candidate_cold_load_smoke": "passed",
+  "crops": {
+    "strawberry": {
+      "status": "passed",
+      "config": {
+        "path": "experiments/transition_model_selection/configs/strawberry.yaml",
+        "sha256": "9ef1f799886405c9cfdd74c803a5550a07eec8a58292ecf35589442767cb155b",
+        "size_bytes": 2769
+      },
+      "random_seed": 42,
+      "hpo_random_seed": 42,
+      "observation_scaler": {
+        "path": "offline_dataset_preparation/datasets/5_rl_dataset/strawberry/observation_scaler.json",
+        "sha256": "f0236634917f1c53c4646b69f69c4aadf1789e49b54916f4ab64d9877282308d",
+        "size_bytes": 4904
+      },
+      "target_columns": [
+        "obs_indoor_temp_c",
+        "obs_indoor_humidity_pct",
+        "obs_indoor_co2_ppm"
+      ],
+      "exogenous_provider": {
+        "offline": "RecordedWeatherProvider",
+        "operating_interface": "forecast_weather",
+        "implementation_path": "src/geas35/models/transition/rollout.py",
+        "implementation_sha256": "5a18f443aa1636e45204c796f94b4e1313d40105669cf082c73afa658c9d20f0",
+        "class": "geas35.models.transition.rollout.RecordedWeatherProvider"
+      },
+      "candidate_dependency_device": {
+        "persistence": {
+          "library_versions": {
+            "numpy": "2.5.1",
+            "pandas": "3.0.5",
+            "sklearn": "1.9.0",
+            "lightgbm": "4.7.0",
+            "xgboost": "3.4.0",
+            "psutil": null
+          },
+          "device": {
+            "python": "3.12.3",
+            "platform": "Linux-6.8.0-100-generic-x86_64-with-glibc2.39",
+            "processor": "x86_64",
+            "gpu_available": null,
+            "gpu_name": null
+          }
+        },
+        "linear_regression": {
+          "library_versions": {
+            "numpy": "2.5.1",
+            "pandas": "3.0.5",
+            "sklearn": "1.9.0",
+            "lightgbm": "4.7.0",
+            "xgboost": "3.4.0",
+            "psutil": null
+          },
+          "device": {
+            "python": "3.12.3",
+            "platform": "Linux-6.8.0-100-generic-x86_64-with-glibc2.39",
+            "processor": "x86_64",
+            "gpu_available": null,
+            "gpu_name": null
+          }
+        },
+        "linear_svr": {
+          "library_versions": {
+            "numpy": "2.5.1",
+            "pandas": "3.0.5",
+            "sklearn": "1.9.0",
+            "lightgbm": "4.7.0",
+            "xgboost": "3.4.0",
+            "psutil": null
+          },
+          "device": {
+            "python": "3.12.3",
+            "platform": "Linux-6.8.0-100-generic-x86_64-with-glibc2.39",
+            "processor": "x86_64",
+            "gpu_available": null,
+            "gpu_name": null
+          }
+        },
+        "knn": {
+          "library_versions": {
+            "numpy": "2.5.1",
+            "pandas": "3.0.5",
+            "sklearn": "1.9.0",
+            "lightgbm": "4.7.0",
+            "xgboost": "3.4.0",
+            "psutil": null
+          },
+          "device": {
+            "python": "3.12.3",
+            "platform": "Linux-6.8.0-100-generic-x86_64-with-glibc2.39",
+            "processor": "x86_64",
+            "gpu_available": null,
+            "gpu_name": null
+          }
+        },
+        "extra_trees": {
+          "library_versions": {
+            "numpy": "2.5.1",
+            "pandas": "3.0.5",
+            "sklearn": "1.9.0",
+            "lightgbm": "4.7.0",
+            "xgboost": "3.4.0",
+            "psutil": null
+          },
+          "device": {
+            "python": "3.12.3",
+            "platform": "Linux-6.8.0-100-generic-x86_64-with-glibc2.39",
+            "processor": "x86_64",
+            "gpu_available": null,
+            "gpu_name": null
+          }
+        },
+        "lightgbm": {
+          "library_versions": {
+            "numpy": "2.5.1",
+            "pandas": "3.0.5",
+            "sklearn": "1.9.0",
+            "lightgbm": "4.7.0",
+            "xgboost": "3.4.0",
+            "psutil": null
+          },
+          "device": {
+            "python": "3.12.3",
+            "platform": "Linux-6.8.0-100-generic-x86_64-with-glibc2.39",
+            "processor": "x86_64",
+            "gpu_available": null,
+            "gpu_name": null
+          }
+        },
+        "xgboost": {
+          "library_versions": {
+            "numpy": "2.5.1",
+            "pandas": "3.0.5",
+            "sklearn": "1.9.0",
+            "lightgbm": "4.7.0",
+            "xgboost": "3.4.0",
+            "psutil": null
+          },
+          "device": {
+            "python": "3.12.3",
+            "platform": "Linux-6.8.0-100-generic-x86_64-with-glibc2.39",
+            "processor": "x86_64",
+            "gpu_available": null,
+            "gpu_name": null
+          }
+        },
+        "mlp": {
+          "library_versions": {
+            "numpy": "2.5.1",
+            "pandas": "3.0.5",
+            "sklearn": "1.9.0",
+            "lightgbm": "4.7.0",
+            "xgboost": "3.4.0",
+            "psutil": null
+          },
+          "device": {
+            "python": "3.12.3",
+            "platform": "Linux-6.8.0-100-generic-x86_64-with-glibc2.39",
+            "processor": "x86_64",
+            "gpu_available": null,
+            "gpu_name": null
+          }
+        }
+      },
+      "cold_load_smoke": {
+        "persistence": {
+          "status": "passed",
+          "prediction_shape": [
+            1,
+            3
+          ],
+          "target_columns": [
+            "obs_indoor_temp_c",
+            "obs_indoor_humidity_pct",
+            "obs_indoor_co2_ppm"
+          ],
+          "reward_finite": true
+        },
+        "linear_regression": {
+          "status": "passed",
+          "prediction_shape": [
+            1,
+            3
+          ],
+          "target_columns": [
+            "obs_indoor_temp_c",
+            "obs_indoor_humidity_pct",
+            "obs_indoor_co2_ppm"
+          ],
+          "reward_finite": true
+        },
+        "linear_svr": {
+          "status": "passed",
+          "prediction_shape": [
+            1,
+            3
+          ],
+          "target_columns": [
+            "obs_indoor_temp_c",
+            "obs_indoor_humidity_pct",
+            "obs_indoor_co2_ppm"
+          ],
+          "reward_finite": true
+        },
+        "knn": {
+          "status": "passed",
+          "prediction_shape": [
+            1,
+            3
+          ],
+          "target_columns": [
+            "obs_indoor_temp_c",
+            "obs_indoor_humidity_pct",
+            "obs_indoor_co2_ppm"
+          ],
+          "reward_finite": true
+        },
+        "extra_trees": {
+          "status": "passed",
+          "prediction_shape": [
+            1,
+            3
+          ],
+          "target_columns": [
+            "obs_indoor_temp_c",
+            "obs_indoor_humidity_pct",
+            "obs_indoor_co2_ppm"
+          ],
+          "reward_finite": true
+        },
+        "lightgbm": {
+          "status": "passed",
+          "prediction_shape": [
+            1,
+            3
+          ],
+          "target_columns": [
+            "obs_indoor_temp_c",
+            "obs_indoor_humidity_pct",
+            "obs_indoor_co2_ppm"
+          ],
+          "reward_finite": true
+        },
+        "xgboost": {
+          "status": "passed",
+          "prediction_shape": [
+            1,
+            3
+          ],
+          "target_columns": [
+            "obs_indoor_temp_c",
+            "obs_indoor_humidity_pct",
+            "obs_indoor_co2_ppm"
+          ],
+          "reward_finite": true
+        },
+        "mlp": {
+          "status": "passed",
+          "prediction_shape": [
+            1,
+            3
+          ],
+          "target_columns": [
+            "obs_indoor_temp_c",
+            "obs_indoor_humidity_pct",
+            "obs_indoor_co2_ppm"
+          ],
+          "reward_finite": true
+        }
+      }
+    },
+    "melon": {
+      "status": "passed",
+      "config": {
+        "path": "experiments/transition_model_selection/configs/melon.yaml",
+        "sha256": "2e72a6ece0f515e09e21f84026f5b08ed87324502fade118014992b536cbc1e3",
+        "size_bytes": 2667
+      },
+      "random_seed": 42,
+      "hpo_random_seed": 42,
+      "observation_scaler": {
+        "path": "offline_dataset_preparation/datasets/5_rl_dataset/melon/observation_scaler.json",
+        "sha256": "bd71f600779c3d39396b495cb00b8fb7140def6d5843c1d2e843d70dd010ccbc",
+        "size_bytes": 4801
+      },
+      "target_columns": [
+        "obs_indoor_temp_c",
+        "obs_indoor_humidity_pct",
+        "obs_indoor_co2_ppm"
+      ],
+      "exogenous_provider": {
+        "offline": "RecordedWeatherProvider",
+        "operating_interface": "forecast_weather",
+        "implementation_path": "src/geas35/models/transition/rollout.py",
+        "implementation_sha256": "5a18f443aa1636e45204c796f94b4e1313d40105669cf082c73afa658c9d20f0",
+        "class": "geas35.models.transition.rollout.RecordedWeatherProvider"
+      },
+      "candidate_dependency_device": {
+        "persistence": {
+          "library_versions": {
+            "numpy": "2.5.1",
+            "pandas": "3.0.5",
+            "sklearn": "1.9.0",
+            "lightgbm": "4.7.0",
+            "xgboost": "3.4.0",
+            "psutil": null
+          },
+          "device": {
+            "python": "3.12.3",
+            "platform": "Linux-6.8.0-100-generic-x86_64-with-glibc2.39",
+            "processor": "x86_64",
+            "gpu_available": null,
+            "gpu_name": null
+          }
+        },
+        "linear_regression": {
+          "library_versions": {
+            "numpy": "2.5.1",
+            "pandas": "3.0.5",
+            "sklearn": "1.9.0",
+            "lightgbm": "4.7.0",
+            "xgboost": "3.4.0",
+            "psutil": null
+          },
+          "device": {
+            "python": "3.12.3",
+            "platform": "Linux-6.8.0-100-generic-x86_64-with-glibc2.39",
+            "processor": "x86_64",
+            "gpu_available": null,
+            "gpu_name": null
+          }
+        },
+        "linear_svr": {
+          "library_versions": {
+            "numpy": "2.5.1",
+            "pandas": "3.0.5",
+            "sklearn": "1.9.0",
+            "lightgbm": "4.7.0",
+            "xgboost": "3.4.0",
+            "psutil": null
+          },
+          "device": {
+            "python": "3.12.3",
+            "platform": "Linux-6.8.0-100-generic-x86_64-with-glibc2.39",
+            "processor": "x86_64",
+            "gpu_available": null,
+            "gpu_name": null
+          }
+        },
+        "knn": {
+          "library_versions": {
+            "numpy": "2.5.1",
+            "pandas": "3.0.5",
+            "sklearn": "1.9.0",
+            "lightgbm": "4.7.0",
+            "xgboost": "3.4.0",
+            "psutil": null
+          },
+          "device": {
+            "python": "3.12.3",
+            "platform": "Linux-6.8.0-100-generic-x86_64-with-glibc2.39",
+            "processor": "x86_64",
+            "gpu_available": null,
+            "gpu_name": null
+          }
+        },
+        "extra_trees": {
+          "library_versions": {
+            "numpy": "2.5.1",
+            "pandas": "3.0.5",
+            "sklearn": "1.9.0",
+            "lightgbm": "4.7.0",
+            "xgboost": "3.4.0",
+            "psutil": null
+          },
+          "device": {
+            "python": "3.12.3",
+            "platform": "Linux-6.8.0-100-generic-x86_64-with-glibc2.39",
+            "processor": "x86_64",
+            "gpu_available": null,
+            "gpu_name": null
+          }
+        },
+        "lightgbm": {
+          "library_versions": {
+            "numpy": "2.5.1",
+            "pandas": "3.0.5",
+            "sklearn": "1.9.0",
+            "lightgbm": "4.7.0",
+            "xgboost": "3.4.0",
+            "psutil": null
+          },
+          "device": {
+            "python": "3.12.3",
+            "platform": "Linux-6.8.0-100-generic-x86_64-with-glibc2.39",
+            "processor": "x86_64",
+            "gpu_available": null,
+            "gpu_name": null
+          }
+        },
+        "xgboost": {
+          "library_versions": {
+            "numpy": "2.5.1",
+            "pandas": "3.0.5",
+            "sklearn": "1.9.0",
+            "lightgbm": "4.7.0",
+            "xgboost": "3.4.0",
+            "psutil": null
+          },
+          "device": {
+            "python": "3.12.3",
+            "platform": "Linux-6.8.0-100-generic-x86_64-with-glibc2.39",
+            "processor": "x86_64",
+            "gpu_available": null,
+            "gpu_name": null
+          }
+        },
+        "mlp": {
+          "library_versions": {
+            "numpy": "2.5.1",
+            "pandas": "3.0.5",
+            "sklearn": "1.9.0",
+            "lightgbm": "4.7.0",
+            "xgboost": "3.4.0",
+            "psutil": null
+          },
+          "device": {
+            "python": "3.12.3",
+            "platform": "Linux-6.8.0-100-generic-x86_64-with-glibc2.39",
+            "processor": "x86_64",
+            "gpu_available": null,
+            "gpu_name": null
+          }
+        }
+      },
+      "cold_load_smoke": {
+        "persistence": {
+          "status": "passed",
+          "prediction_shape": [
+            1,
+            3
+          ],
+          "target_columns": [
+            "obs_indoor_temp_c",
+            "obs_indoor_humidity_pct",
+            "obs_indoor_co2_ppm"
+          ],
+          "reward_finite": true
+        },
+        "linear_regression": {
+          "status": "passed",
+          "prediction_shape": [
+            1,
+            3
+          ],
+          "target_columns": [
+            "obs_indoor_temp_c",
+            "obs_indoor_humidity_pct",
+            "obs_indoor_co2_ppm"
+          ],
+          "reward_finite": true
+        },
+        "linear_svr": {
+          "status": "passed",
+          "prediction_shape": [
+            1,
+            3
+          ],
+          "target_columns": [
+            "obs_indoor_temp_c",
+            "obs_indoor_humidity_pct",
+            "obs_indoor_co2_ppm"
+          ],
+          "reward_finite": true
+        },
+        "knn": {
+          "status": "passed",
+          "prediction_shape": [
+            1,
+            3
+          ],
+          "target_columns": [
+            "obs_indoor_temp_c",
+            "obs_indoor_humidity_pct",
+            "obs_indoor_co2_ppm"
+          ],
+          "reward_finite": true
+        },
+        "extra_trees": {
+          "status": "passed",
+          "prediction_shape": [
+            1,
+            3
+          ],
+          "target_columns": [
+            "obs_indoor_temp_c",
+            "obs_indoor_humidity_pct",
+            "obs_indoor_co2_ppm"
+          ],
+          "reward_finite": true
+        },
+        "lightgbm": {
+          "status": "passed",
+          "prediction_shape": [
+            1,
+            3
+          ],
+          "target_columns": [
+            "obs_indoor_temp_c",
+            "obs_indoor_humidity_pct",
+            "obs_indoor_co2_ppm"
+          ],
+          "reward_finite": true
+        },
+        "xgboost": {
+          "status": "passed",
+          "prediction_shape": [
+            1,
+            3
+          ],
+          "target_columns": [
+            "obs_indoor_temp_c",
+            "obs_indoor_humidity_pct",
+            "obs_indoor_co2_ppm"
+          ],
+          "reward_finite": true
+        },
+        "mlp": {
+          "status": "passed",
+          "prediction_shape": [
+            1,
+            3
+          ],
+          "target_columns": [
+            "obs_indoor_temp_c",
+            "obs_indoor_humidity_pct",
+            "obs_indoor_co2_ppm"
+          ],
+          "reward_finite": true
+        }
+      }
+    },
+    "cucumber": {
+      "status": "passed",
+      "config": {
+        "path": "experiments/transition_model_selection/configs/cucumber.yaml",
+        "sha256": "2ced4a030553c31206c3c28345a5f5982bc05840eb448cf6099dfaece91f90c0",
+        "size_bytes": 2682
+      },
+      "random_seed": 42,
+      "hpo_random_seed": 42,
+      "observation_scaler": {
+        "path": "offline_dataset_preparation/datasets/5_rl_dataset/cucumber/observation_scaler.json",
+        "sha256": "f46e7f0123aa64d98daacabddbd27cc4a972a49e5171321ae80fa4e7336b6b19",
+        "size_bytes": 4865
+      },
+      "target_columns": [
+        "obs_indoor_temp_c",
+        "obs_indoor_humidity_pct",
+        "obs_indoor_co2_ppm"
+      ],
+      "exogenous_provider": {
+        "offline": "RecordedWeatherProvider",
+        "operating_interface": "forecast_weather",
+        "implementation_path": "src/geas35/models/transition/rollout.py",
+        "implementation_sha256": "5a18f443aa1636e45204c796f94b4e1313d40105669cf082c73afa658c9d20f0",
+        "class": "geas35.models.transition.rollout.RecordedWeatherProvider"
+      },
+      "candidate_dependency_device": {
+        "persistence": {
+          "library_versions": {
+            "numpy": "2.5.1",
+            "pandas": "3.0.5",
+            "sklearn": "1.9.0",
+            "lightgbm": "4.7.0",
+            "xgboost": "3.4.0",
+            "psutil": null
+          },
+          "device": {
+            "python": "3.12.3",
+            "platform": "Linux-6.8.0-100-generic-x86_64-with-glibc2.39",
+            "processor": "x86_64",
+            "gpu_available": null,
+            "gpu_name": null
+          }
+        },
+        "linear_regression": {
+          "library_versions": {
+            "numpy": "2.5.1",
+            "pandas": "3.0.5",
+            "sklearn": "1.9.0",
+            "lightgbm": "4.7.0",
+            "xgboost": "3.4.0",
+            "psutil": null
+          },
+          "device": {
+            "python": "3.12.3",
+            "platform": "Linux-6.8.0-100-generic-x86_64-with-glibc2.39",
+            "processor": "x86_64",
+            "gpu_available": null,
+            "gpu_name": null
+          }
+        },
+        "linear_svr": {
+          "library_versions": {
+            "numpy": "2.5.1",
+            "pandas": "3.0.5",
+            "sklearn": "1.9.0",
+            "lightgbm": "4.7.0",
+            "xgboost": "3.4.0",
+            "psutil": null
+          },
+          "device": {
+            "python": "3.12.3",
+            "platform": "Linux-6.8.0-100-generic-x86_64-with-glibc2.39",
+            "processor": "x86_64",
+            "gpu_available": null,
+            "gpu_name": null
+          }
+        },
+        "knn": {
+          "library_versions": {
+            "numpy": "2.5.1",
+            "pandas": "3.0.5",
+            "sklearn": "1.9.0",
+            "lightgbm": "4.7.0",
+            "xgboost": "3.4.0",
+            "psutil": null
+          },
+          "device": {
+            "python": "3.12.3",
+            "platform": "Linux-6.8.0-100-generic-x86_64-with-glibc2.39",
+            "processor": "x86_64",
+            "gpu_available": null,
+            "gpu_name": null
+          }
+        },
+        "extra_trees": {
+          "library_versions": {
+            "numpy": "2.5.1",
+            "pandas": "3.0.5",
+            "sklearn": "1.9.0",
+            "lightgbm": "4.7.0",
+            "xgboost": "3.4.0",
+            "psutil": null
+          },
+          "device": {
+            "python": "3.12.3",
+            "platform": "Linux-6.8.0-100-generic-x86_64-with-glibc2.39",
+            "processor": "x86_64",
+            "gpu_available": null,
+            "gpu_name": null
+          }
+        },
+        "lightgbm": {
+          "library_versions": {
+            "numpy": "2.5.1",
+            "pandas": "3.0.5",
+            "sklearn": "1.9.0",
+            "lightgbm": "4.7.0",
+            "xgboost": "3.4.0",
+            "psutil": null
+          },
+          "device": {
+            "python": "3.12.3",
+            "platform": "Linux-6.8.0-100-generic-x86_64-with-glibc2.39",
+            "processor": "x86_64",
+            "gpu_available": null,
+            "gpu_name": null
+          }
+        },
+        "xgboost": {
+          "library_versions": {
+            "numpy": "2.5.1",
+            "pandas": "3.0.5",
+            "sklearn": "1.9.0",
+            "lightgbm": "4.7.0",
+            "xgboost": "3.4.0",
+            "psutil": null
+          },
+          "device": {
+            "python": "3.12.3",
+            "platform": "Linux-6.8.0-100-generic-x86_64-with-glibc2.39",
+            "processor": "x86_64",
+            "gpu_available": null,
+            "gpu_name": null
+          }
+        },
+        "mlp": {
+          "library_versions": {
+            "numpy": "2.5.1",
+            "pandas": "3.0.5",
+            "sklearn": "1.9.0",
+            "lightgbm": "4.7.0",
+            "xgboost": "3.4.0",
+            "psutil": null
+          },
+          "device": {
+            "python": "3.12.3",
+            "platform": "Linux-6.8.0-100-generic-x86_64-with-glibc2.39",
+            "processor": "x86_64",
+            "gpu_available": null,
+            "gpu_name": null
+          }
+        }
+      },
+      "cold_load_smoke": {
+        "persistence": {
+          "status": "passed",
+          "prediction_shape": [
+            1,
+            3
+          ],
+          "target_columns": [
+            "obs_indoor_temp_c",
+            "obs_indoor_humidity_pct",
+            "obs_indoor_co2_ppm"
+          ],
+          "reward_finite": true
+        },
+        "linear_regression": {
+          "status": "passed",
+          "prediction_shape": [
+            1,
+            3
+          ],
+          "target_columns": [
+            "obs_indoor_temp_c",
+            "obs_indoor_humidity_pct",
+            "obs_indoor_co2_ppm"
+          ],
+          "reward_finite": true
+        },
+        "linear_svr": {
+          "status": "passed",
+          "prediction_shape": [
+            1,
+            3
+          ],
+          "target_columns": [
+            "obs_indoor_temp_c",
+            "obs_indoor_humidity_pct",
+            "obs_indoor_co2_ppm"
+          ],
+          "reward_finite": true
+        },
+        "knn": {
+          "status": "passed",
+          "prediction_shape": [
+            1,
+            3
+          ],
+          "target_columns": [
+            "obs_indoor_temp_c",
+            "obs_indoor_humidity_pct",
+            "obs_indoor_co2_ppm"
+          ],
+          "reward_finite": true
+        },
+        "extra_trees": {
+          "status": "passed",
+          "prediction_shape": [
+            1,
+            3
+          ],
+          "target_columns": [
+            "obs_indoor_temp_c",
+            "obs_indoor_humidity_pct",
+            "obs_indoor_co2_ppm"
+          ],
+          "reward_finite": true
+        },
+        "lightgbm": {
+          "status": "passed",
+          "prediction_shape": [
+            1,
+            3
+          ],
+          "target_columns": [
+            "obs_indoor_temp_c",
+            "obs_indoor_humidity_pct",
+            "obs_indoor_co2_ppm"
+          ],
+          "reward_finite": true
+        },
+        "xgboost": {
+          "status": "passed",
+          "prediction_shape": [
+            1,
+            3
+          ],
+          "target_columns": [
+            "obs_indoor_temp_c",
+            "obs_indoor_humidity_pct",
+            "obs_indoor_co2_ppm"
+          ],
+          "reward_finite": true
+        },
+        "mlp": {
+          "status": "passed",
+          "prediction_shape": [
+            1,
+            3
+          ],
+          "target_columns": [
+            "obs_indoor_temp_c",
+            "obs_indoor_humidity_pct",
+            "obs_indoor_co2_ppm"
+          ],
+          "reward_finite": true
+        }
+      }
+    }
+  },
+  "reviewed_candidate_count": 24,
+  "step14_handoff_generated": false
+}

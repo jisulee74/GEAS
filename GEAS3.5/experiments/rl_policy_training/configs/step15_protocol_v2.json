@@ -1,0 +1,19 @@
+{
+  "schema_version": "geas35.rl.step15.config.v2",
+  "protocol_version": "geas35.rl.step15.v2",
+  "inherits_frozen_contract_from": "geas35.rl.step15.v1",
+  "hpo": {
+    "trials_per_crop": 30,
+    "sampler_seed": 42,
+    "budget_source_step": "19.5",
+    "budget_status": "pending_calibration",
+    "budget_artifact_schema": "geas35.rl.step19_5.budget.v2"
+  },
+  "final_training": {"seeds": [42,43,44,45,46,47,48,49,50,51]},
+  "evaluation": {
+    "primary_metric": "mean_reward_per_scheduled_valid_step",
+    "episodic_return_role": "secondary_metric_only",
+    "confidence_interval": "episode_bootstrap_95pct",
+    "comparison": "paired_by_episode_and_exogenous_trajectory"
+  }
+}

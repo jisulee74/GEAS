@@ -63,6 +63,7 @@ from geas35.models.transition.features import (
     DETERMINISTIC_OBSERVATION_COLUMNS,
     MANAGEMENT_COLUMNS,
     MDP_V1_DYNAMIC_TARGET_BASE_COLUMNS,
+    OFFICIAL_TRANSITION_TARGET_COLUMNS,
     NEXT_OBSERVATION_PREFIX,
     POSTPROCESSED_OBSERVATION_COLUMNS,
     STATIC_METADATA_COLUMNS,
@@ -104,8 +105,12 @@ from geas35.models.transition.registry import (
 )
 from geas35.models.transition.rollout import (
     ActionProvider,
+    EXOGENOUS_WEATHER_COLUMNS,
+    ExogenousProvider,
+    ForecastWeatherProvider,
     LoggedActionProvider,
     PolicyActionProvider,
+    RecordedWeatherProvider,
     RolloutContext,
     RolloutStepContext,
     TransitionRolloutResult,
@@ -153,6 +158,9 @@ from geas35.models.transition.trainer import (
 
 __all__ = [
     "ActionProvider",
+    "EXOGENOUS_WEATHER_COLUMNS",
+    "ExogenousProvider",
+    "ForecastWeatherProvider",
     "ARTIFACT_INTEGRITY_JSON",
     "BaseTransitionModel",
     "BEST_CONFIG_FILENAME",
@@ -187,6 +195,7 @@ __all__ = [
     "HPO_RESULTS_FILENAME",
     "MANAGEMENT_COLUMNS",
     "MDP_V1_DYNAMIC_TARGET_BASE_COLUMNS",
+    "OFFICIAL_TRANSITION_TARGET_COLUMNS",
     "NEXT_OBSERVATION_PREFIX",
     "NO_AUTO_SELECTION_NOTICE",
     "ONE_STEP_METRICS_FILENAME",
@@ -246,6 +255,7 @@ __all__ = [
     "OptionalDependencyError",
     "PersistenceTransitionModel",
     "PolicyActionProvider",
+    "RecordedWeatherProvider",
     "predict_next_observation",
     "predict_next_observation_reward",
     "resolve_transition_feature_schema",

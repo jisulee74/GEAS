@@ -1,0 +1,15 @@
+{
+  "split": "validation",
+  "paired": true,
+  "episodes": [
+    {
+      "episode_index": 31,
+      "episode_id": "iot97_strawberry_geas2_0_seg29_20250411",
+      "series_id": "strawberry_geas2_0",
+      "rollout_id": "229",
+      "scheduled_valid_steps": 1,
+      "seed": 42
+    }
+  ],
+  "test_accessed": false
+}
