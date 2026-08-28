@@ -7,14 +7,14 @@ from pathlib import Path
 from typing import Any
 
 import pandas as pd
-import pymysql
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 WORKSPACE_ROOT = PROJECT_ROOT.parent
 DATASET_ROOT = PROJECT_ROOT / "offline_dataset_preparation" / "datasets"
 RAW_ROOT = DATASET_ROOT / "00_raw"
-MANIFEST_PATH = RAW_ROOT / "manifest.csv"
+SERIES_MANIFEST_PATH = RAW_ROOT / "series_manifest.csv"
+CROP_CYCLE_MANIFEST_PATH = RAW_ROOT / "crop_cycle_manifest.csv"
 SEGMENTS_PATH = RAW_ROOT / "segments.csv"
 ENV_PATH = PROJECT_ROOT / ".env"
 REQUIRED_DB_ENV = (
@@ -48,6 +48,12 @@ CROP_SLUG = {
     "딸기": "strawberry",
     "멜론": "melon",
     "오이": "cucumber",
+}
+
+CROP_DISPLAY_NAME = {
+    "strawberry": "딸기",
+    "melon": "멜론",
+    "cucumber": "오이",
 }
 
 CONTROL_RULE = (
@@ -85,8 +91,8 @@ def segment_plan() -> pd.DataFrame:
         rows.append(
             {
                 "series_id": sid,
-                "segment_id": f"iot97_{sid}_seg{counters[sid]:02d}",
-                "segment_index": counters[sid],
+                "source_segment_id": f"iot97_{sid}_source_seg{counters[sid]:02d}",
+                "source_segment_index": counters[sid],
                 "crop": crop,
                 "geas_version": version,
                 "control_mode": control_mode,
@@ -138,7 +144,9 @@ def db_config_from_env(path: Path = ENV_PATH) -> dict[str, object]:
     }
 
 
-def connect() -> pymysql.connections.Connection:
+def connect():
+    import pymysql
+
     config = db_config_from_env()
     return pymysql.connect(
         host=str(config["host"]),
@@ -213,6 +221,76 @@ def fetch_action_history(start: pd.Timestamp, end: pd.Timestamp) -> pd.DataFrame
         with conn.cursor() as cur:
             cur.execute(query, (start.to_pydatetime(), end.to_pydatetime()))
             return pd.DataFrame(cur.fetchall())
+
+
+def fetch_crop_cycles(iot_data_idx: int = IOT_DATA_IDX) -> pd.DataFrame:
+    """Read cultivation-cycle metadata from crop_info."""
+    query = """
+        SELECT
+            idx AS crop_cycle_id,
+            iot_data_idx,
+            crop_nm AS crop_name,
+            subj_cd,
+            kind_cd,
+            trans_crop_date AS transplant_date,
+            crop_end_date AS db_crop_end_date
+        FROM crop_info
+        WHERE iot_data_idx = %s
+          AND COALESCE(del_yn, 'N') = 'N'
+          AND trans_crop_date IS NOT NULL
+        ORDER BY trans_crop_date, idx
+    """
+    with connect() as conn:
+        with conn.cursor() as cur:
+            cur.execute(query, (iot_data_idx,))
+            return pd.DataFrame(cur.fetchall())
+
+
+def prepare_crop_cycle_manifest(crop_cycles: pd.DataFrame) -> pd.DataFrame:
+    """Add non-overlapping, five-minute-grid effective end dates."""
+    columns = [
+        "crop_cycle_id",
+        "iot_data_idx",
+        "crop",
+        "crop_name",
+        "subj_cd",
+        "kind_cd",
+        "transplant_date",
+        "db_crop_end_date",
+        "effective_crop_end_date",
+        "end_adjusted",
+    ]
+    if crop_cycles.empty:
+        return pd.DataFrame(columns=columns)
+
+    out = crop_cycles.copy()
+    out["subj_cd"] = out["subj_cd"].map(
+        lambda value: None if pd.isna(value) else str(value).zfill(2)
+    )
+    out["kind_cd"] = out["kind_cd"].map(
+        lambda value: None if pd.isna(value) else str(value).zfill(4)
+    )
+    out["crop"] = out["subj_cd"].map(
+        {"01": "strawberry", "04": "cucumber", "05": "melon"}
+    )
+    out["transplant_date"] = pd.to_datetime(out["transplant_date"], errors="coerce")
+    out["db_crop_end_date"] = pd.to_datetime(out["db_crop_end_date"], errors="coerce")
+    out = out.sort_values(
+        ["iot_data_idx", "transplant_date", "crop_cycle_id"]
+    ).reset_index(drop=True)
+
+    next_transplant = out.groupby("iot_data_idx")["transplant_date"].shift(-1)
+    overlaps_next = (
+        next_transplant.notna()
+        & out["db_crop_end_date"].notna()
+        & out["db_crop_end_date"].ge(next_transplant)
+    )
+    out["effective_crop_end_date"] = out["db_crop_end_date"]
+    out.loc[overlaps_next, "effective_crop_end_date"] = (
+        next_transplant.loc[overlaps_next] - pd.Timedelta(minutes=5)
+    )
+    out["end_adjusted"] = overlaps_next.astype(int)
+    return out[columns]
 
 
 def is_missing_text(series: pd.Series) -> pd.Series:
@@ -301,32 +379,36 @@ def assign_metadata(df: pd.DataFrame, crop: str, geas_version: str, plan: pd.Dat
     reg_date = pd.to_datetime(df["reg_date"], errors="coerce")
     sid = series_id(crop, geas_version)
     df["series_id"] = sid
-    df["segment_id"] = pd.Series(pd.NA, index=df.index, dtype="string")
-    df["segment_index"] = pd.Series(pd.NA, index=df.index, dtype="Int64")
+    df["source_segment_id"] = pd.Series(pd.NA, index=df.index, dtype="string")
+    df["source_segment_index"] = pd.Series(pd.NA, index=df.index, dtype="Int64")
     df["crop"] = crop
     df["geas_version"] = geas_version
     for _, segment in plan[(plan["crop"] == crop) & (plan["geas_version"] == geas_version)].iterrows():
         mask = reg_date.ge(segment["planned_start"]) & reg_date.le(segment["planned_end"])
-        df.loc[mask, "segment_id"] = segment["segment_id"]
-        df.loc[mask, "segment_index"] = int(segment["segment_index"])
-    if df["segment_id"].isna().any():
-        missing_dates = reg_date[df["segment_id"].isna()]
+        df.loc[mask, "source_segment_id"] = segment["source_segment_id"]
+        df.loc[mask, "source_segment_index"] = int(segment["source_segment_index"])
+    if df["source_segment_id"].isna().any():
+        missing_dates = reg_date[df["source_segment_id"].isna()]
         raise RuntimeError(f"{sid} has rows outside segment plan: {missing_dates.min()} to {missing_dates.max()}")
     return df
 
 
-def write_manifests(file_rows: list[dict[str, Any]], plan: pd.DataFrame) -> None:
+def write_manifests(
+    file_rows: list[dict[str, Any]],
+    plan: pd.DataFrame,
+    crop_cycles: pd.DataFrame,
+) -> None:
     file_df = pd.DataFrame(file_rows)
     segment_rows = []
     for _, file_row in file_df.iterrows():
         df = pd.read_parquet(file_row["file_path"])
         grouped = (
-            df.groupby("segment_id", sort=False)
+            df.groupby("source_segment_id", sort=False)
             .agg(
                 series_id=("series_id", "first"),
                 crop=("crop", "first"),
                 geas_version=("geas_version", "first"),
-                segment_index=("segment_index", "first"),
+                source_segment_index=("source_segment_index", "first"),
                 actual_start=("reg_date", "min"),
                 actual_end=("reg_date", "max"),
                 row_count=("reg_date", "size"),
@@ -337,16 +419,16 @@ def write_manifests(file_rows: list[dict[str, Any]], plan: pd.DataFrame) -> None
         segment_rows.append(grouped)
 
     segments = pd.concat(segment_rows, ignore_index=True)
-    planned = plan[["segment_id", "control_mode", "planned_start", "planned_end"]]
-    segments = segments.merge(planned, on="segment_id", how="left")
+    planned = plan[["source_segment_id", "control_mode", "planned_start", "planned_end"]]
+    segments = segments.merge(planned, on="source_segment_id", how="left")
     segments = segments[
         [
-            "segment_id",
+            "source_segment_id",
             "series_id",
             "crop",
             "geas_version",
             "control_mode",
-            "segment_index",
+            "source_segment_index",
             "planned_start",
             "planned_end",
             "actual_start",
@@ -357,19 +439,53 @@ def write_manifests(file_rows: list[dict[str, Any]], plan: pd.DataFrame) -> None
     ].sort_values("actual_start")
     segments.to_csv(SEGMENTS_PATH, index=False, encoding="utf-8-sig")
 
-    manifest = (
+    series_manifest = (
         segments.groupby(["series_id", "crop", "geas_version"], sort=False)
         .agg(
             actual_start=("actual_start", "min"),
             actual_end=("actual_end", "max"),
             row_count=("row_count", "sum"),
-            n_segments=("segment_id", "nunique"),
+            n_source_segments=("source_segment_id", "nunique"),
             file_paths=("file_path", lambda s: ";".join(dict.fromkeys(map(str, s)))),
         )
         .reset_index()
     )
-    manifest["control_rule"] = CONTROL_RULE
-    manifest.to_csv(MANIFEST_PATH, index=False, encoding="utf-8-sig")
+    series_manifest = series_manifest.sort_values("actual_start").reset_index(drop=True)
+    series_manifest.insert(0, "series_number", series_manifest.index + 1)
+    series_manifest["crop_name"] = series_manifest["crop"].map(CROP_DISPLAY_NAME)
+    series_manifest = series_manifest.rename(
+        columns={
+            "actual_start": "data_start",
+            "actual_end": "data_end",
+            "file_paths": "file_path",
+        }
+    )
+    series_manifest = series_manifest[
+        [
+            "series_number",
+            "series_id",
+            "data_start",
+            "data_end",
+            "crop",
+            "crop_name",
+            "geas_version",
+            "row_count",
+            "n_source_segments",
+            "file_path",
+        ]
+    ]
+    series_manifest.to_csv(
+        SERIES_MANIFEST_PATH,
+        index=False,
+        encoding="utf-8-sig",
+        date_format="%Y-%m-%d %H:%M:%S",
+    )
+    prepare_crop_cycle_manifest(crop_cycles).to_csv(
+        CROP_CYCLE_MANIFEST_PATH,
+        index=False,
+        encoding="utf-8-sig",
+        date_format="%Y-%m-%d %H:%M:%S",
+    )
 
 
 def build_arg_parser() -> argparse.ArgumentParser:
@@ -436,8 +552,9 @@ def main(argv: list[str] | None = None) -> int:
         )
         print(f"series {sid}: {len(dataset):,} rows -> {out_path}")
 
-    write_manifests(file_rows, plan)
-    print(f"manifest={MANIFEST_PATH}")
+    write_manifests(file_rows, plan, fetch_crop_cycles())
+    print(f"series_manifest={SERIES_MANIFEST_PATH}")
+    print(f"crop_cycle_manifest={CROP_CYCLE_MANIFEST_PATH}")
     print(f"segments={SEGMENTS_PATH}")
     return 0
 

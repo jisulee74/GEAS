@@ -58,7 +58,18 @@ DEFAULT_DOMAIN_RANGE_PATH = (
     / "qc"
     / "smartfarm_korea_domain_ranges.csv"
 )
-OBSERVATION_RULE_COLUMNS = tuple(STATE_COLUMNS)
+RULE_BASED_OUTLIER_COLUMNS = (
+    "in_temp", "in_temp2", "in_hum", "in_hum2", "in_co2", "in_co2_2",
+    "out_temp", "out_winddirec", "out_windsp", "out_rain", "out_light",
+    "out_light_sum", "in_medium_hum1", "in_medium_hum2",
+    "in_medium_temp1", "in_medium_temp2",
+)
+AI_BASED_OUTLIER_COLUMNS = (
+    "in_medium_temp1", "in_temp", "in_temp2", "in_hum", "in_hum2",
+    "in_medium_hum1", "in_co2", "in_co2_2",
+)
+# Compatibility name retained for callers that import the former constant.
+OBSERVATION_RULE_COLUMNS = RULE_BASED_OUTLIER_COLUMNS
 SEGMENT_COLUMN = "segment_id"
 RESAMPLED_ROW_COLUMN = "is_resampled_row"
 
@@ -67,7 +78,6 @@ ACTION_CONTROL_LOG_MAP = {
     "cont_skyr_vol": "pred_rtw",
     "cont_cur_vol": "pred_pc1",
     "cont_kwcur_vol": "pred_pc2",
-    "cont_co2_run": "pred_co2",
     "cont_pump1_run": "pred_cp1",
     "cont_pump2_run": "pred_cp2",
     "cont_heater_run": "pred_heater",
@@ -641,6 +651,8 @@ def prepare_missing_outliers_handled_features(
     rules: Iterable[DomainRangeRule] | None = None,
     domain_csv_path: str | Path = DEFAULT_DOMAIN_RANGE_PATH,
     observation_columns: Iterable[str] | None = None,
+    imputation_columns: Iterable[str] | None = None,
+    rule_columns: Iterable[str] = RULE_BASED_OUTLIER_COLUMNS,
     keep_extra_columns: bool = True,
     add_flags: bool = True,
     imputation_confidence_threshold: float = DEFAULT_IMPUTATION_CONFIDENCE_THRESHOLD,
@@ -659,6 +671,14 @@ def prepare_missing_outliers_handled_features(
         imputation_confidence_threshold
     )
     obs_cols = _observation_columns(observation_columns)
+    impute_cols = set(obs_cols if imputation_columns is None else imputation_columns)
+    unsupported_impute_cols = impute_cols.difference(obs_cols)
+    if unsupported_impute_cols:
+        names = ", ".join(sorted(unsupported_impute_cols))
+        raise ValueError(
+            "imputation_columns must be a subset of observation_columns: "
+            f"{names}"
+        )
     if quality_model is None:
         from geas35.models.quality.rule_only import RuleOnlyQualityModel
 
@@ -679,7 +699,7 @@ def prepare_missing_outliers_handled_features(
         df,
         rule_set,
         aggregate_flag_col=DEFAULT_RULE_AGGREGATE_FLAG,
-        allowed_columns=obs_cols,
+        allowed_columns=rule_columns,
     )
 
     model = _fit_rule_only_if_needed(model, df, obs_cols)
@@ -723,6 +743,9 @@ def prepare_missing_outliers_handled_features(
         missing_or_rule_mask=missing_or_rule_mask,
         imputation_confidence_threshold=imputation_confidence_threshold,
     )
+    for col in obs_cols:
+        if col not in impute_cols:
+            imputation_mask[col] = False
 
     before_impute = df.loc[:, list(obs_cols)].copy()
     df = output.frame.copy()

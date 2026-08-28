@@ -11,6 +11,11 @@ quality and transition experiments.
 04_prepare_rl_dataset.py Build offline_dataset_preparation/datasets/5_rl_dataset
 ```
 
+The raw extraction stage writes two top-level manifests: `series_manifest.csv`
+describes the crop/GEAS-version data files, while `crop_cycle_manifest.csv`
+records `crop_info` transplant dates, original crop end dates, and effective
+5-minute-grid end dates adjusted to avoid overlap with the next transplant.
+
 Execution order:
 
 ```powershell

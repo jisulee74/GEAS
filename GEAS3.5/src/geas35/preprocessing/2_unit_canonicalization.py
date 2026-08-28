@@ -35,7 +35,6 @@ PERCENT_ACTION_COLUMNS = [
 BINARY_ACTION_COLUMNS = [
     "cont_heater_run",
     "cont_cooler_run",
-    "cont_co2_run",
     "cont_pump1_run",
     "cont_pump2_run",
     "cont_fan_run",
