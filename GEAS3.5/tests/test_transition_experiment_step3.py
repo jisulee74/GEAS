@@ -18,47 +18,43 @@ from geas35.experiments.transition.config import (
     load_transition_experiment_config,
     read_configured_transition_frames,
 )
-from geas35.models.transition import load_selected_transition_model
+from geas35.models.transition import load_transition_candidate_model
 from synthetic_experiment_fixtures import (
     write_transition_smoke_config,
     write_transition_smoke_fixture,
 )
 
 
-def test_transition_experiment_writes_selected_test_metrics(tmp_path: Path) -> None:
+def test_transition_experiment_writes_candidate_artifacts_without_selection(
+    tmp_path: Path,
+) -> None:
     fixture = write_transition_smoke_fixture(tmp_path)
     result = run_from_config(fixture.config_path)
 
-    selected_manifest = (
-        fixture.output_dir / fixture.crop / "selected_transition_model.json"
-    )
-    selected_test_metrics = (
-        fixture.output_dir / fixture.crop / "selected_transition_model_test_metrics.json"
-    )
+    candidate_dir = fixture.output_dir / fixture.crop / "linear_regression"
     summary = fixture.output_dir / "experiment_summary.json"
 
-    assert selected_manifest.exists()
-    assert selected_test_metrics.exists()
+    assert candidate_dir.exists()
+    assert not (fixture.output_dir / fixture.crop / "selected_transition_model.json").exists()
+    assert not (
+        fixture.output_dir / fixture.crop / "selected_transition_model_test_metrics.json"
+    ).exists()
     assert summary.exists()
-    assert result.selected_manifest_path == str(selected_manifest)
-    assert result.selected_test_metrics_path == str(selected_test_metrics)
 
-    loaded = load_selected_transition_model(fixture.output_dir, fixture.crop)
+    loaded = load_transition_candidate_model(
+        fixture.output_dir,
+        fixture.crop,
+        model_name="linear_regression",
+    )
     assert loaded.model_name == "linear_regression"
 
-    metrics = json.loads(selected_test_metrics.read_text(encoding="utf-8"))
     summary_payload = json.loads(summary.read_text(encoding="utf-8"))
-    assert metrics["stage"] == "selected_transition_model_test_evaluation"
-    assert metrics["selection_split"] == "validation"
-    assert metrics["evaluation_split"] == "test"
-    assert metrics["test_used_for_selection"] is False
-    assert metrics["selected_model_name"] == "linear_regression"
-    assert metrics["test_report"]["row_count"] > 0
-    assert summary_payload["selected_test_evaluation"]["test_used_for_selection"] is False
-    assert (
-        summary_payload["selected_test_evaluation"]["metrics_path"]
-        == str(selected_test_metrics)
-    )
+    assert summary_payload["automatic_model_selection"] is False
+    assert summary_payload["test_used_for_selection"] is False
+    assert "validation_ranking" in summary_payload
+    assert "selected_model_name" not in summary_payload
+    assert "selection_result" not in summary_payload
+    assert "selected_test_evaluation" not in summary_payload
 
 
 def test_transition_config_fails_fast_for_missing_rl_dataset(tmp_path: Path) -> None:
