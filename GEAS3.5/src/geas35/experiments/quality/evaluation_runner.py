@@ -61,6 +61,7 @@ def run_quality_validation_test_evaluation(
     *,
     config: QualityEvaluationConfig,
     calibration_result: QualityThresholdCalibrationResult,
+    reference_df: pd.DataFrame,
     validation_df: pd.DataFrame,
     test_df: pd.DataFrame,
     observation_columns: Iterable[str],
@@ -76,6 +77,7 @@ def run_quality_validation_test_evaluation(
         run_model_validation_test_evaluation(
             config=config,
             model_result=model_result,
+            reference_df=reference_df,
             validation_df=validation_df,
             test_df=test_df,
             observation_columns=columns,
@@ -97,6 +99,7 @@ def run_model_validation_test_evaluation(
     *,
     config: QualityEvaluationConfig,
     model_result: ModelThresholdCalibrationResult,
+    reference_df: pd.DataFrame,
     validation_df: pd.DataFrame,
     test_df: pd.DataFrame,
     observation_columns: Iterable[str],
@@ -124,6 +127,7 @@ def run_model_validation_test_evaluation(
         anomaly_scale=config.anomaly_scale,
         random_state=config.random_state,
         include_efficiency=False,
+        reference_df=reference_df,
     )
     test_report = evaluate_quality_model_for_report(
         model_result.model,
@@ -136,6 +140,7 @@ def run_model_validation_test_evaluation(
         anomaly_scale=config.anomaly_scale,
         random_state=config.random_state,
         include_efficiency=False,
+        reference_df=reference_df,
     )
     result = ModelEvaluationResult(
         model_name=model_result.model_name,

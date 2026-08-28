@@ -5,27 +5,37 @@ from __future__ import annotations
 import json
 import math
 from pathlib import Path
-from typing import Any, Iterable
+from typing import Any, Iterable, Mapping
 
 import pandas as pd
 
 
+MODEL_ORDER = ("modern_tcn", "timesnet", "patch_tst")
+MODEL_NAMES = {
+    "modern_tcn": "ModernTCN",
+    "timesnet": "TimesNet",
+    "patch_tst": "PatchTST",
+}
+MODEL_COLORS = {
+    "modern_tcn": "#4C78A8",
+    "timesnet": "#F58518",
+    "patch_tst": "#54A24B",
+}
+
+
 FIGURE_STEMS = (
     "hpo_progress",
-    "rmse_comparison",
-    "mae_comparison",
-    "f1_comparison",
-    "pr_auc_comparison",
     "threshold_curve",
+    "threshold_curve_selected_range",
+    "roc_pr_curves",
     "training_loss",
-    "online_benchmark_summary",
     "reconstruction_error_heatmap",
-    "model_comparison_summary",
 )
 
 
+
 def generate_quality_experiment_figures(output_root: str | Path) -> list[Path]:
-    """Generate PNG and PDF figures from existing experiment artifacts."""
+    """Generate PNG figures from existing experiment artifacts."""
 
     root = Path(output_root)
     figures_dir = root / "figures"
@@ -35,62 +45,20 @@ def generate_quality_experiment_figures(output_root: str | Path) -> list[Path]:
 
     hpo = _read_json(root / "hpo_results.json")
     thresholds = _read_json(root / "threshold_calibration.json")
-    comparison = _read_comparison_csv(root / "model_comparison.csv")
     history = _read_csv(root / "training_history.csv")
     reconstruction = _read_csv(root / "reconstruction_metric_table.csv")
-    benchmark = _read_csv(root / "online_benchmark_table.csv")
+    combined_figures_dir = root.parent / "figures"
+    combined_figures_dir.mkdir(parents=True, exist_ok=True)
+    summary = _combined_validation_summary(root.parent)
 
     outputs: list[Path] = []
     outputs.extend(_plot_hpo_progress(plt, figures_dir, hpo))
-    outputs.extend(
-        _plot_metric_bar(
-            plt,
-            figures_dir,
-            comparison,
-            stem="rmse_comparison",
-            column="validation_rmse",
-            ylabel="Validation RMSE",
-            title="Validation Reconstruction RMSE",
-        )
-    )
-    outputs.extend(
-        _plot_metric_bar(
-            plt,
-            figures_dir,
-            comparison,
-            stem="mae_comparison",
-            column="validation_mae",
-            ylabel="Validation MAE",
-            title="Validation Reconstruction MAE",
-        )
-    )
-    outputs.extend(
-        _plot_metric_bar(
-            plt,
-            figures_dir,
-            comparison,
-            stem="f1_comparison",
-            column="validation_f1",
-            ylabel="Validation F1-score",
-            title="Validation Anomaly Detection F1-score",
-        )
-    )
-    outputs.extend(
-        _plot_metric_bar(
-            plt,
-            figures_dir,
-            comparison,
-            stem="pr_auc_comparison",
-            column="validation_pr_auc",
-            ylabel="Validation PR-AUC",
-            title="Validation Anomaly Detection PR-AUC",
-        )
-    )
+    outputs.extend(_plot_performance_categories(plt, combined_figures_dir, summary))
     outputs.extend(_plot_threshold_curve(plt, figures_dir, thresholds))
+    outputs.extend(_plot_threshold_curve_selected_range(plt, figures_dir, thresholds))
+    outputs.extend(_plot_roc_pr_curves(plt, figures_dir, thresholds))
     outputs.extend(_plot_training_loss(plt, figures_dir, history))
-    outputs.extend(_plot_online_benchmark_summary(plt, figures_dir, benchmark, comparison))
     outputs.extend(_plot_reconstruction_heatmap(plt, figures_dir, reconstruction))
-    outputs.extend(_plot_model_summary(plt, figures_dir, comparison))
     return outputs
 
 
@@ -108,12 +76,12 @@ def _configure_matplotlib(plt) -> None:
         {
             "figure.dpi": 160,
             "savefig.dpi": 300,
-            "font.size": 10,
-            "axes.titlesize": 12,
-            "axes.labelsize": 10,
-            "legend.fontsize": 9,
-            "xtick.labelsize": 9,
-            "ytick.labelsize": 9,
+            "font.size": 12,
+            "axes.titlesize": 15,
+            "axes.labelsize": 13,
+            "legend.fontsize": 11,
+            "xtick.labelsize": 11,
+            "ytick.labelsize": 11,
             "axes.grid": True,
             "grid.alpha": 0.25,
             "pdf.fonttype": 42,
@@ -123,9 +91,13 @@ def _configure_matplotlib(plt) -> None:
 
 
 def _plot_hpo_progress(plt, figures_dir: Path, hpo: dict[str, Any]) -> list[Path]:
-    fig, ax = plt.subplots(figsize=(7.0, 4.2))
+    fig, ax = plt.subplots(figsize=(7.4, 4.6))
+    crop_name = _crop_display_name(figures_dir)
+    title = f"HPO Search Progress — {crop_name}"
+    models = hpo.get("models", {})
     plotted = False
-    for model_name, model_payload in hpo.get("models", {}).items():
+    for model_name in _ordered_model_names(models):
+        model_payload = models[model_name]
         candidates = model_payload.get("candidate_results", [])
         y_values = [
             _metric_value(
@@ -135,23 +107,205 @@ def _plot_hpo_progress(plt, figures_dir: Path, hpo: dict[str, Any]) -> list[Path
             for candidate in candidates
         ]
         y_values = [value for value in y_values if value is not None]
-        if y_values:
-            ax.plot(
-                range(1, len(y_values) + 1),
-                y_values,
-                marker="o",
-                linewidth=1.8,
-                label=str(model_name),
-            )
-            plotted = True
+        if not y_values:
+            continue
+        color = MODEL_COLORS.get(model_name)
+        ax.plot(
+            range(1, len(y_values) + 1),
+            y_values,
+            color=color,
+            marker="o",
+            markersize=4.5,
+            markerfacecolor=color,
+            markeredgewidth=0.0,
+            linewidth=1.8,
+            label=MODEL_NAMES.get(model_name, model_name),
+        )
+        plotted = True
     if plotted:
-        ax.set_xlabel("Random Search Candidate")
-        ax.set_ylabel("Validation RMSE")
-        ax.set_title("HPO Search Progress")
-        ax.legend(frameon=False)
+        ax.set_xlabel("Random Search Candidate", fontsize=13)
+        ax.set_ylabel("Validation RMSE", fontsize=13)
+        ax.set_title(title, fontsize=15)
+        ax.tick_params(axis="both", labelsize=12)
+        ax.legend(frameon=False, fontsize=11)
     else:
-        _empty_axes(ax, "HPO Search Progress", "No HPO candidate metrics available")
+        _empty_axes(ax, title, "No HPO candidate metrics available")
     return _save_figure(fig, figures_dir, "hpo_progress")
+
+def _validation_summary(root: Path) -> pd.DataFrame:
+    reconstruction = _read_csv(root / "reconstruction_metric_table.csv")
+    anomaly = _read_csv(root / "anomaly_detection_metric_table.csv")
+    benchmark = _read_csv(root / "online_benchmark_table.csv")
+    rec = reconstruction[
+        (reconstruction["split"].astype(str) == "validation")
+        & (reconstruction["column"].astype(str) == "__all__")
+    ].set_index("model_name")
+    det = anomaly[
+        (anomaly["split"].astype(str) == "validation")
+        & (anomaly["column"].astype(str) == "__all__")
+    ].set_index("model_name")
+    bench = benchmark[
+        benchmark["split"].astype(str) == "validation"
+    ].set_index("model_name")
+    rows = []
+    for model_name in MODEL_ORDER:
+        if model_name not in rec.index or model_name not in det.index:
+            continue
+        r, d = rec.loc[model_name], det.loc[model_name]
+        b = bench.loc[model_name] if model_name in bench.index else {}
+        tp, fp = float(d["true_positive"]), float(d["false_positive"])
+        tn, fn = float(d["true_negative"]), float(d["false_negative"])
+        denominator = math.sqrt((tp + fp) * (tp + fn) * (tn + fp) * (tn + fn))
+        rows.append({
+            "crop": root.name,
+            "model_name": model_name,
+            "rmse": float(r["rmse"]),
+            "mae": float(r["mae"]),
+            "f1_score": float(d["f1_score"]),
+            "precision": float(d["precision"]),
+            "recall": float(d["recall"]),
+            "mcc": 0.0 if denominator == 0 else (tp * tn - fp * fn) / denominator,
+            "fpr": 0.0 if fp + tn == 0 else fp / (fp + tn),
+            "roc_auc": float(d["roc_auc"]),
+            "pr_auc": float(d["pr_auc"]),
+            "inference_latency_ms_per_row": float(b["inference_latency_ms_per_row"]),
+            "peak_memory_mb": float(b["peak_memory_bytes"]) / (1024 ** 2),
+            "model_size_mb": float(b["model_size_bytes"]) / (1024 ** 2),
+        })
+    return pd.DataFrame(rows)
+
+
+def _combined_validation_summary(artifacts_root: Path) -> pd.DataFrame:
+    frames = []
+    for crop_root in artifacts_root.iterdir():
+        if not crop_root.is_dir() or crop_root.name == "figures":
+            continue
+        required = (
+            crop_root / "reconstruction_metric_table.csv",
+            crop_root / "anomaly_detection_metric_table.csv",
+            crop_root / "online_benchmark_table.csv",
+        )
+        if all(path.exists() for path in required):
+            frames.append(_validation_summary(crop_root))
+    return pd.concat(frames, ignore_index=True) if frames else pd.DataFrame()
+
+
+def _shared_metric_limits(
+    frame: pd.DataFrame, columns: Iterable[str]
+) -> dict[str, tuple[float, float]]:
+    limits = {}
+    bounded = {"f1_score", "precision", "recall", "mcc", "fpr", "roc_auc", "pr_auc"}
+    for column in columns:
+        values = pd.to_numeric(frame[column], errors="coerce").dropna()
+        if values.empty:
+            limits[column] = (0.0, 1.0)
+        elif column in bounded:
+            limits[column] = (min(0.0, float(values.min()) * 1.1), 1.0)
+        else:
+            upper = float(values.max())
+            limits[column] = (0.0, upper * 1.12 if upper > 0 else 1.0)
+    return limits
+
+
+def _plot_performance_categories(
+    plt, figures_dir: Path, frame: pd.DataFrame
+) -> list[Path]:
+    categories = (
+        ("reconstruction_performance", "Reconstruction Performance",
+         (("rmse", "RMSE ↓", "Value"), ("mae", "MAE ↓", "Value"))),
+        ("anomaly_detection_classification",
+         "Anomaly Detection Performance (Classification)",
+         (("f1_score", "F1 ↑", "Score"), ("precision", "Precision ↑", "Score"),
+          ("recall", "Recall ↑", "Score"), ("mcc", "MCC ↑", "Score"),
+          ("fpr", "FPR ↑", "Rate"))),
+        ("anomaly_detection_ranking", "Anomaly Detection Performance (Ranking)",
+         (("roc_auc", "ROC-AUC ↑", "Score"), ("pr_auc", "PR-AUC ↑", "Score"))),
+        ("computational_efficiency", "Computational Efficiency",
+         (("inference_latency_ms_per_row", "Inference Latency ↓", "ms/row"),
+          ("peak_memory_mb", "Peak Memory ↓", "MB"),
+          ("model_size_mb", "Model Size ↓", "MB"))),
+    )
+    columns = [metric[0] for _, _, metrics in categories for metric in metrics]
+    limits = _shared_metric_limits(frame, columns)
+    preferred = ("strawberry", "melon", "cucumber")
+    available = set(frame["crop"])
+    crops = [crop for crop in preferred if crop in available]
+    crops.extend(sorted(available - set(crops)))
+    labels = {"cucumber": "Cucumber", "melon": "Melon", "strawberry": "Strawberry"}
+    markers = ("o", "s", "^")
+    outputs = []
+    for stem, category_title, metrics in categories:
+        panel_width = 3.05
+        panel_spacing = 0.24
+        figure_spacing = 0.34
+        horizontal_margin = 0.70
+        panel_count = len(metrics)
+        figure_width = horizontal_margin + panel_width * (
+            panel_count + figure_spacing * (panel_count - 1)
+        )
+        fig, axes = plt.subplots(
+            1,
+            panel_count,
+            figsize=(figure_width, 4.5),
+        )
+        axes = [axes] if len(metrics) == 1 else list(axes)
+        for ax, (column, title, unit) in zip(axes, metrics):
+            for index, model_name in enumerate(MODEL_ORDER):
+                values = []
+                for crop in crops:
+                    match = frame[
+                        (frame["crop"] == crop)
+                        & (frame["model_name"] == model_name)
+                    ]
+                    values.append(float(match.iloc[0][column]) if not match.empty else math.nan)
+                x_offset = (-0.16, 0.0, 0.16)[index]
+                x_values = [position + x_offset for position in range(len(crops))]
+                ax.scatter(
+                    x_values,
+                    values,
+                    color=MODEL_COLORS[model_name],
+                    marker=markers[index],
+                    s=46,
+                    edgecolor="white",
+                    linewidth=0.7,
+                    zorder=3,
+                    label=MODEL_NAMES[model_name],
+                )
+            ax.set_title(title, fontsize=15)
+            ax.set_ylabel(unit, fontsize=13)
+            ax.set_xticks(range(len(crops)), [labels.get(c, c.title()) for c in crops])
+            ax.set_xlim(-0.45, len(crops) - 0.55)
+            ax.set_ylim(*limits[column])
+            ax.grid(axis="x", visible=False)
+            ax.grid(axis="y", visible=True, alpha=0.25)
+            ax.tick_params(axis="both", labelsize=12)
+        handles, legend_labels = axes[-1].get_legend_handles_labels()
+        fig.legend(
+            handles, legend_labels, loc="lower center",
+            bbox_to_anchor=(0.5, 0.025), ncol=3,
+            frameon=False, fontsize=12, borderaxespad=0.0,
+        )
+        fig.suptitle(category_title, fontsize=17, y=0.965)
+        fig.subplots_adjust(
+            left=0.55 / figure_width,
+            right=1.0 - 0.15 / figure_width,
+            bottom=0.16,
+            top=0.79,
+            wspace=panel_spacing,
+        )
+        outputs.extend(_save_fixed_size_figure(fig, figures_dir, stem))
+    return outputs
+
+
+
+def _save_fixed_size_figure(fig, figures_dir: Path, stem: str) -> list[Path]:
+    """Save a category figure without recomputing its reserved legend margins."""
+    path = figures_dir / f"{stem}.png"
+    fig.savefig(path)
+    import matplotlib.pyplot as plt
+
+    plt.close(fig)
+    return [path]
 
 
 def _plot_metric_bar(
@@ -181,48 +335,368 @@ def _plot_metric_bar(
     return _save_figure(fig, figures_dir, stem)
 
 
-def _plot_threshold_curve(plt, figures_dir: Path, thresholds: dict[str, Any]) -> list[Path]:
-    fig, ax = plt.subplots(figsize=(7.0, 4.2))
-    plotted = False
-    for model_name, payload in thresholds.get("models", {}).items():
-        candidates = payload.get("candidate_results", [])
-        x_values = [_safe_float(row.get("threshold")) for row in candidates]
-        y_values = [_safe_float(row.get("f1_score")) for row in candidates]
-        points = [(x, y) for x, y in zip(x_values, y_values) if x is not None and y is not None]
-        if points:
-            points.sort(key=lambda item: item[0])
-            ax.plot(
-                [point[0] for point in points],
-                [point[1] for point in points],
-                marker="o",
-                linewidth=1.8,
-                label=str(model_name),
-            )
-            plotted = True
-    if plotted:
-        ax.set_xlabel("Threshold")
-        ax.set_ylabel("Validation F1-score")
-        ax.set_title("Threshold Calibration Curve")
-        ax.legend(frameon=False)
-    else:
-        _empty_axes(ax, "Threshold Calibration Curve", "No threshold metrics available")
-    return _save_figure(fig, figures_dir, "threshold_curve")
+def _automatic_selected_x_max(
+    selected_thresholds: list[float],
+    candidate_thresholds: list[float],
+) -> float | None:
+    """Return the legacy selected-range limit, capped by observed candidates."""
 
+    if not selected_thresholds or not candidate_thresholds:
+        return None
+    candidate_max = max(candidate_thresholds)
+    if candidate_max <= 0.0:
+        return None
+    raw_limit = max(selected_thresholds) * 4.0
+    legacy_limit = max(10.0, math.ceil(raw_limit / 10.0) * 10.0)
+    return min(candidate_max, legacy_limit)
+
+
+def _plot_threshold_curve_panels(
+    plt,
+    figures_dir: Path,
+    thresholds: dict[str, Any],
+    *,
+    selected_range: bool,
+) -> list[Path]:
+    """Plot model curves for each variable, optionally limiting the x range."""
+
+    models = thresholds.get("models", {})
+    columns: list[str] = []
+    for payload in models.values():
+        for col in payload.get("per_column_calibration", {}):
+            if col not in columns:
+                columns.append(col)
+    stem = "threshold_curve_selected_range" if selected_range else "threshold_curve"
+    if not columns:
+        fig, ax = plt.subplots(figsize=(7.4, 4.6))
+        _empty_axes(ax, "Threshold Calibration", "No per-variable threshold metrics available")
+        return _save_figure(fig, figures_dir, stem)
+
+    ncols = 2
+    nrows = math.ceil(len(columns) / ncols)
+    fig, axes = plt.subplots(nrows, ncols, figsize=(14.8, 4.2 * nrows), squeeze=False)
+    for ax, col in zip(axes.flat, columns):
+        model_details: list[tuple[int, str, dict[str, Any], list[tuple[float, float]]]] = []
+        selected_thresholds: list[float] = []
+        candidate_thresholds: list[float] = []
+        for index, model_name in enumerate(_ordered_model_names(models)):
+            detail = models[model_name].get("per_column_calibration", {}).get(col, {})
+            points: list[tuple[float, float]] = []
+            for candidate in detail.get("candidate_results", []):
+                x = _positive_finite(candidate.get("threshold"))
+                y = _positive_finite(candidate.get("f1_score"))
+                if x is not None and y is not None:
+                    points.append((x, y))
+                    candidate_thresholds.append(x)
+            points.sort()
+            selected_x = _positive_finite(detail.get("best_threshold"))
+            if selected_x is not None:
+                selected_thresholds.append(selected_x)
+            model_details.append((index, model_name, detail, points))
+
+        x_max = (
+            _automatic_selected_x_max(selected_thresholds, candidate_thresholds)
+            if selected_range
+            else None
+        )
+        for index, model_name, detail, points in model_details:
+            if x_max is not None:
+                points = [(x, y) for x, y in points if x <= x_max]
+            if not points:
+                continue
+            color = MODEL_COLORS.get(model_name, f"C{index}")
+            ax.plot(
+                [x for x, _ in points],
+                [y for _, y in points],
+                color=color,
+                marker="o",
+                markersize=4.5,
+                markeredgewidth=0.0,
+                linewidth=1.6,
+                label=MODEL_NAMES.get(model_name, model_name),
+            )
+            selected_x = _positive_finite(detail.get("best_threshold"))
+            selected_y = _positive_finite(detail.get("best_objective_value"))
+            if (
+                selected_x is not None
+                and selected_y is not None
+                and (x_max is None or selected_x <= x_max)
+            ):
+                ax.scatter(
+                    selected_x,
+                    selected_y,
+                    marker="*",
+                    s=105,
+                    color=color,
+                    edgecolor="black",
+                    linewidth=0.8,
+                    zorder=5,
+                )
+        if x_max is not None:
+            ax.set_xlim(0.0, x_max)
+        ax.set_title(col, fontsize=15)
+        ax.set_xlabel("Threshold", fontsize=13)
+        ax.set_ylabel("Validation F1-score", fontsize=13)
+        ax.tick_params(axis="both", labelsize=11)
+        ax.set_ylim(0.0, 1.0)
+    for ax in axes.flat[len(columns):]:
+        ax.axis("off")
+    handles, labels = axes.flat[0].get_legend_handles_labels()
+    if handles:
+        handles.append(
+            plt.Line2D(
+                [], [], marker="*", linestyle="None", markersize=12,
+                markerfacecolor="#B0B0B0", markeredgecolor="black",
+            )
+        )
+        labels.append("Selected threshold")
+        axes.flat[0].legend(
+            handles,
+            labels,
+            loc="best",
+            frameon=True,
+            framealpha=0.9,
+            edgecolor="none",
+            fontsize=11,
+        )
+
+    crop_name = figures_dir.parent.name.replace("_", " ").title()
+    range_label = " — Selected Range" if selected_range else ""
+    fig.suptitle(
+        f"Per-variable Threshold Calibration{range_label} — {crop_name}",
+        fontsize=17,
+        y=0.995,
+    )
+    fig.tight_layout()
+    return _save_figure(fig, figures_dir, stem)
+
+
+def _plot_threshold_curve(plt, figures_dir: Path, thresholds: dict[str, Any]) -> list[Path]:
+    return _plot_threshold_curve_panels(
+        plt, figures_dir, thresholds, selected_range=False
+    )
+
+
+def _plot_threshold_curve_selected_range(
+    plt,
+    figures_dir: Path,
+    thresholds: dict[str, Any],
+) -> list[Path]:
+    return _plot_threshold_curve_panels(
+        plt, figures_dir, thresholds, selected_range=True
+    )
+
+
+def _positive_finite(value: Any) -> float | None:
+    number = _safe_float(value)
+    return number if number is not None and number >= 0.0 else None
+
+
+
+def _plot_roc_pr_curves(
+    plt,
+    figures_dir: Path,
+    thresholds: dict[str, Any],
+) -> list[Path]:
+    model_order = ("modern_tcn", "timesnet", "patch_tst")
+    display_names = {
+        "modern_tcn": "ModernTCN",
+        "timesnet": "TimesNet",
+        "patch_tst": "PatchTST",
+    }
+    colors = {
+        "modern_tcn": "#4C78A8",
+        "timesnet": "#F58518",
+        "patch_tst": "#54A24B",
+    }
+    models = thresholds.get("models", {})
+    fig, (roc_ax, pr_ax) = plt.subplots(1, 2, figsize=(10.5, 4.5))
+    prevalences: list[float] = []
+    plotted = False
+
+    for model_name in model_order:
+        model = models.get(model_name)
+        if not isinstance(model, dict):
+            continue
+        roc_points: list[tuple[float, float]] = [(0.0, 0.0), (1.0, 1.0)]
+        pr_points: list[tuple[float, float]] = [(0.0, 1.0)]
+        selected_roc: tuple[float, float] | None = None
+        selected_pr: tuple[float, float] | None = None
+        best_threshold = _safe_float(model.get("best_threshold"))
+
+        for candidate in model.get("candidate_results", []):
+            if not isinstance(candidate, dict):
+                continue
+            rates = _confusion_rates(candidate)
+            threshold = _safe_float(candidate.get("threshold"))
+            if rates is None:
+                continue
+            fpr, recall, precision, prevalence = rates
+            roc_points.append((fpr, recall))
+            pr_points.append((recall, precision))
+            prevalences.append(prevalence)
+            if (
+                best_threshold is not None
+                and threshold is not None
+                and math.isclose(
+                    threshold,
+                    best_threshold,
+                    rel_tol=1e-10,
+                    abs_tol=1e-12,
+                )
+            ):
+                selected_roc = (fpr, recall)
+                selected_pr = (recall, precision)
+
+        roc_points = _deduplicate_curve_x(roc_points)
+        pr_points = _deduplicate_curve_x(pr_points)
+        if len(roc_points) <= 2 and len(pr_points) <= 1:
+            continue
+        plotted = True
+        color = colors[model_name]
+        roc_x, roc_y = zip(*roc_points)
+        pr_x, pr_y = zip(*pr_points)
+        roc_ax.plot(
+            roc_x,
+            roc_y,
+            color=color,
+            linewidth=2.2,
+            label=display_names[model_name],
+        )
+        roc_ax.fill_between(roc_x, roc_y, 0.0, color=color, alpha=0.09)
+        pr_ax.step(
+            pr_x,
+            pr_y,
+            where="post",
+            color=color,
+            linewidth=2.2,
+            label=display_names[model_name],
+        )
+        pr_ax.fill_between(
+            pr_x,
+            pr_y,
+            0.0,
+            step="post",
+            color=color,
+            alpha=0.09,
+        )
+        if selected_roc is not None:
+            roc_ax.scatter(
+                *selected_roc,
+                marker="*",
+                s=95,
+                color=color,
+                edgecolor="black",
+                linewidth=0.7,
+                zorder=5,
+            )
+        if selected_pr is not None:
+            pr_ax.scatter(
+                *selected_pr,
+                marker="*",
+                s=95,
+                color=color,
+                edgecolor="black",
+                linewidth=0.7,
+                zorder=5,
+            )
+
+    if not plotted:
+        _empty_axes(
+            roc_ax,
+            "ROC Curve",
+            "No threshold confusion matrices available",
+        )
+        _empty_axes(
+            pr_ax,
+            "Precision–Recall Curve",
+            "No threshold confusion matrices available",
+        )
+        return _save_figure(fig, figures_dir, "roc_pr_curves")
+
+    for ax in (roc_ax, pr_ax):
+        ax.scatter(
+            [],
+            [],
+            marker="*",
+            s=105,
+            color="#B0B0B0",
+            edgecolor="black",
+            linewidth=0.8,
+            label="Selected threshold",
+        )
+
+    prevalence = sum(prevalences) / len(prevalences) if prevalences else 0.1
+    roc_ax.plot([0.0, 1.0], [0.0, 1.0], "--", color="#777777", linewidth=1.1)
+    pr_ax.axhline(prevalence, linestyle="--", color="#777777", linewidth=1.1)
+    roc_ax.set(
+        xlim=(0.0, 1.0),
+        ylim=(0.0, 1.02),
+        xlabel="False Positive Rate",
+        ylabel="True Positive Rate",
+        title="ROC Curve",
+    )
+    pr_ax.set(
+        xlim=(0.0, 1.0),
+        ylim=(0.0, 1.02),
+        xlabel="Recall",
+        ylabel="Precision",
+        title="Precision–Recall Curve",
+    )
+    roc_ax.legend(frameon=False, loc="lower right")
+    pr_ax.legend(frameon=False, loc="upper right")
+    crop_name = figures_dir.parent.name.replace("_", " ").title()
+    fig.suptitle(f"Validation Anomaly Detection — {crop_name}", fontsize=17)
+    return _save_figure(fig, figures_dir, "roc_pr_curves")
+
+
+def _confusion_rates(
+    row: dict[str, Any],
+) -> tuple[float, float, float, float] | None:
+    confusion = row.get("confusion_matrix")
+    if not isinstance(confusion, dict):
+        return None
+    try:
+        tp = int(confusion["true_positive"])
+        fp = int(confusion["false_positive"])
+        tn = int(confusion["true_negative"])
+        fn = int(confusion["false_negative"])
+    except (KeyError, TypeError, ValueError):
+        return None
+    tpr = tp / (tp + fn) if tp + fn else 0.0
+    fpr = fp / (fp + tn) if fp + tn else 0.0
+    precision = tp / (tp + fp) if tp + fp else 1.0
+    total = tp + fp + tn + fn
+    prevalence = (tp + fn) / total if total else 0.0
+    return fpr, tpr, precision, prevalence
+
+
+def _deduplicate_curve_x(
+    points: list[tuple[float, float]],
+) -> list[tuple[float, float]]:
+    by_x: dict[float, float] = {}
+    for x_value, y_value in points:
+        by_x[x_value] = max(y_value, by_x.get(x_value, float("-inf")))
+    return sorted(by_x.items())
 
 def _plot_training_loss(plt, figures_dir: Path, history: pd.DataFrame) -> list[Path]:
-    fig, ax = plt.subplots(figsize=(7.0, 4.2))
+    fig, ax = plt.subplots(figsize=(7.4, 4.6))
+    crop_name = _crop_display_name(figures_dir)
+    title = f"Training Loss Curve — {crop_name}"
     if history.empty:
-        _empty_axes(ax, "Training Loss Curve", "No training history available")
+        _empty_axes(ax, title, "No training history available")
         return _save_figure(fig, figures_dir, "training_loss")
     loss_col = _first_existing(
         history.columns,
         ("validation_reconstruction_loss", "train_reconstruction_loss", "loss"),
     )
     if loss_col is None:
-        _empty_axes(ax, "Training Loss Curve", "No loss column available")
+        _empty_axes(ax, title, "No loss column available")
         return _save_figure(fig, figures_dir, "training_loss")
     epoch_col = "epoch" if "epoch" in history.columns else None
-    for model_name, group in history.groupby("model_name"):
+    grouped = {str(name): group for name, group in history.groupby("model_name")}
+    for model_name in _ordered_model_names(grouped):
+        group = grouped[model_name]
         x_values = (
             pd.to_numeric(group[epoch_col], errors="coerce")
             if epoch_col is not None
@@ -230,23 +704,29 @@ def _plot_training_loss(plt, figures_dir: Path, history: pd.DataFrame) -> list[P
         )
         y_values = pd.to_numeric(group[loss_col], errors="coerce")
         mask = x_values.notna() & y_values.notna()
-        if mask.any():
-            ax.plot(
-                x_values[mask],
-                y_values[mask],
-                marker="o",
-                linewidth=1.8,
-                label=str(model_name),
-            )
+        if not mask.any():
+            continue
+        color = MODEL_COLORS.get(model_name)
+        ax.plot(
+            x_values[mask],
+            y_values[mask],
+            color=color,
+            marker="o",
+            markersize=4.5,
+            markerfacecolor=color,
+            markeredgewidth=0.0,
+            linewidth=1.8,
+            label=MODEL_NAMES.get(model_name, model_name),
+        )
     if ax.lines:
-        ax.set_xlabel("Epoch")
-        ax.set_ylabel(loss_col.replace("_", " ").title())
-        ax.set_title("Training Loss Curve")
-        ax.legend(frameon=False)
+        ax.set_xlabel("Epoch", fontsize=13)
+        ax.set_ylabel(loss_col.replace("_", " ").title(), fontsize=13)
+        ax.set_title(title, fontsize=15)
+        ax.tick_params(axis="both", labelsize=11)
+        ax.legend(frameon=False, fontsize=11)
     else:
-        _empty_axes(ax, "Training Loss Curve", "No finite loss values available")
+        _empty_axes(ax, title, "No finite loss values available")
     return _save_figure(fig, figures_dir, "training_loss")
-
 
 def _plot_model_summary(plt, figures_dir: Path, frame: pd.DataFrame) -> list[Path]:
     fig, axes = plt.subplots(1, 3, figsize=(10.5, 3.8))
@@ -280,6 +760,7 @@ def _plot_online_benchmark_summary(
     comparison: pd.DataFrame,
 ) -> list[Path]:
     fig, axes = plt.subplots(1, 3, figsize=(11.0, 3.8))
+    crop_name = _crop_display_name(figures_dir)
     if benchmark.empty:
         benchmark = _benchmark_from_comparison(comparison)
     metrics = [
@@ -304,7 +785,7 @@ def _plot_online_benchmark_summary(
         ax.bar(plot_frame["model_name"], plot_frame[column], color=color)
         ax.set_title(label)
         ax.tick_params(axis="x", rotation=25)
-    fig.suptitle("Online Benchmark Summary", y=1.02)
+    fig.suptitle(f"Online Benchmark Summary — {crop_name}", y=1.02)
     return _save_figure(fig, figures_dir, "online_benchmark_summary")
 
 
@@ -314,24 +795,26 @@ def _plot_reconstruction_heatmap(
     reconstruction: pd.DataFrame,
 ) -> list[Path]:
     fig, ax = plt.subplots(figsize=(8.5, 4.8))
+    crop_name = _crop_display_name(figures_dir)
+    title = f"Per-column Reconstruction Error — {crop_name}"
     if reconstruction.empty:
-        _empty_axes(ax, "Per-column Reconstruction Error", "No reconstruction table available")
+        _empty_axes(ax, title, "No reconstruction table available")
         return _save_figure(fig, figures_dir, "reconstruction_error_heatmap")
     frame = reconstruction.copy()
     if "column" not in frame.columns or "model_name" not in frame.columns:
-        _empty_axes(ax, "Per-column Reconstruction Error", "Missing heatmap columns")
+        _empty_axes(ax, title, "Missing heatmap columns")
         return _save_figure(fig, figures_dir, "reconstruction_error_heatmap")
     if "split" in frame.columns:
         frame = frame[frame["split"].astype(str) == "validation"]
     frame = frame[frame["column"].astype(str) != "__all__"]
     metric_col = _first_existing(frame.columns, ("rmse", "mae"))
     if metric_col is None:
-        _empty_axes(ax, "Per-column Reconstruction Error", "No error metric available")
+        _empty_axes(ax, title, "No error metric available")
         return _save_figure(fig, figures_dir, "reconstruction_error_heatmap")
     frame[metric_col] = pd.to_numeric(frame[metric_col], errors="coerce")
     frame = frame.dropna(subset=[metric_col])
     if frame.empty:
-        _empty_axes(ax, "Per-column Reconstruction Error", "No finite error values available")
+        _empty_axes(ax, title, "No finite error values available")
         return _save_figure(fig, figures_dir, "reconstruction_error_heatmap")
     pivot = frame.pivot_table(
         index="model_name",
@@ -340,10 +823,10 @@ def _plot_reconstruction_heatmap(
         aggfunc="mean",
     )
     if pivot.empty:
-        _empty_axes(ax, "Per-column Reconstruction Error", "No heatmap values available")
+        _empty_axes(ax, title, "No heatmap values available")
         return _save_figure(fig, figures_dir, "reconstruction_error_heatmap")
     image = ax.imshow(pivot.to_numpy(dtype=float), aspect="auto", cmap="viridis")
-    ax.set_title(f"Validation Per-column Reconstruction {metric_col.upper()}")
+    ax.set_title(f"Validation Per-column Reconstruction {metric_col.upper()} — {crop_name}")
     ax.set_xticks(range(len(pivot.columns)))
     ax.set_xticklabels(pivot.columns, rotation=45, ha="right")
     ax.set_yticks(range(len(pivot.index)))
@@ -387,6 +870,16 @@ def _benchmark_from_comparison(frame: pd.DataFrame) -> pd.DataFrame:
     output = frame.loc[:, available].rename(columns=rename_map)
     output["split"] = "validation"
     return output
+
+
+def _crop_display_name(figures_dir: Path) -> str:
+    return figures_dir.parent.name.replace("_", " ").title()
+
+
+def _ordered_model_names(models: Mapping[str, Any]) -> list[str]:
+    ordered = [name for name in MODEL_ORDER if name in models]
+    ordered.extend(name for name in models if name not in MODEL_ORDER)
+    return ordered
 
 
 def _metric_value(metrics: dict[str, Any], key: str) -> float | None:

@@ -1,4 +1,4 @@
-"""Temporarily redraw the melon threshold curve from completed artifacts.
+"""Draw a crop threshold curve from completed artifacts.
 
 This script is intentionally independent from the shared figure pipeline.
 """
@@ -34,6 +34,7 @@ def draw_threshold_curve(
     calibration_path: Path,
     output_path: Path,
     *,
+    crop: str,
     x_max: float | None = None,
 ) -> Path:
     import matplotlib
@@ -154,7 +155,7 @@ def draw_threshold_curve(
         ax.set_ylim(0.0, min(1.0, max(visible_f1) * 1.18))
     ax.set_xlabel("Threshold")
     ax.set_ylabel("Validation F1-score")
-    ax.set_title("Threshold Calibration — Melon")
+    ax.set_title(f"Threshold Calibration — {crop.replace(chr(95), chr(32)).title()}")
     ax.grid(True, alpha=0.22)
     ax.legend(frameon=False, loc="best")
     fig.tight_layout()
@@ -167,24 +168,16 @@ def draw_threshold_curve(
 
 def main() -> int:
     experiment_root = _experiment_root()
-    # Previous cucumber source retained for reference; its existing output is untouched.
-    # cucumber_artifact_root = experiment_root / "artifacts" / "cucumber"
-    default_artifact_root = experiment_root / "artifacts" / "melon"
     parser = argparse.ArgumentParser(
-        description="Redraw the completed melon threshold curve only."
+        description="Redraw one completed crop threshold curve."
     )
     parser.add_argument(
-        "--calibration",
-        type=Path,
-        default=default_artifact_root / "threshold_calibration.json",
+        "--crop",
+        default="strawberry",
+        help="Artifact crop directory and plot title (default: strawberry).",
     )
-    parser.add_argument(
-        "--output",
-        type=Path,
-        default=default_artifact_root
-        / "figures"
-        / "threshold_curve_refined_temp.png",
-    )
+    parser.add_argument("--calibration", type=Path, default=None)
+    parser.add_argument("--output", type=Path, default=None)
     parser.add_argument(
         "--x-max",
         type=float,
@@ -192,9 +185,16 @@ def main() -> int:
         help="Optional explicit threshold-axis maximum (automatic if omitted).",
     )
     args = parser.parse_args()
+    artifact_root = experiment_root / "artifacts" / args.crop
+    calibration_path = args.calibration or artifact_root / "threshold_calibration.json"
+    output_path = (
+        args.output
+        or artifact_root / "figures" / "threshold_curve_selected_range.png"
+    )
     output = draw_threshold_curve(
-        args.calibration.resolve(),
-        args.output.resolve(),
+        calibration_path.resolve(),
+        output_path.resolve(),
+        crop=args.crop,
         x_max=args.x_max,
     )
     print(f"Saved: {output}")

@@ -2,6 +2,15 @@ dataset:
   train: ../../../offline_dataset_preparation/datasets/02_split/cucumber/train.parquet
   validation: ../../../offline_dataset_preparation/datasets/02_split/cucumber/validation.parquet
   test: ../../../offline_dataset_preparation/datasets/02_split/cucumber/test.parquet
+  observation_columns:
+    - in_medium_temp1
+    - in_temp
+    - in_temp2
+    - in_hum
+    - in_hum2
+    - in_medium_hum1
+    - in_co2
+    - in_co2_2
 
 experiment:
   output_dir: artifacts/cucumber
@@ -74,7 +83,7 @@ hpo:
 
 threshold:
   enabled: true
-  candidate_generation: validation_reconstruction_error_linspace
+  candidate_generation: injected_validation_score_linspace
   candidate_count: 100
 
 evaluation:

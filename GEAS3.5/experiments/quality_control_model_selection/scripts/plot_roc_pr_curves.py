@@ -1,4 +1,4 @@
-"""Draw temporary melon Validation ROC/PR curves from completed artifacts.
+"""Draw crop Validation ROC/PR curves from completed artifacts.
 
 The displayed curves are reconstructed from the 100 saved threshold candidates.
 Legend AUC values are the exact metrics already stored by the evaluation.
@@ -64,7 +64,7 @@ def _deduplicate_x(points: list[tuple[float, float]]) -> list[tuple[float, float
     return sorted(by_x.items())
 
 
-def draw_curves(calibration_path: Path, output_path: Path) -> Path:
+def draw_curves(calibration_path: Path, output_path: Path, *, crop: str) -> Path:
     import matplotlib
 
     matplotlib.use("Agg")
@@ -186,7 +186,7 @@ def draw_curves(calibration_path: Path, output_path: Path) -> Path:
     )
     roc_ax.legend(frameon=False, loc="lower right")
     pr_ax.legend(frameon=False, loc="upper right")
-    fig.suptitle("Validation Anomaly Detection — Melon", fontsize=17)
+    fig.suptitle(f"Validation Anomaly Detection — {crop.replace("_", " " ).title()}", fontsize=17)
     fig.tight_layout()
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
@@ -196,24 +196,28 @@ def draw_curves(calibration_path: Path, output_path: Path) -> Path:
 
 
 def main() -> int:
-    # Previous cucumber source retained for reference; its existing output is untouched.
-    # cucumber_artifact_root = _experiment_root() / "artifacts" / "cucumber"
-    artifact_root = _experiment_root() / "artifacts" / "melon"
     parser = argparse.ArgumentParser(
-        description="Draw temporary melon Validation ROC and PR curves."
+        description="Draw crop Validation ROC and PR curves."
     )
     parser.add_argument(
-        "--calibration",
-        type=Path,
-        default=artifact_root / "threshold_calibration.json",
+        "--crop",
+        default="strawberry",
+        help="Artifact crop directory and plot title (default: strawberry).",
     )
-    parser.add_argument(
-        "--output",
-        type=Path,
-        default=artifact_root / "figures" / "roc_pr_curves_temp.png",
-    )
+    parser.add_argument("--calibration", type=Path, default=None)
+    parser.add_argument("--output", type=Path, default=None)
     args = parser.parse_args()
-    output = draw_curves(args.calibration.resolve(), args.output.resolve())
+    artifact_root = _experiment_root() / "artifacts" / args.crop
+    calibration_path = args.calibration or artifact_root / "threshold_calibration.json"
+    output_path = (
+        args.output
+        or artifact_root / "figures" / "roc_pr_curves.png"
+    )
+    output = draw_curves(
+        calibration_path.resolve(),
+        output_path.resolve(),
+        crop=args.crop,
+    )
     print(f"Saved: {output}")
     return 0
 

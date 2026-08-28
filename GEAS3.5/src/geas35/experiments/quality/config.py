@@ -144,12 +144,12 @@ def _threshold_candidate_count(threshold: Mapping[str, Any]) -> int:
     if not bool(threshold.get("enabled", True)):
         raise ValueError("threshold.enabled must remain true for v1.4 experiments.")
     generation = str(threshold.get(
-        "candidate_generation", "validation_reconstruction_error_linspace"
+        "candidate_generation", "injected_validation_score_linspace"
     ))
-    if generation != "validation_reconstruction_error_linspace":
+    if generation != "injected_validation_score_linspace":
         raise ValueError(
             "threshold.candidate_generation must be "
-            "validation_reconstruction_error_linspace."
+            "injected_validation_score_linspace."
         )
     count = int(threshold.get("candidate_count", 100))
     if count < 2:

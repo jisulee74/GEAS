@@ -197,6 +197,7 @@ def run_quality_model_experiment(
             mask_fraction=config.mask_fraction,
             random_state=config.evaluation_random_seed,
             progress_context=f"{Path(config.output_root).name}][{model_spec.model_name}",
+            reference_df=train_df,
         ).optimize(final_model, validation_df, columns)
         write_json(
             model_dir / "threshold_calibration.json",
@@ -214,6 +215,7 @@ def run_quality_model_experiment(
             anomaly_scale=config.anomaly_scale,
             random_state=config.evaluation_random_seed,
             efficiency_repeats=config.efficiency_repeats,
+            reference_df=train_df,
         )
         test_report = evaluate_quality_model_for_report(
             final_model,
@@ -226,6 +228,7 @@ def run_quality_model_experiment(
             anomaly_scale=config.anomaly_scale,
             random_state=config.evaluation_random_seed,
             efficiency_repeats=config.efficiency_repeats,
+            reference_df=train_df,
         )
         write_json(
             model_dir / "evaluation.json",
@@ -384,7 +387,7 @@ def _config_payload(config: QualityExperimentConfig, columns: tuple[str, ...]) -
     return {
         "observation_columns": list(columns),
         "models": [asdict(model) for model in config.models],
-        "threshold_candidate_generation": "validation_reconstruction_error_linspace",
+        "threshold_candidate_generation": "injected_validation_score_linspace",
         "threshold_candidate_count": config.threshold_candidate_count,
         "early_stopping": config.early_stopping.to_artifact(),
         "mask_fraction": config.mask_fraction,
@@ -407,8 +410,13 @@ def _threshold_payload(result: ThresholdOptimizationResult) -> dict[str, Any]:
         "candidate_generation": result.candidate_generation,
         "validation_error_min": result.validation_error_min,
         "validation_error_max": result.validation_error_max,
+        "candidate_score_min": result.validation_error_min,
+        "candidate_score_max": result.validation_error_max,
+        "candidate_range_source": "injected_validation_scores",
         "requested_candidate_count": result.requested_candidate_count,
         "actual_candidate_count": result.actual_candidate_count,
+        "per_column_calibration": result.per_column_calibration,
+        "injection_stats": result.best_detection_result.injection_stats,
         "threshold_calibration_after_hpo": True,
         "threshold_is_hpo_parameter": False,
         "precision": metrics.precision,

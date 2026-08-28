@@ -21,6 +21,7 @@ QUALITY_FLAG_SUFFIXES = (
     "_rule_outlier_flag",
     "_ai_outlier_flag",
     "_invalid_flag",
+    "_ffill_flag",
 )
 
 

@@ -149,6 +149,7 @@ def run_model_threshold_calibration(
         random_state=config.random_state,
         include_masking=config.include_masking,
         progress_context=f"{crop_name}][{model_hpo_result.model_name}",
+        reference_df=train_df,
     ).optimize(model, validation_df, columns)
     _write_json(
         model_dir / "threshold_calibration.json",
@@ -239,7 +240,7 @@ def _config_payload(
     return {
         "stage": "quality_model_threshold_calibration",
         "observation_columns": list(columns),
-        "threshold_candidate_generation": "validation_reconstruction_error_linspace",
+        "threshold_candidate_generation": "injected_validation_score_linspace",
         "threshold_candidate_count": config.threshold_candidate_count,
         "early_stopping": config.early_stopping.to_artifact(),
         "objective_metric": config.objective_metric,
@@ -280,8 +281,13 @@ def _threshold_payload(result: ThresholdOptimizationResult) -> dict[str, Any]:
         "candidate_generation": result.candidate_generation,
         "validation_error_min": result.validation_error_min,
         "validation_error_max": result.validation_error_max,
+        "candidate_score_min": result.validation_error_min,
+        "candidate_score_max": result.validation_error_max,
+        "candidate_range_source": "injected_validation_scores",
         "requested_candidate_count": result.requested_candidate_count,
         "actual_candidate_count": result.actual_candidate_count,
+        "per_column_calibration": result.per_column_calibration,
+        "injection_stats": result.best_detection_result.injection_stats,
         "threshold_calibration_after_hpo": True,
         "threshold_is_hpo_parameter": False,
         "precision": metrics.precision,
