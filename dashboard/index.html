@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GEAS 실험 대시보드 | Greenhouse Experiment Dashboard</title>
+  <meta name="description" content="GEAS 3.5 통합 실험 대시보드: 데이터 품질 관리(QC), 전이모델(Transition Model) 선정 및 강화학습(RL) 제어 실험 종합 분석">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Core Stylesheets -->
+  <link rel="stylesheet" href="src/css/main.css?v=20260911_v32">
+  <link rel="stylesheet" href="src/css/components.css?v=20260911_v32">
+  <link rel="stylesheet" href="src/css/sections.css?v=20260911_v32">
+
+  <!-- Vendor Chart.js & PapaParse -->
+  <script src="src/vendor/chart.umd.min.js"></script>
+  <script src="src/vendor/chartjs-plugin-annotation.min.js"></script>
+  <script src="src/vendor/papaparse.min.js"></script>
+</head>
+<body>
+  <div class="app-container">
+    
+    <!-- 1. Header & Academic Scope Banner -->
+    <header class="app-header">
+      <div class="header-top">
+        <div class="brand-section">
+          <div class="brand-badge-row">
+            <span class="system-tag">GEAS 3.5 Experiment Suite</span>
+            <span class="validation-scope-tag">
+              <span>🌿</span> TheIMC Greenhouse Environment Automation System
+            </span>
+          </div>
+          <h1 class="app-title">
+            <span>🌿 GEAS 실험 대시보드</span>
+          </h1>
+          <p class="app-subtitle">
+            스마트 온실 자동제어 시스템 <strong>GEAS</strong>(TheIMC)의 
+            <strong>데이터 품질 관리(QC)</strong>, <strong>전이모델(Transition Model) 선정</strong>, 
+            <strong>강화학습 및 제어(RL Control)</strong> 실험을 통합 분석·검증하는 전주기 연구 대시보드
+          </p>
+        </div>
+
+        <div class="header-actions">
+          <button type="button" class="theme-toggle-btn" id="provenance-modal-btn" title="View Data Provenance and HPO Specifications">
+            <span>📋</span> Provenance & Specs
+          </button>
+        </div>
+      </div>
+
+      <div class="disclaimer-banner">
+        <div>
+          <strong>📌 실험 해석 및 데이터 무결성 원칙:</strong> 
+          상위 메뉴에서 원하는 실험 파이프라인을 선택하십시오. 전이모델 및 품질 관리 결과는 HPO 및 Validation 평가 단계 기준이며, 
+          데이터 왜곡을 방지하기 위해 미보유 항목(시계열/실행이력)은 정직하게 '자료 없음'으로 표시됩니다.
+        </div>
+      </div>
+    </header>
+
+    <!-- 2. Master Top-Level Experiment Navigation Bar -->
+    <nav class="master-nav-container" aria-label="Master Experiment Selector">
+      <div class="master-nav-title-group">
+        <span>🧪</span>
+        <span>실험 파이프라인 선택:</span>
+      </div>
+      <div class="master-nav-tabs">
+        <button type="button" class="master-nav-btn active" data-experiment="quality" id="btn-exp-quality">
+          <span>🌿</span> 데이터 품질 관리
+          <span class="nav-badge">QC Pipeline</span>
+        </button>
+        <button type="button" class="master-nav-btn" data-experiment="transition" id="btn-exp-transition">
+          <span>📈</span> 전이모델 선정
+          <span class="nav-badge">Transition Models</span>
+        </button>
+        <button type="button" class="master-nav-btn" data-experiment="rl_control" id="btn-exp-rl">
+          <span>🎮</span> 강화학습 및 제어 실험
+          <span class="nav-badge nav-badge-warn">준비 중</span>
+        </button>
+      </div>
+    </nav>
+
+    <!-- ====================================================================
+         EXPERIMENT CONTAINER 1: 데이터 품질 관리 (Data Quality Management)
+         ==================================================================== -->
+    <div id="container-exp-quality" class="experiment-container active">
+      <!-- Quality Panel Filter Bar -->
+      <section class="filter-bar-container" aria-label="Quality Data Filters">
+        <div class="filter-bar-header">
+          <div class="filter-bar-title">
+            <span>🔍</span>
+            <span>데이터 품질 관리 필터 컨트롤</span>
+          </div>
+          <div class="filter-bar-summary">
+            <span>Active Filters:</span>
+            <div id="quality-active-filters-summary">
+              <span class="active-filter-pill">전체 작물</span>
+              <span class="active-filter-pill">전체 모델</span>
+              <span class="active-filter-pill">Validation (기본)</span>
+            </div>
+            <button type="button" class="filter-reset-btn" id="quality-filter-reset-btn" title="Reset all quality filters to default">
+              <span>↺</span> Reset
+            </button>
+          </div>
+        </div>
+
+        <div class="filter-grid">
+          <!-- Crop Filter -->
+          <div class="filter-group">
+            <label class="filter-label" for="quality-filter-crop">Target Crop (작물)</label>
+            <select class="filter-select" id="quality-filter-crop">
+              <option value="all">All Crops (전체 작물)</option>
+              <option value="cucumber">오이 (Cucumber)</option>
+              <option value="melon">멜론 (Melon)</option>
+              <option value="strawberry">딸기 (Strawberry)</option>
+            </select>
+          </div>
+
+          <!-- Candidate Model Filter -->
+          <div class="filter-group">
+            <label class="filter-label" for="quality-filter-model">Candidate Model (후보모델)</label>
+            <select class="filter-select" id="quality-filter-model">
+              <option value="all">All Models (전체 모델)</option>
+              <option value="ModernTCN">ModernTCN</option>
+              <option value="TimesNet">TimesNet</option>
+              <option value="PatchTST">PatchTST</option>
+            </select>
+          </div>
+
+          <!-- Evaluation Split Filter (Default: Validation) -->
+          <div class="filter-group">
+            <label class="filter-label" for="quality-filter-split">Evaluation Split (평가 분할)</label>
+            <select class="filter-select" id="quality-filter-split">
+              <option value="validation" selected>Validation (검증 - 기본)</option>
+              <option value="test">Test (최종 평가 - Holdout)</option>
+            </select>
+          </div>
+
+          <!-- Variable Filter (Conditionally Visible on Per-variable screens) -->
+          <div class="filter-group" id="quality-variable-filter-group" style="display: none;">
+            <label class="filter-label" for="quality-filter-variable">Target Variable (변수별 상세 필터)</label>
+            <select class="filter-select" id="quality-filter-variable">
+              <option value="all">All Variables (전체 변수)</option>
+              <option value="__all__">종합 평균/합계 (__all__)</option>
+              <option value="in_temp">실내온도 1 (in_temp)</option>
+              <option value="in_temp2">실내온도 2 (in_temp2)</option>
+              <option value="in_hum">실내습도 1 (in_hum)</option>
+              <option value="in_hum2">실내습도 2 (in_hum2)</option>
+              <option value="in_co2">실내 CO₂ 1 (in_co2)</option>
+              <option value="in_co2_2">실내 CO₂ 2 (in_co2_2)</option>
+              <option value="in_medium_temp1">배지온도 1 (in_medium_temp1)</option>
+              <option value="in_medium_hum1">배지습도 1 (in_medium_hum1)</option>
+            </select>
+          </div>
+        </div>
+      </section>
+
+      <!-- Quality Sub-Navigation Tabs (7 Sub-Screens) -->
+      <nav class="tabs-nav" id="quality-tabs-nav" aria-label="Quality Analysis Sections">
+        <button type="button" class="tab-btn active" data-tab="quality-overview">
+          <span>📊</span> 개요 및 처리 과정
+        </button>
+        <button type="button" class="tab-btn" data-tab="quality-setup">
+          <span>⚙️</span> 실험 설정
+        </button>
+        <button type="button" class="tab-btn" data-tab="quality-reconstruction">
+          <span>🩹</span> 결측·마스킹 복원
+        </button>
+        <button type="button" class="tab-btn" data-tab="quality-detection">
+          <span>🚨</span> 이상치 탐지
+        </button>
+        <button type="button" class="tab-btn" data-tab="quality-hpo">
+          <span>🎛️</span> HPO 및 임계값
+        </button>
+        <button type="button" class="tab-btn" data-tab="quality-resource">
+          <span>⚡</span> 자원 효율성
+        </button>
+        <button type="button" class="tab-btn" data-tab="quality-deployment">
+          <span>🚀</span> 적용 현황
+        </button>
+      </nav>
+
+      <!-- Quality Tab Panels Content -->
+      <main class="tab-content-area">
+        <section class="tab-panel active" id="tab-panel-quality-overview"></section>
+        <section class="tab-panel" id="tab-panel-quality-setup"></section>
+        <section class="tab-panel" id="tab-panel-quality-reconstruction"></section>
+        <section class="tab-panel" id="tab-panel-quality-detection"></section>
+        <section class="tab-panel" id="tab-panel-quality-hpo"></section>
+        <section class="tab-panel" id="tab-panel-quality-resource"></section>
+        <section class="tab-panel" id="tab-panel-quality-deployment"></section>
+      </main>
+    </div>
+
+    <!-- ====================================================================
+         EXPERIMENT CONTAINER 2: 전이모델 선정 (Transition Model Selection)
+         ==================================================================== -->
+    <div id="container-exp-transition" class="experiment-container" style="display: none;">
+      <!-- Global Multi-Facet Filter Bar (Transition Model Filters) -->
+      <section class="filter-bar-container" aria-label="Global Data Filters">
+        <div class="filter-bar-header">
+          <div class="filter-bar-title">
+            <span>🔍</span>
+            <span>전이모델 선정 필터 컨트롤</span>
+          </div>
+          <div class="filter-bar-summary">
+            <span>Active Filters:</span>
+            <div id="active-filters-summary">
+              <span class="active-filter-pill">All Records</span>
+            </div>
+            <button type="button" class="filter-reset-btn" id="filter-reset-btn" title="Reset all filters to default">
+              <span>↺</span> Reset
+            </button>
+          </div>
+        </div>
+
+        <div class="filter-grid">
+          <!-- Crop Filter -->
+          <div class="filter-group">
+            <label class="filter-label" for="filter-crop">Target Crop (작물)</label>
+            <select class="filter-select" id="filter-crop">
+              <option value="all">All Crops (전체 작물)</option>
+              <option value="strawberry">딸기 (Strawberry)</option>
+              <option value="melon">멜론 (Melon)</option>
+              <option value="cucumber">오이 (Cucumber)</option>
+            </select>
+          </div>
+
+          <!-- Feature Variant Filter -->
+          <div class="filter-group">
+            <label class="filter-label" for="filter-variant">Feature Variant (품질플래그)</label>
+            <select class="filter-select" id="filter-variant">
+              <option value="all">All Variants (전체)</option>
+              <option value="with_quality_flags">With Flags (품질플래그 포함)</option>
+              <option value="without_quality_flags">Without Flags (품질플래그 제외)</option>
+            </select>
+          </div>
+
+          <!-- Candidate Model Filter -->
+          <div class="filter-group">
+            <label class="filter-label" for="filter-model">Candidate Model (후보모델)</label>
+            <select class="filter-select" id="filter-model">
+              <option value="all">All Models (전체 모델)</option>
+              <option value="lightgbm">LightGBM</option>
+              <option value="xgboost">XGBoost</option>
+              <option value="extra_trees">ExtraTrees</option>
+              <option value="random_forest">Random Forest</option>
+              <option value="gradient_boosting">Gradient Boosting</option>
+              <option value="hist_gradient_boosting">Hist Gradient Boosting</option>
+              <option value="catboost">CatBoost</option>
+              <option value="knn">KNN</option>
+              <option value="linear_svr">Linear SVR</option>
+              <option value="mlp">MLP</option>
+              <option value="ridge">Ridge</option>
+              <option value="persistence">Persistence (Baseline)</option>
+            </select>
+          </div>
+
+          <!-- Deployment Eligibility Filter -->
+          <div class="filter-group">
+            <label class="filter-label" for="filter-eligibility">Deployment Gate (적격 여부)</label>
+            <select class="filter-select" id="filter-eligibility">
+              <option value="all">All Statuses (전체)</option>
+              <option value="eligible_only">Deployable Only (적격 후보만)</option>
+              <option value="ineligible_only">Ineligible Only (부적격 후보만)</option>
+            </select>
+          </div>
+
+          <!-- Show Baseline Toggle -->
+          <div class="filter-group">
+            <label class="filter-label" style="visibility: hidden;">Baseline Toggle</label>
+            <label class="filter-toggle-group">
+              <input type="checkbox" class="filter-toggle-input" id="filter-baseline" checked>
+              <span class="filter-toggle-text">Show Persistence Baseline</span>
+            </label>
+          </div>
+        </div>
+      </section>
+
+      <!-- Navigation Tabs (8 Sub-Screens) -->
+      <nav class="tabs-nav" id="transition-tabs-nav" aria-label="Analysis Sections">
+        <button type="button" class="tab-btn active" data-tab="overview">
+          <span>📊</span> 개요 및 잠정 선도 후보
+        </button>
+        <button type="button" class="tab-btn" data-tab="setup">
+          <span>⚙️</span> 실험 설정 및 모델 구조
+        </button>
+        <button type="button" class="tab-btn" data-tab="ranking">
+          <span>🏆</span> 후보 모델 종합 순위
+        </button>
+        <button type="button" class="tab-btn" data-tab="onestep">
+          <span>🎯</span> 5분 단기 예측 성능
+        </button>
+        <button type="button" class="tab-btn" data-tab="safety">
+          <span>🛡️</span> 다단계 롤아웃 및 안전성
+        </button>
+        <button type="button" class="tab-btn" data-tab="drift">
+          <span>📉</span> 롤아웃 드리프트 분석
+        </button>
+        <button type="button" class="tab-btn" data-tab="resource">
+          <span>⚡</span> 자원 효율성 및 속도
+        </button>
+        <button type="button" class="tab-btn" data-tab="ablation">
+          <span>🔬</span> 품질플래그 효과 검증
+        </button>
+      </nav>
+
+      <!-- Dynamic Tab Panels Content -->
+      <main class="tab-content-area">
+        <!-- Section 1: Overview & Candidates -->
+        <section class="tab-panel active" id="tab-panel-overview"></section>
+
+        <!-- Section: Experimental Setup & Architecture -->
+        <section class="tab-panel" id="tab-panel-setup"></section>
+
+        <!-- Section 2: Candidate Ranking -->
+        <section class="tab-panel" id="tab-panel-ranking"></section>
+
+        <!-- Section 3: One-Step Targets -->
+        <section class="tab-panel" id="tab-panel-onestep"></section>
+
+        <!-- Section 4: Rollout & Safety -->
+        <section class="tab-panel" id="tab-panel-safety"></section>
+
+        <!-- Section 5: Rollout Drift Details (Table 6) -->
+        <section class="tab-panel" id="tab-panel-drift"></section>
+
+        <!-- Section 6: Resource Efficiency -->
+        <section class="tab-panel" id="tab-panel-resource"></section>
+
+        <!-- Section 7: Quality-Flag Ablation -->
+        <section class="tab-panel" id="tab-panel-ablation"></section>
+      </main>
+    </div>
+
+    <!-- ====================================================================
+         EXPERIMENT CONTAINER 3: 강화학습 및 제어 실험 (RL & Control)
+         ==================================================================== -->
+    <div id="container-exp-rl" class="experiment-container" style="display: none;">
+      <main class="tab-content-area">
+        <section class="tab-panel active" id="tab-panel-rl-control"></section>
+      </main>
+    </div>
+
+    <!-- 5. Footer -->
+    <footer class="app-footer">
+      <div>
+        <strong>TheIMC · GEAS (Greenhouse Environment Automation System)</strong> · Transition Model Selection Research Pipeline
+      </div>
+      <div style="margin-top: 0.35rem; color: var(--text-muted);">
+        Developed by <strong>TheIMC</strong> · Official Rerun Validation Artifacts · Powered by Modern Semantic Web & Vanilla Design System
+      </div>
+    </footer>
+
+    <!-- 6. Provenance & Specification Modal -->
+    <dialog id="provenance-modal" style="margin: auto; max-width: 720px; width: 90%; background: #ffffff; border: 1px solid #cbd5e1; border-radius: var(--radius-lg); padding: 1.8rem; color: #0f172a; box-shadow: var(--shadow-lg);">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+        <h3 style="font-size: 1.2rem; font-weight: 800; display: flex; align-items: center; gap: 0.5rem; color: #0f172a;">
+          <span>📋</span> Dataset Provenance & HPO Specifications
+        </h3>
+        <button type="button" id="close-provenance-modal-btn" style="background: transparent; border: none; font-size: 1.25rem; color: #64748b; cursor: pointer;">✕</button>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 1rem; font-size: 0.85rem; color: #334155; max-height: 70vh; overflow-y: auto;">
+        <div style="background: #f8fafc; padding: 0.85rem; border: 1px solid #e2e8f0; border-radius: var(--radius-md);">
+          <div style="font-weight: 700; color: #0f172a; margin-bottom: 0.35rem;">📍 Source Experiment Artifacts (TheIMC GEAS Team)</div>
+          <code style="font-size: 0.76rem; word-break: break-all; color: #4338ca;">
+            /NHNHOME/WORKSPACE/26mafra001_A/BASE/theimc/jslee/GEAS/GEAS3.5/experiments/transition_model_selection/artifacts/step12_v1_4_root_cause/official_rerun
+          </code>
+        </div>
+
+        <div>
+          <div style="font-weight: 700; color: #0f172a; margin-bottom: 0.35rem;">📐 Official HPO Multi-Horizon Objective Function</div>
+          <div style="background: #f1f5f9; border: 1px solid #cbd5e1; padding: 0.75rem; border-radius: var(--radius-sm); font-family: var(--font-family-mono); font-size: 0.82rem; color: #065f46; font-weight: 600;">
+            Loss = 0.10 × One-Step(5m) + 0.10 × Rollout(15m) + 0.25 × Rollout(30m) + 0.45 × Rollout(60m) + 0.10 × Drift Slope
+          </div>
+        </div>
+
+        <div>
+          <div style="font-weight: 700; color: #0f172a; margin-bottom: 0.35rem;">⚖️ Selection & Tie-Breaking Rules</div>
+          <ul style="padding-left: 1.2rem; display: flex; flex-direction: column; gap: 0.3rem;">
+            <li><strong>Safety & Action-Response Gate:</strong> Non-finite values, physical violations, or fully action-insensitive models are disqualified from deployment eligibility.</li>
+            <li><strong>Parsimony Principle:</strong> When quality-flag inclusion shows no statistically significant improvement (95% CI spanning 0 or equal NRMSE), the leaner <code>without_quality_flags</code> variant is prioritized.</li>
+            <li><strong>Validation Scope:</strong> Test dataset was strictly quarantined during model training, HPO, and candidate selection.</li>
+          </ul>
+        </div>
+      </div>
+    </dialog>
+
+  </div>
+
+  <!-- Main ES Module Entry Point with cache busting -->
+  <script type="module" src="src/js/app.js?v=20260911_v32"></script>
+</body>
+</html>

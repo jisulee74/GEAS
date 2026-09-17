@@ -1,0 +1,20 @@
+{
+  "model_name": "timesnet",
+  "validation": {
+    "inference_latency_ms_per_row": 0.3217612874129752,
+    "peak_memory_bytes": 227519311,
+    "model_size_bytes": 5722656,
+    "measured_rows": 21024,
+    "repeats": 3
+  },
+  "test": {
+    "inference_latency_ms_per_row": 0.319247854225854,
+    "peak_memory_bytes": 230774829,
+    "model_size_bytes": 5722656,
+    "measured_rows": 21312,
+    "repeats": 3
+  },
+  "online_benchmark_included": true,
+  "automatic_best_model_selection": false,
+  "test_used_for_selection": false
+}

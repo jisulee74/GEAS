@@ -1,0 +1,780 @@
+/* ==========================================================================
+   GEAS Dashboard - Component Styles (Light Theme - High Contrast & Crisp Visuals)
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Filter Control Bar
+   -------------------------------------------------------------------------- */
+.filter-bar-container {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem 1.5rem;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.filter-bar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.filter-bar-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text-primary);
+}
+
+.filter-bar-summary {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.active-filter-pill {
+  background: #e0e7ff;
+  color: #3730a3;
+  border: 1px solid #c7d2fe;
+  padding: 0.2rem 0.6rem;
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.filter-reset-btn {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 0.25rem 0.65rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  transition: all var(--transition-fast);
+}
+
+.filter-reset-btn:hover {
+  color: var(--accent-danger);
+  border-color: var(--accent-danger);
+  background: var(--accent-danger-bg);
+}
+
+.filter-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  align-items: flex-end;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.filter-label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #475569;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.filter-select, .filter-input {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  color: #0f172a;
+  font-family: var(--font-family-sans);
+  font-size: 0.88rem;
+  padding: 0.55rem 0.85rem;
+  border-radius: var(--radius-md);
+  outline: none;
+  width: 100%;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.filter-select:focus, .filter-input:focus {
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 3px var(--accent-primary-glow);
+}
+
+.filter-toggle-group {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.55rem 0.85rem;
+  background: #f8fafc;
+  border: 1px solid #cbd5e1;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  user-select: none;
+  height: 40px;
+}
+
+.filter-toggle-input {
+  cursor: pointer;
+  accent-color: var(--accent-primary);
+  width: 1.1rem;
+  height: 1.1rem;
+}
+
+.filter-toggle-text {
+  font-size: 0.85rem;
+  color: #1e293b;
+  font-weight: 600;
+}
+
+/* --------------------------------------------------------------------------
+   2. KPI Cards Grid & Styles (Light Theme)
+   -------------------------------------------------------------------------- */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 1.25rem;
+}
+
+.kpi-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: var(--radius-lg);
+  padding: 1.25rem 1.4rem;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  position: relative;
+  overflow: hidden;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.kpi-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  border-color: #cbd5e1;
+}
+
+.kpi-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: var(--kpi-accent, var(--accent-primary));
+}
+
+.kpi-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.kpi-title {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #475569;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.kpi-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: var(--radius-md);
+  background: #f1f5f9;
+  color: var(--kpi-accent, var(--accent-primary));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+}
+
+.kpi-value-row {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+
+.kpi-value {
+  font-size: 1.95rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: #0f172a;
+  font-family: var(--font-family-sans);
+}
+
+.kpi-unit {
+  font-size: 0.85rem;
+  color: #64748b;
+  font-weight: 600;
+}
+
+.kpi-footer {
+  font-size: 0.78rem;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.kpi-trend {
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.kpi-trend.positive { color: #059669; }
+.kpi-trend.negative { color: #dc2626; }
+.kpi-trend.neutral { color: #475569; }
+
+/* Provisional Candidate Cards (Clean Light Theme - No Muddy Grey) */
+.champion-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.25rem;
+}
+
+.champion-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: var(--radius-lg);
+  padding: 1.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.champion-card.strawberry { border-left: 5px solid #e11d48; }
+.champion-card.melon { border-left: 5px solid #059669; }
+.champion-card.cucumber { border-left: 5px solid #0284c7; }
+
+.champion-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.champion-crop-name {
+  font-size: 1.15rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-transform: capitalize;
+  color: #0f172a;
+}
+
+.champion-model-name {
+  font-size: 1.45rem;
+  font-weight: 800;
+  color: #1e293b;
+  letter-spacing: -0.01em;
+  margin-top: 0.25rem;
+}
+
+.champion-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+  background: transparent;
+  border-top: 1px solid #e2e8f0;
+  border-bottom: 1px solid #e2e8f0;
+  padding: 0.75rem 0;
+}
+
+.champ-stat-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.champ-stat-label {
+  font-size: 0.72rem;
+  color: #64748b;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.champ-stat-val {
+  font-size: 1rem;
+  font-weight: 800;
+  font-family: var(--font-family-mono);
+  color: #0f172a;
+}
+
+.champion-runner-up {
+  margin-top: 0.25rem;
+  padding: 0.5rem 0;
+  background: transparent;
+  font-size: 0.8rem;
+}
+
+/* --------------------------------------------------------------------------
+   3. Badges & State Tags (Crisp Light Theme)
+   -------------------------------------------------------------------------- */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.25rem 0.6rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  font-weight: 700;
+  white-space: nowrap;
+  line-height: 1.3;
+}
+
+.badge-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.badge-eligible {
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  color: #065f46;
+}
+.badge-eligible .badge-dot { background: #059669; }
+
+.badge-ineligible {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #991b1b;
+}
+.badge-ineligible .badge-dot { background: #dc2626; }
+
+.badge-baseline {
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  color: #475569;
+}
+.badge-baseline .badge-dot { background: #64748b; }
+
+.badge-safe {
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  color: #065f46;
+}
+
+.badge-insufficient-support {
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  color: #1e40af;
+}
+
+.badge-action-insensitive {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #991b1b;
+}
+
+.badge-physical-violation {
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  color: #92400e;
+}
+
+.badge-variant {
+  background: #e0e7ff;
+  border: 1px solid #c7d2fe;
+  color: #3730a3;
+  font-family: var(--font-family-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+
+/* --------------------------------------------------------------------------
+   4. Interactive Data Table System
+   -------------------------------------------------------------------------- */
+.data-table-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.data-table-toolbar {
+  padding: 1rem 1.4rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  border-bottom: 1px solid #e2e8f0;
+  background: #f8fafc;
+}
+
+.table-toolbar-left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.table-title {
+  font-size: 1rem;
+  font-weight: 800;
+  color: #0f172a;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.table-row-count {
+  font-size: 0.78rem;
+  color: #475569;
+  background: #e2e8f0;
+  font-weight: 600;
+  padding: 0.15rem 0.55rem;
+  border-radius: var(--radius-full);
+}
+
+.table-toolbar-right {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.table-search-input {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  color: #0f172a;
+  font-size: 0.82rem;
+  padding: 0.45rem 0.8rem;
+  border-radius: var(--radius-md);
+  outline: none;
+  min-width: 200px;
+}
+
+.table-search-input:focus {
+  border-color: var(--accent-primary);
+}
+
+.table-btn {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  color: #334155;
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 0.45rem 0.85rem;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: all var(--transition-fast);
+  box-shadow: var(--shadow-sm);
+}
+
+.table-btn:hover {
+  background: #f8fafc;
+  color: #0f172a;
+  border-color: var(--accent-primary);
+}
+
+.table-responsive-wrapper {
+  overflow-x: auto;
+  max-height: 600px;
+  position: relative;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.86rem;
+}
+
+.data-table th {
+  background: #f8fafc;
+  color: #475569;
+  font-weight: 700;
+  font-size: 0.76rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.85rem 1rem;
+  border-bottom: 2px solid #e2e8f0;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+}
+
+.data-table th:hover {
+  color: #0f172a;
+  background: #f1f5f9;
+}
+
+.data-table th .sort-indicator {
+  margin-left: 0.35rem;
+  font-size: 0.7rem;
+  color: var(--accent-primary);
+}
+
+.data-table td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #f1f5f9;
+  color: #1e293b;
+  white-space: nowrap;
+}
+
+.data-table tbody tr {
+  transition: background-color var(--transition-fast);
+}
+
+.data-table tbody tr:hover {
+  background-color: #f8fafc;
+}
+
+.data-table tbody tr.row-ineligible {
+  background-color: #fff5f5;
+}
+
+.data-table tbody tr.row-baseline {
+  opacity: 0.85;
+}
+
+.table-pagination-bar {
+  padding: 0.75rem 1.4rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  background: #f8fafc;
+  border-top: 1px solid #e2e8f0;
+  font-size: 0.82rem;
+  color: #475569;
+}
+
+.pagination-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.page-btn {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  color: #475569;
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 0.3rem 0.65rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.page-btn:hover:not(:disabled) {
+  color: #0f172a;
+  border-color: var(--accent-primary);
+  background: #f8fafc;
+}
+
+.page-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.page-btn.active {
+  background: #4f46e5;
+  color: #ffffff;
+  border-color: #4f46e5;
+}
+
+/* --------------------------------------------------------------------------
+   5. Chart Container Cards
+   -------------------------------------------------------------------------- */
+.chart-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: var(--radius-lg);
+  padding: 1.4rem;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.chart-title-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.chart-title {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #0f172a;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.chart-subtitle {
+  font-size: 0.82rem;
+  color: #64748b;
+}
+
+.chart-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.chart-canvas-wrapper {
+  position: relative;
+  width: 100%;
+  min-height: 340px;
+  max-height: 480px;
+}
+
+/* --------------------------------------------------------------------------
+   6. Academic Callouts & Toggle Buttons (Crisp Light Theme)
+   -------------------------------------------------------------------------- */
+.academic-callout {
+  padding: 1rem 1.25rem;
+  border-radius: var(--radius-md);
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-left: 4px solid var(--accent-primary);
+  font-size: 0.85rem;
+  color: #334155;
+  line-height: 1.55;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.academic-callout strong {
+  color: #0f172a;
+}
+
+.toggle-pill-group {
+  display: inline-flex;
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  border-radius: var(--radius-md);
+  padding: 0.2rem;
+}
+
+.toggle-pill-btn {
+  background: transparent;
+  border: none;
+  color: #475569;
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 0.35rem 0.8rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+/* --------------------------------------------------------------------------
+   7. Eligibility Criteria Guide Card
+   -------------------------------------------------------------------------- */
+.eligibility-guide-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: var(--radius-lg);
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.eligibility-guide-title {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #0f172a;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.eligibility-guide-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1rem;
+}
+
+.guide-badge-box {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: var(--radius-md);
+  padding: 1rem 1.15rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.guide-badge-box.eligible {
+  border-left: 4px solid #059669;
+  background: #f0fdf4;
+}
+
+.guide-badge-box.ineligible {
+  border-left: 4px solid #dc2626;
+  background: #fef2f2;
+}
+
+.guide-badge-box p {
+  font-size: 0.82rem;
+  color: #334155;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.guide-badge-box ul {
+  padding-left: 1.2rem;
+  margin: 0;
+  font-size: 0.8rem;
+  color: #334155;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.guide-badge-box ul li strong {
+  color: #0f172a;
+}

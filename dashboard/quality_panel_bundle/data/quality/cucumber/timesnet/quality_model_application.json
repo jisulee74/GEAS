@@ -1,0 +1,51 @@
+{
+  "stage": "quality_model_application_artifact",
+  "model_name": "timesnet",
+  "model_pickle_path": "quality_model.pkl",
+  "artifact_format": "pickle",
+  "threshold": {
+    "in_medium_temp1": 18.291671581248984,
+    "in_temp": 16.181858523880766,
+    "in_temp2": 14.316105263759487,
+    "in_hum": 47.4208321202201,
+    "in_hum2": 35.72275333153405,
+    "in_medium_hum1": 43.68906333319121,
+    "in_co2": 155.11254963094686,
+    "in_co2_2": 190.1926458551149
+  },
+  "observation_columns": [
+    "in_medium_temp1",
+    "in_temp",
+    "in_temp2",
+    "in_hum",
+    "in_hum2",
+    "in_medium_hum1",
+    "in_co2",
+    "in_co2_2"
+  ],
+  "imputation_confidence_threshold": null,
+  "automatic_best_model_selection": false,
+  "test_used_for_selection": false,
+  "metadata": {
+    "source": "quality_threshold_calibration",
+    "hpo_best_candidate": {
+      "name": "timesnet_seed42_candidate012",
+      "common": {
+        "lookback": 288,
+        "mask_fraction": 0.3,
+        "batch_size": 64,
+        "epochs": 100,
+        "learning_rate": 0.0004054153574900177,
+        "weight_decay": 1.328224045649621e-06,
+        "dropout": 0.1310152167697087,
+        "random_state": 42,
+        "expected_frequency": "5min"
+      },
+      "model_specific": {
+        "temporal_blocks": 3,
+        "top_k_periods": 2,
+        "period_embedding_dim": 32
+      }
+    }
+  }
+}

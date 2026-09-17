@@ -1,0 +1,20 @@
+{
+  "name": "patch_tst_seed42_candidate039",
+  "common": {
+    "lookback": 288,
+    "mask_fraction": 0.3,
+    "batch_size": 128,
+    "epochs": 100,
+    "learning_rate": 0.0040618308261083265,
+    "weight_decay": 7.405022905253861e-05,
+    "dropout": 0.23542903477565622,
+    "random_state": 42,
+    "expected_frequency": "5min"
+  },
+  "model_specific": {
+    "patch_length": 32,
+    "transformer_depth": 2,
+    "attention_heads": 8,
+    "embedding_dim": 32
+  }
+}

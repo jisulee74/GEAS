@@ -1,0 +1,68 @@
+{
+  "stage": "quality_model_online_benchmark",
+  "online_benchmark_included": true,
+  "automatic_best_model_selection": false,
+  "test_used_for_selection": false,
+  "models": {
+    "modern_tcn": {
+      "model_name": "modern_tcn",
+      "validation": {
+        "inference_latency_ms_per_row": 0.3030923685444758,
+        "peak_memory_bytes": 227347331,
+        "model_size_bytes": 6102304,
+        "measured_rows": 21024,
+        "repeats": 3
+      },
+      "test": {
+        "inference_latency_ms_per_row": 0.30443590038010404,
+        "peak_memory_bytes": 230807513,
+        "model_size_bytes": 6102304,
+        "measured_rows": 21312,
+        "repeats": 3
+      },
+      "online_benchmark_included": true,
+      "automatic_best_model_selection": false,
+      "test_used_for_selection": false
+    },
+    "timesnet": {
+      "model_name": "timesnet",
+      "validation": {
+        "inference_latency_ms_per_row": 0.3217612874129752,
+        "peak_memory_bytes": 227519311,
+        "model_size_bytes": 5722656,
+        "measured_rows": 21024,
+        "repeats": 3
+      },
+      "test": {
+        "inference_latency_ms_per_row": 0.319247854225854,
+        "peak_memory_bytes": 230774829,
+        "model_size_bytes": 5722656,
+        "measured_rows": 21312,
+        "repeats": 3
+      },
+      "online_benchmark_included": true,
+      "automatic_best_model_selection": false,
+      "test_used_for_selection": false
+    },
+    "patch_tst": {
+      "model_name": "patch_tst",
+      "validation": {
+        "inference_latency_ms_per_row": 0.2868631837524772,
+        "peak_memory_bytes": 229737950,
+        "model_size_bytes": 102304,
+        "measured_rows": 21024,
+        "repeats": 3
+      },
+      "test": {
+        "inference_latency_ms_per_row": 0.28601178138279587,
+        "peak_memory_bytes": 233018695,
+        "model_size_bytes": 102304,
+        "measured_rows": 21312,
+        "repeats": 3
+      },
+      "online_benchmark_included": true,
+      "automatic_best_model_selection": false,
+      "test_used_for_selection": false
+    }
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "stage": "quality_model_threshold_calibration",
+  "observation_columns": [
+    "in_medium_temp1",
+    "in_temp",
+    "in_temp2",
+    "in_hum",
+    "in_hum2",
+    "in_medium_hum1",
+    "in_co2",
+    "in_co2_2"
+  ],
+  "threshold_candidate_generation": "injected_validation_score_linspace",
+  "threshold_candidate_count": 100,
+  "early_stopping": {
+    "monitor": "validation_reconstruction_loss",
+    "mode": "min",
+    "patience": 10,
+    "min_delta": 0.0
+  },
+  "objective_metric": "f1_score",
+  "mask_fraction": 0.1,
+  "anomaly_fraction": 0.1,
+  "anomaly_scale": 8.0,
+  "random_state": 42,
+  "include_masking": true,
+  "threshold_calibration_after_hpo": true,
+  "threshold_is_hpo_parameter": false
+}

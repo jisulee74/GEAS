@@ -1,0 +1,4 @@
+﻿crop,input_rows,matched_cycle_rows,excluded_outside_cycle_rows,excluded_start,excluded_end,matched_crop_cycles,policy
+cucumber,33984,33984,0,,,2,transplant_date <= reg_date <= effective_crop_end_date
+melon,44029,44029,0,,,1,transplant_date <= reg_date <= effective_crop_end_date
+strawberry,147816,141026,6790,2025-04-14 10:10:00,2025-05-07 23:55:00,3,transplant_date <= reg_date <= effective_crop_end_date

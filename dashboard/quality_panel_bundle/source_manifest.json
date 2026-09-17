@@ -1,0 +1,1090 @@
+{
+  "description": "Final QC experiment artifacts and current source snapshots for dashboard implementation; not an executable training package.",
+  "source_root": "GEAS/GEAS3.5",
+  "files": [
+    {
+      "path": "data/quality/cucumber/anomaly_detection_metric_table.csv",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/cucumber/anomaly_detection_metric_table.csv",
+      "bytes": 22371,
+      "sha256": "5b09eb215747cb1e2887a8243aec59c55566444488534223fffcf949a7a5b1f0"
+    },
+    {
+      "path": "data/quality/cucumber/artifact_integrity.json",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/cucumber/artifact_integrity.json",
+      "bytes": 8391,
+      "sha256": "83549fa093ec409755184c664ed03da3970f0cc2cb0ced3b5e144a2f6f67e378"
+    },
+    {
+      "path": "data/quality/cucumber/best_config.json",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/cucumber/best_config.json",
+      "bytes": 1760,
+      "sha256": "8c896ffc3555a6aa7cc88a68190c4ecd65aa692f08afc5edc1bffcaccbd1da32"
+    },
+    {
+      "path": "data/quality/cucumber/evaluation.json",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/cucumber/evaluation.json",
+      "bytes": 71233,
+      "sha256": "3472ae63adec7d1c04c3cfd4f315451cba96703f040c937812ac7155a83f2623"
+    },
+    {
+      "path": "data/quality/cucumber/evaluation_config.json",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/cucumber/evaluation_config.json",
+      "bytes": 469,
+      "sha256": "0e0f81b5bf96ac9168ca6a268a278ccc8862b8bf30b14ac392c0317915f613cc"
+    },
+    {
+      "path": "data/quality/cucumber/figures/hpo_progress.png",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/cucumber/figures/hpo_progress.png",
+      "bytes": 186918,
+      "sha256": "af14a9f0f23dc0a969944160a33089ccef8ddbd28f78c863e9e69adc60394fb5"
+    },
+    {
+      "path": "data/quality/cucumber/figures/reconstruction_error_heatmap.png",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/cucumber/figures/reconstruction_error_heatmap.png",
+      "bytes": 149586,
+      "sha256": "7ddeaa1414f4662ae83749231c327df3f78525096bc7a0dce9ad3ef71b9f4f5c"
+    },
+    {
+      "path": "data/quality/cucumber/figures/roc_pr_curves.png",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/cucumber/figures/roc_pr_curves.png",
+      "bytes": 213614,
+      "sha256": "44097e0521f101f53c808aabfc2dc5aee6e9eabb9338d8a9bcadbca15051448f"
+    },
+    {
+      "path": "data/quality/cucumber/figures/threshold_curve.png",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/cucumber/figures/threshold_curve.png",
+      "bytes": 1241380,
+      "sha256": "26552587f143fee09b3c67d31d7151329573645124d3c40e64d7a35ff8046834"
+    },
+    {
+      "path": "data/quality/cucumber/figures/threshold_curve_selected_range.png",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/cucumber/figures/threshold_curve_selected_range.png",
+      "bytes": 1293001,
+      "sha256": "d3914c3e070da2f445a0cba2f6a1479c3a3307795bf5c86843f5cf5d82bf4c88"
+    },
+    {
+      "path": "data/quality/cucumber/figures/training_loss.png",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/cucumber/figures/training_loss.png",
+      "bytes": 138500,
+      "sha256": "9aa8490dd3d6de6cffe55d90aca6bea91ddee0518f951d1ed8040f392fa46003"
+    },
+    {
+      "path": "data/quality/cucumber/hpo_config.json",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/cucumber/hpo_config.json",
+      "bytes": 5313,
+      "sha256": "23233175fc3de218a2d38ab5d52889b6ba65edb118daa88a962e5ae112f6e331"
+    },
+    {
+      "path": "data/quality/cucumber/hpo_results.json",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/cucumber/hpo_results.json",
+      "bytes": 2837687,
+      "sha256": "ae82efd871a21099ad27316ff4e77cd9f37c1c7f3a39fae6d71011a88165a735"
+    },
+    {
+      "path": "data/quality/cucumber/modern_tcn/best_config.json",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/cucumber/modern_tcn/best_config.json",
+      "bytes": 456,
+      "sha256": "5d21eeb204a71ba1e007897d0f04827a14e07c13212fc3e26350e706205a6239"
+    },
+    {
+      "path": "data/quality/cucumber/modern_tcn/evaluation.json",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/cucumber/modern_tcn/evaluation.json",
+      "bytes": 21154,
+      "sha256": "45eb02477e7de94a59655429dffa6ef7103a6fbbe3797da262d05e31e195815c"
+    },
+    {
+      "path": "data/quality/cucumber/modern_tcn/hpo_results.json",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/cucumber/modern_tcn/hpo_results.json",
+      "bytes": 767617,
+      "sha256": "094fe3caf9b576f48ff6523db1360cd2e555d96cd8ed3b0b25f55e359657beb0"
+    },
+    {
+      "path": "data/quality/cucumber/modern_tcn/online_benchmark.json",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/cucumber/modern_tcn/online_benchmark.json",
+      "bytes": 527,
+      "sha256": "736482b4ed84e9e8e5025ceece4adacdf354ccad0e680f9ad0c6a6c91c0e9fd4"
+    },
+    {
+      "path": "data/quality/cucumber/modern_tcn/quality_model_application.json",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/cucumber/modern_tcn/quality_model_application.json",
+      "bytes": 1399,
+      "sha256": "4442a1279ef80e60c8ed0ed54f308d62f3169a9882412d91514af24dd8364634"
+    },
+    {
+      "path": "data/quality/cucumber/modern_tcn/threshold_calibration.json",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/cucumber/modern_tcn/threshold_calibration.json",
+      "bytes": 216617,
+      "sha256": "4e42da73af25d58084bb57c8cf1ec5ee6d4f0d021fee85439b1146cc6f50844f"
+    },
+    {
+      "path": "data/quality/cucumber/modern_tcn/training_history.csv",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/cucumber/modern_tcn/training_history.csv",
+      "bytes": 2226,
+      "sha256": "a10799142237bb3970b2cbc521f2ac99d7227b5421ef3c7bb0208a3e395ff875"
+    },
+    {
+      "path": "data/quality/cucumber/online_benchmark.json",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/cucumber/online_benchmark.json",
+      "bytes": 2036,
+      "sha256": "76410e03f102e5dda4eeffd4e31a173becc66913ff3548d617cfcef626f47476"
+    },
+    {
+      "path": "data/quality/cucumber/online_benchmark_config.json",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/cucumber/online_benchmark_config.json",
+      "bytes": 404,
+      "sha256": "2b7bc09756c7454f995bc0a398b1229a3a31c5db916d359da602f60167675879"
+    },
+    {
+      "path": "data/quality/cucumber/online_benchmark_table.csv",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/cucumber/online_benchmark_table.csv",
+      "bytes": 476,
+      "sha256": "88081b9b2529202123addcb038b188819a8757d5ca1221bff1898f04baf6cf1d"
+    },
+    {
+      "path": "data/quality/cucumber/patch_tst/best_config.json",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/cucumber/patch_tst/best_config.json",
+      "bytes": 462,
+      "sha256": "e9728350c44e1bae73cb4f64915c7e0c9de475b16831a6bdd7dbc509d8c73f4b"
+    },
+    {
+      "path": "data/quality/cucumber/patch_tst/evaluation.json",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/cucumber/patch_tst/evaluation.json",
+      "bytes": 20901,
+      "sha256": "a2a596735d39591b6c67cb9319d9a90bcf7295e776f4328e491f7ffb50772cee"
+    },
+    {
+      "path": "data/quality/cucumber/patch_tst/hpo_results.json",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/cucumber/patch_tst/hpo_results.json",
+      "bytes": 910605,
+      "sha256": "acb80c22a4786d97ddc6ca9a17164c8e4f57a83aa5c007f45d4cd5df38090e0d"
+    },
+    {
+      "path": "data/quality/cucumber/patch_tst/online_benchmark.json",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/cucumber/patch_tst/online_benchmark.json",
+      "bytes": 524,
+      "sha256": "74e0154e108e8aef4a23f702af29f807d09f0b6fc53d473e084015b63ceb8e85"
+    },
+    {
+      "path": "data/quality/cucumber/patch_tst/quality_model_application.json",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/cucumber/patch_tst/quality_model_application.json",
+      "bytes": 1389,
+      "sha256": "94811111dd1ad8f21c2afd770cd84f9328ef8c99d6c8e6b9daea90c2875ff401"
+    },
+    {
+      "path": "data/quality/cucumber/patch_tst/threshold_calibration.json",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/cucumber/patch_tst/threshold_calibration.json",
+      "bytes": 205944,
+      "sha256": "73a0029d780a1bc992820fc64d6c57ce2d68cdb286bddbb567d727f048a11b47"
+    },
+    {
+      "path": "data/quality/cucumber/patch_tst/training_history.csv",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/cucumber/patch_tst/training_history.csv",
+      "bytes": 568,
+      "sha256": "4132fae6c36b601b7d15916af8866a16285b0f30e19863c5928f7d25d75b953b"
+    },
+    {
+      "path": "data/quality/cucumber/reconstruction_metric_table.csv",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/cucumber/reconstruction_metric_table.csv",
+      "bytes": 3903,
+      "sha256": "d899a75ff76b9df8e96217f99e704a6dcedffff4683ef1b140259c92372e438b"
+    },
+    {
+      "path": "data/quality/cucumber/threshold_calibration.json",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/cucumber/threshold_calibration.json",
+      "bytes": 723923,
+      "sha256": "4345e02bbd21e793599fda66362ece58202eb91e99f556e782552e7425bbcc1f"
+    },
+    {
+      "path": "data/quality/cucumber/threshold_config.json",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/cucumber/threshold_config.json",
+      "bytes": 705,
+      "sha256": "e58a749b470f448d0bcf6841a9c4360a5820177a93aed6a5b3dcd5d6edf5f265"
+    },
+    {
+      "path": "data/quality/cucumber/timesnet/best_config.json",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/cucumber/timesnet/best_config.json",
+      "bytes": 439,
+      "sha256": "7700f3ec6e51e41e88ac8bac4ea49c9cb22b4b20d5d28115a9103af3172e676d"
+    },
+    {
+      "path": "data/quality/cucumber/timesnet/evaluation.json",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/cucumber/timesnet/evaluation.json",
+      "bytes": 21407,
+      "sha256": "8ee5be706b431c9767128555bf5a0792dd290ba7f7a0e568ba5f5e866fb9c167"
+    },
+    {
+      "path": "data/quality/cucumber/timesnet/hpo_results.json",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/cucumber/timesnet/hpo_results.json",
+      "bytes": 860534,
+      "sha256": "f9839b86e57f7cffe8b0651d19277ca3eb4a7eddf966ef7a60ebf1715805c063"
+    },
+    {
+      "path": "data/quality/cucumber/timesnet/online_benchmark.json",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/cucumber/timesnet/online_benchmark.json",
+      "bytes": 521,
+      "sha256": "350162b248b54f26dade2a7134c5f5d3374d9f7e68e3a4a4bcadde6f6d4dd705"
+    },
+    {
+      "path": "data/quality/cucumber/timesnet/quality_model_application.json",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/cucumber/timesnet/quality_model_application.json",
+      "bytes": 1359,
+      "sha256": "ae21d988e92d34766b22f0199294395f3c62510aaf830ace1e6f89150b7e7a64"
+    },
+    {
+      "path": "data/quality/cucumber/timesnet/threshold_calibration.json",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/cucumber/timesnet/threshold_calibration.json",
+      "bytes": 219390,
+      "sha256": "1b97e6e2a90d9e6912d6fec76635fadb10855054423fe897047a3cefb1e2462a"
+    },
+    {
+      "path": "data/quality/cucumber/timesnet/training_history.csv",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/cucumber/timesnet/training_history.csv",
+      "bytes": 1148,
+      "sha256": "4d6648f99e2b3158fe6e902cfa897c336a398454cdc8e21fb741c612b3ce0bbc"
+    },
+    {
+      "path": "data/quality/cucumber/training_history.csv",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/cucumber/training_history.csv",
+      "bytes": 7290,
+      "sha256": "66386a21b6c61cfd2c5b1df35ef6eb6f5eb3e8dbba23d94239e20467a11eebbf"
+    },
+    {
+      "path": "data/quality/cucumber/visualization_manifest.json",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/cucumber/visualization_manifest.json",
+      "bytes": 1966,
+      "sha256": "4050ee3291a39bef59196b84aca25ff7d3210b217cdbbab67da272d1ee4af764"
+    },
+    {
+      "path": "data/quality/figures/anomaly_detection_classification.png",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/figures/anomaly_detection_classification.png",
+      "bytes": 251554,
+      "sha256": "c16762b8f1455b929e500b98950f682c06b1a34edd02278f02907b9d628c816e"
+    },
+    {
+      "path": "data/quality/figures/anomaly_detection_ranking.png",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/figures/anomaly_detection_ranking.png",
+      "bytes": 142689,
+      "sha256": "84e7d0164bb45ce3ce8546cb666c3771a2a8a0821c8e0aab1f1f744d09958caf"
+    },
+    {
+      "path": "data/quality/figures/computational_efficiency.png",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/figures/computational_efficiency.png",
+      "bytes": 167374,
+      "sha256": "4bde9ec9a21f6c734f9b3f909df870a5fcebe701e19f04469d466bcbf46f42fb"
+    },
+    {
+      "path": "data/quality/figures/reconstruction_performance.png",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/figures/reconstruction_performance.png",
+      "bytes": 121946,
+      "sha256": "b9f244968d3f25b29e63d74ecbea4a27bc4a97175f77ab96f5215f96964d499f"
+    },
+    {
+      "path": "data/quality/melon/anomaly_detection_metric_table.csv",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/melon/anomaly_detection_metric_table.csv",
+      "bytes": 23221,
+      "sha256": "3ff9a2c37adfe1199343694283dac67bcc3521cea98b2c5287272099ec4ffc19"
+    },
+    {
+      "path": "data/quality/melon/artifact_integrity.json",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/melon/artifact_integrity.json",
+      "bytes": 8250,
+      "sha256": "be1c2ae75a24b6ef24c6c41a7298c6dbf091b6886a40e4f77134acb11573bcc9"
+    },
+    {
+      "path": "data/quality/melon/best_config.json",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/melon/best_config.json",
+      "bytes": 1763,
+      "sha256": "0401a7e7e044feb68440a372d2b4b99ea057c315d8a8c8470cd04597c90e3251"
+    },
+    {
+      "path": "data/quality/melon/evaluation.json",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/melon/evaluation.json",
+      "bytes": 72157,
+      "sha256": "9439facc01b766d67696f788bca9080615b1338bf469481f4ad2390b7a471805"
+    },
+    {
+      "path": "data/quality/melon/evaluation_config.json",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/melon/evaluation_config.json",
+      "bytes": 469,
+      "sha256": "0e0f81b5bf96ac9168ca6a268a278ccc8862b8bf30b14ac392c0317915f613cc"
+    },
+    {
+      "path": "data/quality/melon/figures/hpo_progress.png",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/melon/figures/hpo_progress.png",
+      "bytes": 138884,
+      "sha256": "e3f1c981e61e4e56fb757d7c96cd4b681d11968138bafbacd7aa62ff45b892c9"
+    },
+    {
+      "path": "data/quality/melon/figures/reconstruction_error_heatmap.png",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/melon/figures/reconstruction_error_heatmap.png",
+      "bytes": 146385,
+      "sha256": "ef2139d5924053361baf4f00a9a73a53a85b617301122d1ef4761d04fccd4455"
+    },
+    {
+      "path": "data/quality/melon/figures/roc_pr_curves.png",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/melon/figures/roc_pr_curves.png",
+      "bytes": 236448,
+      "sha256": "aaae6e5bba47c2b4ab39e040b8bc1e59bc3c6688ae0484d38329146bab976ac3"
+    },
+    {
+      "path": "data/quality/melon/figures/threshold_curve.png",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/melon/figures/threshold_curve.png",
+      "bytes": 1157273,
+      "sha256": "29a3d591e2671f97cb1114e2e3920afe6334a5e58fbc53c9090f9e3a45120039"
+    },
+    {
+      "path": "data/quality/melon/figures/threshold_curve_selected_range.png",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/melon/figures/threshold_curve_selected_range.png",
+      "bytes": 1221179,
+      "sha256": "9b6cebc8d64e9fd925965c808898ae6d1d34dc4ba721f1ac2a379e0d0cc37486"
+    },
+    {
+      "path": "data/quality/melon/figures/training_loss.png",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/melon/figures/training_loss.png",
+      "bytes": 168500,
+      "sha256": "c3e1662138b17278d123e6cd08e59cca075b694e4fced45d0a0e68550bb373f2"
+    },
+    {
+      "path": "data/quality/melon/hpo_config.json",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/melon/hpo_config.json",
+      "bytes": 5313,
+      "sha256": "23233175fc3de218a2d38ab5d52889b6ba65edb118daa88a962e5ae112f6e331"
+    },
+    {
+      "path": "data/quality/melon/hpo_results.json",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/melon/hpo_results.json",
+      "bytes": 3000747,
+      "sha256": "38e9e8187c715a7ee1d889c99a513c7b37cf6bf063dd317013974ea4e5f122eb"
+    },
+    {
+      "path": "data/quality/melon/modern_tcn/best_config.json",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/melon/modern_tcn/best_config.json",
+      "bytes": 457,
+      "sha256": "28594d523ae35b03e1f3f1cba3cad27d2ccc1c7a929cd942b814b5dab5800e79"
+    },
+    {
+      "path": "data/quality/melon/modern_tcn/evaluation.json",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/melon/modern_tcn/evaluation.json",
+      "bytes": 21462,
+      "sha256": "ae3445bca87a4ce577a8f6fb03a019d0a613dea88ad31d7ecc139257ef49f7d4"
+    },
+    {
+      "path": "data/quality/melon/modern_tcn/hpo_results.json",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/melon/modern_tcn/hpo_results.json",
+      "bytes": 894971,
+      "sha256": "de2b073f15a9f71ce45aae373ac610750cdbf2eb2d47dd198e097179b02ffe23"
+    },
+    {
+      "path": "data/quality/melon/modern_tcn/online_benchmark.json",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/melon/modern_tcn/online_benchmark.json",
+      "bytes": 527,
+      "sha256": "028081abe971b4c3d07cf52da7386d7c8e1d0a98856d57128bf6027418426415"
+    },
+    {
+      "path": "data/quality/melon/modern_tcn/quality_model_application.json",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/melon/modern_tcn/quality_model_application.json",
+      "bytes": 1399,
+      "sha256": "262dbf392cad09a982bc8dd4f4687a0f0e6925ead9a12a92a3dc00cfc7508733"
+    },
+    {
+      "path": "data/quality/melon/modern_tcn/threshold_calibration.json",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/melon/modern_tcn/threshold_calibration.json",
+      "bytes": 219940,
+      "sha256": "f1a2bc089a344038713f4ea4218fc49d0c12f137ef622a356c783a2dd196ba6e"
+    },
+    {
+      "path": "data/quality/melon/modern_tcn/training_history.csv",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/melon/modern_tcn/training_history.csv",
+      "bytes": 4644,
+      "sha256": "32732c959d6e8661c84e1c83b0b177037de382c28ea8b91b09a3ed38e738444d"
+    },
+    {
+      "path": "data/quality/melon/online_benchmark.json",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/melon/online_benchmark.json",
+      "bytes": 2035,
+      "sha256": "bf4fec60d8df5998f6bdceca322b969fd0952e18840efe8fd8d03a52e35fd543"
+    },
+    {
+      "path": "data/quality/melon/online_benchmark_config.json",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/melon/online_benchmark_config.json",
+      "bytes": 404,
+      "sha256": "2b7bc09756c7454f995bc0a398b1229a3a31c5db916d359da602f60167675879"
+    },
+    {
+      "path": "data/quality/melon/online_benchmark_table.csv",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/melon/online_benchmark_table.csv",
+      "bytes": 475,
+      "sha256": "3a5f786e4995f9a963ad5a9521088fd3a5f2554ef136177284c89fda7eb0cbf6"
+    },
+    {
+      "path": "data/quality/melon/patch_tst/best_config.json",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/melon/patch_tst/best_config.json",
+      "bytes": 462,
+      "sha256": "5ab2a3937b2668a157547a09a846adaa78139e9107cdf03a58a306037c3249b0"
+    },
+    {
+      "path": "data/quality/melon/patch_tst/evaluation.json",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/melon/patch_tst/evaluation.json",
+      "bytes": 21479,
+      "sha256": "dc4549fd892547b48bb3aff1838f0e6deeb7350bc3200316587e9bc1cdb57edb"
+    },
+    {
+      "path": "data/quality/melon/patch_tst/hpo_results.json",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/melon/patch_tst/hpo_results.json",
+      "bytes": 793092,
+      "sha256": "7d9a6ce6b18d2af741f4faea32cd81f45e2a44d81fbb4a2fef0027ad8ee11cc6"
+    },
+    {
+      "path": "data/quality/melon/patch_tst/online_benchmark.json",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/melon/patch_tst/online_benchmark.json",
+      "bytes": 522,
+      "sha256": "c62bc6c6d5420754777e9396168b37f00cb0978286ff7f27d04e96de1181b934"
+    },
+    {
+      "path": "data/quality/melon/patch_tst/quality_model_application.json",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/melon/patch_tst/quality_model_application.json",
+      "bytes": 1387,
+      "sha256": "3ca430245cbda77246251680da1ce39ae259789b2abf8b0e75a1a1388db5e7bf"
+    },
+    {
+      "path": "data/quality/melon/patch_tst/threshold_calibration.json",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/melon/patch_tst/threshold_calibration.json",
+      "bytes": 224315,
+      "sha256": "d82228db1f94d77f92520a29511d129abd6f7115530cebf6f0118bfa41ae4e22"
+    },
+    {
+      "path": "data/quality/melon/patch_tst/training_history.csv",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/melon/patch_tst/training_history.csv",
+      "bytes": 2866,
+      "sha256": "4d1e581143a7345a36f4ac8a08dce4be501b6290d5d0e7abe756204547ab3042"
+    },
+    {
+      "path": "data/quality/melon/reconstruction_metric_table.csv",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/melon/reconstruction_metric_table.csv",
+      "bytes": 3904,
+      "sha256": "bc0d121f7af3ba4e33ff7d98735e06c21fa8e137235e4d17ff9c26cc042962b5"
+    },
+    {
+      "path": "data/quality/melon/threshold_calibration.json",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/melon/threshold_calibration.json",
+      "bytes": 748603,
+      "sha256": "5093b6552d44567790737826800e85be86481531f350f2c3df45f7122bc17906"
+    },
+    {
+      "path": "data/quality/melon/threshold_config.json",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/melon/threshold_config.json",
+      "bytes": 705,
+      "sha256": "e58a749b470f448d0bcf6841a9c4360a5820177a93aed6a5b3dcd5d6edf5f265"
+    },
+    {
+      "path": "data/quality/melon/timesnet/best_config.json",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/melon/timesnet/best_config.json",
+      "bytes": 441,
+      "sha256": "8211eafc89328e62a070b9354203ae24f7d04f9482b645d7801c39bef7225afd"
+    },
+    {
+      "path": "data/quality/melon/timesnet/evaluation.json",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/melon/timesnet/evaluation.json",
+      "bytes": 21445,
+      "sha256": "e655abcc013b9779863a1543f553df795ee698c9e2a67184aa5e230a299b1c9c"
+    },
+    {
+      "path": "data/quality/melon/timesnet/hpo_results.json",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/melon/timesnet/hpo_results.json",
+      "bytes": 993473,
+      "sha256": "0a31c6a80bcb4c47247050691b423ef4dad325db34583bbd1e30b9d7c46f0197"
+    },
+    {
+      "path": "data/quality/melon/timesnet/online_benchmark.json",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/melon/timesnet/online_benchmark.json",
+      "bytes": 522,
+      "sha256": "9b702c851127178eb694d346505370b844ee9a0fd7c59efd5dd7bc0b4ddccb7f"
+    },
+    {
+      "path": "data/quality/melon/timesnet/quality_model_application.json",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/melon/timesnet/quality_model_application.json",
+      "bytes": 1363,
+      "sha256": "52f12f8a1ee71ada7dab85e1d7d06002da1c93c8aa70e07bfe1536e7533668cd"
+    },
+    {
+      "path": "data/quality/melon/timesnet/threshold_calibration.json",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/melon/timesnet/threshold_calibration.json",
+      "bytes": 222385,
+      "sha256": "9aea5093da8bdff4f05d21ffe23ce093d3de43180e6db49701a32bf06bf0fd18"
+    },
+    {
+      "path": "data/quality/melon/timesnet/training_history.csv",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/melon/timesnet/training_history.csv",
+      "bytes": 4668,
+      "sha256": "4ffa0e141cee497a40eb3b9effe3b8b221cfd5c8fc8a398f66bba7536a91742f"
+    },
+    {
+      "path": "data/quality/melon/training_history.csv",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/melon/training_history.csv",
+      "bytes": 22556,
+      "sha256": "ce76ed7ec573b1223434d388a105740997b686d0153eda64f3787b043c490210"
+    },
+    {
+      "path": "data/quality/melon/visualization_manifest.json",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/melon/visualization_manifest.json",
+      "bytes": 1945,
+      "sha256": "df744f0c2e520e07fef13a96ecf61b3c8dcb8110cdf8d4a8c0460b150d77a286"
+    },
+    {
+      "path": "data/quality/strawberry/anomaly_detection_metric_table.csv",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/strawberry/anomaly_detection_metric_table.csv",
+      "bytes": 23572,
+      "sha256": "14a125cdf7dcb138e0d8b259c6ac49bd3a016819bbff220a326b7ec88672d90d"
+    },
+    {
+      "path": "data/quality/strawberry/artifact_integrity.json",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/strawberry/artifact_integrity.json",
+      "bytes": 8485,
+      "sha256": "c123bbf69223ec9cd4e5daa950c5fc4d49dac84c89731837976e6f92b4b8d50c"
+    },
+    {
+      "path": "data/quality/strawberry/best_config.json",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/strawberry/best_config.json",
+      "bytes": 1763,
+      "sha256": "aec2855216205d4f52ac90f3f5c6ed3eee3062d6f7b2bb026bc296fc11a72427"
+    },
+    {
+      "path": "data/quality/strawberry/evaluation.json",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/strawberry/evaluation.json",
+      "bytes": 72594,
+      "sha256": "be5344f9ccca487f5e5150fab22d212df4ce912e6a963c74218604cfeb72dd80"
+    },
+    {
+      "path": "data/quality/strawberry/evaluation_config.json",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/strawberry/evaluation_config.json",
+      "bytes": 469,
+      "sha256": "0e0f81b5bf96ac9168ca6a268a278ccc8862b8bf30b14ac392c0317915f613cc"
+    },
+    {
+      "path": "data/quality/strawberry/figures/hpo_progress.png",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/strawberry/figures/hpo_progress.png",
+      "bytes": 139269,
+      "sha256": "3ba2a85e15a3033627e8d33c7af7e96067cabc3e2907c538be0edee08fcdbf47"
+    },
+    {
+      "path": "data/quality/strawberry/figures/reconstruction_error_heatmap.png",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/strawberry/figures/reconstruction_error_heatmap.png",
+      "bytes": 125511,
+      "sha256": "ea48d1ef4b48171ffef6fb1cc8a650eefb508d1a19ec3b170cd6e066c6f4a8d8"
+    },
+    {
+      "path": "data/quality/strawberry/figures/roc_pr_curves.png",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/strawberry/figures/roc_pr_curves.png",
+      "bytes": 233116,
+      "sha256": "8fcecfc972b340b982a5d755ab017d115e476b2f94a37861c722edb185bf3257"
+    },
+    {
+      "path": "data/quality/strawberry/figures/threshold_curve.png",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/strawberry/figures/threshold_curve.png",
+      "bytes": 1288540,
+      "sha256": "dd6edd1f0484ab9106a0338a202786a0095380c4af63bb36196f67554e66b153"
+    },
+    {
+      "path": "data/quality/strawberry/figures/threshold_curve_selected_range.png",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/strawberry/figures/threshold_curve_selected_range.png",
+      "bytes": 1248624,
+      "sha256": "e23c42730edd7e46e274daca3bca905526a1817bd3e75461161668a7d9720260"
+    },
+    {
+      "path": "data/quality/strawberry/figures/training_loss.png",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/strawberry/figures/training_loss.png",
+      "bytes": 187427,
+      "sha256": "13ad4659952736523a1ff61a57fb28780e0d23a9171ccdd5cd2003fe368fcca5"
+    },
+    {
+      "path": "data/quality/strawberry/hpo_config.json",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/strawberry/hpo_config.json",
+      "bytes": 5313,
+      "sha256": "23233175fc3de218a2d38ab5d52889b6ba65edb118daa88a962e5ae112f6e331"
+    },
+    {
+      "path": "data/quality/strawberry/hpo_results.json",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/strawberry/hpo_results.json",
+      "bytes": 1889674,
+      "sha256": "191f256e7ca418cea80417f22215675a7ad12d2d2dfc05e99164637613ea64c5"
+    },
+    {
+      "path": "data/quality/strawberry/modern_tcn/best_config.json",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/strawberry/modern_tcn/best_config.json",
+      "bytes": 456,
+      "sha256": "2c98b2d79b9624aea49eba22ae4af4e9dd7df150e994ebc058f3d9ed7d5a6d68"
+    },
+    {
+      "path": "data/quality/strawberry/modern_tcn/evaluation.json",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/strawberry/modern_tcn/evaluation.json",
+      "bytes": 21612,
+      "sha256": "f5477a35b5ad3c518a3f7cd3e1bcc37ea64516546607ccfb66903c3bbbabdf2b"
+    },
+    {
+      "path": "data/quality/strawberry/modern_tcn/hpo_results.json",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/strawberry/modern_tcn/hpo_results.json",
+      "bytes": 469862,
+      "sha256": "2bc46fd4871582f95316f6ac793d7f90533ec0dc4269b628cda0cb0e7869aa21"
+    },
+    {
+      "path": "data/quality/strawberry/modern_tcn/online_benchmark.json",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/strawberry/modern_tcn/online_benchmark.json",
+      "bytes": 530,
+      "sha256": "51f87c4491ababf3ac77a5b385d5bc7ca6261fcc5aad0707995ccae2e3b1a9a5"
+    },
+    {
+      "path": "data/quality/strawberry/modern_tcn/quality_model_application.json",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/strawberry/modern_tcn/quality_model_application.json",
+      "bytes": 1397,
+      "sha256": "285242506667bf1bcd41397320f218cb845e6b1454f3b5043be15869f560d2a1"
+    },
+    {
+      "path": "data/quality/strawberry/modern_tcn/threshold_calibration.json",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/strawberry/modern_tcn/threshold_calibration.json",
+      "bytes": 222395,
+      "sha256": "b83e50321cdc91cb58026818cbf23655ee21d10d2d2ec2f83fc8f2efe0300e96"
+    },
+    {
+      "path": "data/quality/strawberry/modern_tcn/training_history.csv",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/strawberry/modern_tcn/training_history.csv",
+      "bytes": 1070,
+      "sha256": "68fc25afe95e9abc0e03b28d203a919c40af3ab2468b27bb042f8d09d4c17bfd"
+    },
+    {
+      "path": "data/quality/strawberry/online_benchmark.json",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/strawberry/online_benchmark.json",
+      "bytes": 2047,
+      "sha256": "8e1b3e9facab0befb698e4a77eb205a3755e25f165900802edfe8903b705e163"
+    },
+    {
+      "path": "data/quality/strawberry/online_benchmark_config.json",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/strawberry/online_benchmark_config.json",
+      "bytes": 404,
+      "sha256": "2b7bc09756c7454f995bc0a398b1229a3a31c5db916d359da602f60167675879"
+    },
+    {
+      "path": "data/quality/strawberry/online_benchmark_table.csv",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/strawberry/online_benchmark_table.csv",
+      "bytes": 487,
+      "sha256": "1e6f30239be94ecaaf4f8d7961268c5446f1e97df40ff50842b6aeafdf1d04bb"
+    },
+    {
+      "path": "data/quality/strawberry/patch_tst/best_config.json",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/strawberry/patch_tst/best_config.json",
+      "bytes": 463,
+      "sha256": "537ae0c2427c48adcdac1770c34eae4eece609827c518c192d370f18698fb3fa"
+    },
+    {
+      "path": "data/quality/strawberry/patch_tst/evaluation.json",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/strawberry/patch_tst/evaluation.json",
+      "bytes": 21606,
+      "sha256": "db0eadfb9ba70142ffb9728cdc686afb85be08cf87cc1c0bf171ef311541f3c5"
+    },
+    {
+      "path": "data/quality/strawberry/patch_tst/hpo_results.json",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/strawberry/patch_tst/hpo_results.json",
+      "bytes": 686061,
+      "sha256": "ea370d8c6dfb43a26974d9b441602f122dc1e64d36495f5ca0ddfb6aec2ca864"
+    },
+    {
+      "path": "data/quality/strawberry/patch_tst/online_benchmark.json",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/strawberry/patch_tst/online_benchmark.json",
+      "bytes": 527,
+      "sha256": "5f394cec823f45e92f6ac6cc11a02e7c1b77940457bb201ed62b55c713f5c378"
+    },
+    {
+      "path": "data/quality/strawberry/patch_tst/quality_model_application.json",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/strawberry/patch_tst/quality_model_application.json",
+      "bytes": 1389,
+      "sha256": "10bf23c36e73197690c160d238a108e9a3251f80369ae65fa6b8f6e33dfd4b1b"
+    },
+    {
+      "path": "data/quality/strawberry/patch_tst/threshold_calibration.json",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/strawberry/patch_tst/threshold_calibration.json",
+      "bytes": 223763,
+      "sha256": "6d63f84e26ccb74d53ea6bff01add64407c9a9ab1cbbe189a8efac656d7c0ea1"
+    },
+    {
+      "path": "data/quality/strawberry/patch_tst/training_history.csv",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/strawberry/patch_tst/training_history.csv",
+      "bytes": 1077,
+      "sha256": "ea7554c3df2c2864d79273e7f5ae052ac3a0c248d4fd2b346e2d100b805281ee"
+    },
+    {
+      "path": "data/quality/strawberry/reconstruction_metric_table.csv",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/strawberry/reconstruction_metric_table.csv",
+      "bytes": 3962,
+      "sha256": "1a059876f8ff4bec9469efb8ed263bcc5ca7f1d3baf88cca78a0eddc9edc81a6"
+    },
+    {
+      "path": "data/quality/strawberry/threshold_calibration.json",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/strawberry/threshold_calibration.json",
+      "bytes": 750885,
+      "sha256": "e225eebbfe83f68a36f9593339be9ebcb18670eb97c3744346347b4ca5604f2a"
+    },
+    {
+      "path": "data/quality/strawberry/threshold_config.json",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/strawberry/threshold_config.json",
+      "bytes": 705,
+      "sha256": "e58a749b470f448d0bcf6841a9c4360a5820177a93aed6a5b3dcd5d6edf5f265"
+    },
+    {
+      "path": "data/quality/strawberry/timesnet/best_config.json",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/strawberry/timesnet/best_config.json",
+      "bytes": 441,
+      "sha256": "a82902b06a7b90f58954472eaf161cb5aa1a7f5a5cdaaac5c01c036fc4293a59"
+    },
+    {
+      "path": "data/quality/strawberry/timesnet/evaluation.json",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/strawberry/timesnet/evaluation.json",
+      "bytes": 21605,
+      "sha256": "4cc1037657057bc51926949324089a0faacb1ae1905c3f916e171161c0d1a9a0"
+    },
+    {
+      "path": "data/quality/strawberry/timesnet/hpo_results.json",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/strawberry/timesnet/hpo_results.json",
+      "bytes": 527060,
+      "sha256": "3d19024db76083c93766424309120738faab2157d95f014935759344821aa8d9"
+    },
+    {
+      "path": "data/quality/strawberry/timesnet/online_benchmark.json",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/strawberry/timesnet/online_benchmark.json",
+      "bytes": 526,
+      "sha256": "05543bc7351b88d4c1740c60725f808d047e6ac61dbb882683bec322a97aa804"
+    },
+    {
+      "path": "data/quality/strawberry/timesnet/quality_model_application.json",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/strawberry/timesnet/quality_model_application.json",
+      "bytes": 1361,
+      "sha256": "5f64eedb34893c97e1475e1a152061f5ab50de958fabdc4782029a24b9f1cedc"
+    },
+    {
+      "path": "data/quality/strawberry/timesnet/threshold_calibration.json",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/strawberry/timesnet/threshold_calibration.json",
+      "bytes": 222749,
+      "sha256": "d5870fff7e2c90f04d01dd71287ee98c06dded8d611c875506a961362c61487f"
+    },
+    {
+      "path": "data/quality/strawberry/timesnet/training_history.csv",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/strawberry/timesnet/training_history.csv",
+      "bytes": 589,
+      "sha256": "dfa21e11662fb87c5242b1a34d9fe8954ba6d4a4dcf0045ff24ad058dea9df25"
+    },
+    {
+      "path": "data/quality/strawberry/training_history.csv",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/strawberry/training_history.csv",
+      "bytes": 4976,
+      "sha256": "625e4f90451a7e2f4ed280669c0b7e2fe5593c02d261a95dbfa2732043b02296"
+    },
+    {
+      "path": "data/quality/strawberry/visualization_manifest.json",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/strawberry/visualization_manifest.json",
+      "bytes": 1980,
+      "sha256": "aa47aed947887f55fdb0b54cd31547e0e8d02d266ca66e39738f2ee65fcc4076"
+    },
+    {
+      "path": "data/quality/test_results.csv",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/test_results.csv",
+      "bytes": 1155,
+      "sha256": "e995778b9d5e98b2ef6dca6f54cd0555e0030b1146de14c8782fbbfa1313231e"
+    },
+    {
+      "path": "data/quality/validation_results.csv",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/validation_results.csv",
+      "bytes": 1155,
+      "sha256": "7ec5e4ff32ed68b88ffc3cd3e53620cb424c299293c6bdd5e1662eb0979f5845"
+    },
+    {
+      "path": "reference/experiment/README.md",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/README.md",
+      "bytes": 5284,
+      "sha256": "a303d03bbed6f20f42289678d79eedb96863fcc451715ace666f11d5aba8f4c0"
+    },
+    {
+      "path": "reference/experiment/AI_TARGET_SCOPE.md",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/AI_TARGET_SCOPE.md",
+      "bytes": 547,
+      "sha256": "682678a3d02d310d23e4bfe77d98aa57535d692c0d3fe08407bf21f3069d68bb"
+    },
+    {
+      "path": "reference/experiment/ARTIFACT_EXPERIMENT_COMPARISON.md",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/ARTIFACT_EXPERIMENT_COMPARISON.md",
+      "bytes": 6406,
+      "sha256": "fee6f9d6fd3890c31ad19202644d5da709b81752b51b007f4f7657a35be4da6b"
+    },
+    {
+      "path": "reference/configs/cucumber.yaml",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/configs/cucumber.yaml",
+      "bytes": 2185,
+      "sha256": "2eaa04004bd8f9d9b6d29b1c233880f5eea67fc4334f8c9feecb43fa5804a270"
+    },
+    {
+      "path": "reference/configs/melon.yaml",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/configs/melon.yaml",
+      "bytes": 2173,
+      "sha256": "adb7fddac12dd3c9f702d221f3b30135ab86e749a26c8824e2e5eeb25c441f05"
+    },
+    {
+      "path": "reference/configs/strawberry.yaml",
+      "source": "GEAS/GEAS3.5/experiments/quality_control_model_selection/configs/strawberry.yaml",
+      "bytes": 2193,
+      "sha256": "0299c62a253c38653683a9a306c0632431d138404d9ac4533cb014124c185649"
+    },
+    {
+      "path": "reference/source/src/geas35/experiments/quality/__init__.py",
+      "source": "GEAS/GEAS3.5/src/geas35/experiments/quality/__init__.py",
+      "bytes": 4439,
+      "sha256": "2451f8383f94fe3b6bc8b2dfc016389d3ee224b0f1ea1140a692592eabf6df38"
+    },
+    {
+      "path": "reference/source/src/geas35/experiments/quality/benchmark_runner.py",
+      "source": "GEAS/GEAS3.5/src/geas35/experiments/quality/benchmark_runner.py",
+      "bytes": 7147,
+      "sha256": "423b675d830f36342bcbdcfa53fc4e04721c591c98ec375d123dac06056fe677"
+    },
+    {
+      "path": "reference/source/src/geas35/experiments/quality/calibration_runner.py",
+      "source": "GEAS/GEAS3.5/src/geas35/experiments/quality/calibration_runner.py",
+      "bytes": 12496,
+      "sha256": "4cfde7194fcf574648b320de7ab986a3036aa7052c2fa9c0fbe649d02f4ba504"
+    },
+    {
+      "path": "reference/source/src/geas35/experiments/quality/cli.py",
+      "source": "GEAS/GEAS3.5/src/geas35/experiments/quality/cli.py",
+      "bytes": 7449,
+      "sha256": "975c0a096c350bb7a32d14e1e28d17ad072fedebec74fd142acbbe8c17453760"
+    },
+    {
+      "path": "reference/source/src/geas35/experiments/quality/config.py",
+      "source": "GEAS/GEAS3.5/src/geas35/experiments/quality/config.py",
+      "bytes": 12210,
+      "sha256": "c293af25951f8272b79490bb31bf693992b9cfe3a30ae9a6a36ce2021b84f79c"
+    },
+    {
+      "path": "reference/source/src/geas35/experiments/quality/evaluation_runner.py",
+      "source": "GEAS/GEAS3.5/src/geas35/experiments/quality/evaluation_runner.py",
+      "bytes": 8059,
+      "sha256": "e6ae1b23b8f833760b4c3806eded4d7fe082b386a583e99537f3760f0b2fc60f"
+    },
+    {
+      "path": "reference/source/src/geas35/experiments/quality/figures.py",
+      "source": "GEAS/GEAS3.5/src/geas35/experiments/quality/figures.py",
+      "bytes": 33786,
+      "sha256": "1363f5b10a3cd53829c98667f066743711bffa26797ddd1232867e29b1f94de0"
+    },
+    {
+      "path": "reference/source/src/geas35/experiments/quality/hpo_runner.py",
+      "source": "GEAS/GEAS3.5/src/geas35/experiments/quality/hpo_runner.py",
+      "bytes": 9220,
+      "sha256": "e6c2a67f4ba4160c8201158a0a264aa47085512a7bdd39181912dbfca92d1bfb"
+    },
+    {
+      "path": "reference/source/src/geas35/experiments/quality/integrity_runner.py",
+      "source": "GEAS/GEAS3.5/src/geas35/experiments/quality/integrity_runner.py",
+      "bytes": 11196,
+      "sha256": "abe3e7dbaef1379a5befa6e9bf0e1dd84594385cdf75b28f77e2177e20446a8a"
+    },
+    {
+      "path": "reference/source/src/geas35/experiments/quality/report_runner.py",
+      "source": "GEAS/GEAS3.5/src/geas35/experiments/quality/report_runner.py",
+      "bytes": 12187,
+      "sha256": "998aa9f301b948a2be731daf859ab1c66faead5b05b00fd957a93ecc211ff991"
+    },
+    {
+      "path": "reference/source/src/geas35/experiments/quality/runner.py",
+      "source": "GEAS/GEAS3.5/src/geas35/experiments/quality/runner.py",
+      "bytes": 20926,
+      "sha256": "263451904fb66345d1ddcfaccc7d475d2e22f84bd5c8686580e73445a7aedcdb"
+    },
+    {
+      "path": "reference/source/src/geas35/experiments/quality/search.py",
+      "source": "GEAS/GEAS3.5/src/geas35/experiments/quality/search.py",
+      "bytes": 3931,
+      "sha256": "33e3dc1acc1c77b98c51103184f409bf846ca088ba0aa53748a3722131da2e6b"
+    },
+    {
+      "path": "reference/source/src/geas35/experiments/quality/visualization_runner.py",
+      "source": "GEAS/GEAS3.5/src/geas35/experiments/quality/visualization_runner.py",
+      "bytes": 3121,
+      "sha256": "b2c135a140d1366267c66418b6ed789452585d757ea6d0305e3332abcc941041"
+    },
+    {
+      "path": "reference/source/src/geas35/models/quality/__init__.py",
+      "source": "GEAS/GEAS3.5/src/geas35/models/quality/__init__.py",
+      "bytes": 4031,
+      "sha256": "b4ddae18e17ab5566513d6f9a961360f33a42ee28801f83487d9f4594098346b"
+    },
+    {
+      "path": "reference/source/src/geas35/models/quality/artifacts.py",
+      "source": "GEAS/GEAS3.5/src/geas35/models/quality/artifacts.py",
+      "bytes": 6235,
+      "sha256": "5ee576c0162b7d95497a11fc13bc50d97096473829d7e6767ada84e578ed532d"
+    },
+    {
+      "path": "reference/source/src/geas35/models/quality/base.py",
+      "source": "GEAS/GEAS3.5/src/geas35/models/quality/base.py",
+      "bytes": 4492,
+      "sha256": "2aebb6e08c3e94dabb10e2b4c468c4623cb66052a3be861b4366e42328ab6fc9"
+    },
+    {
+      "path": "reference/source/src/geas35/models/quality/baseline.py",
+      "source": "GEAS/GEAS3.5/src/geas35/models/quality/baseline.py",
+      "bytes": 6100,
+      "sha256": "78289f010b36630e97f01d621a248a1b102df21f6e93d9a7465cf1decfc7b202"
+    },
+    {
+      "path": "reference/source/src/geas35/models/quality/deep/__init__.py",
+      "source": "GEAS/GEAS3.5/src/geas35/models/quality/deep/__init__.py",
+      "bytes": 742,
+      "sha256": "e6cbd1988e245f0ff0d3c27e60021d002058128cef246283d3ec7c67c1fe2cfd"
+    },
+    {
+      "path": "reference/source/src/geas35/models/quality/deep/common.py",
+      "source": "GEAS/GEAS3.5/src/geas35/models/quality/deep/common.py",
+      "bytes": 11684,
+      "sha256": "d1075fbcdfcb97cc9444dca6f67a44e415032f892dd060aa2046dfee0628a3cd"
+    },
+    {
+      "path": "reference/source/src/geas35/models/quality/evaluation.py",
+      "source": "GEAS/GEAS3.5/src/geas35/models/quality/evaluation.py",
+      "bytes": 19904,
+      "sha256": "607992fa856022ae650f0320beedadea8733a1e5dcea4c999c6cf85b3174e9be"
+    },
+    {
+      "path": "reference/source/src/geas35/models/quality/hyperparameters.py",
+      "source": "GEAS/GEAS3.5/src/geas35/models/quality/hyperparameters.py",
+      "bytes": 13260,
+      "sha256": "12ce45a42521fe9a515b538808e8395666f25bf70dcd790d774dbf33c46c078b"
+    },
+    {
+      "path": "reference/source/src/geas35/models/quality/modern_tcn.py",
+      "source": "GEAS/GEAS3.5/src/geas35/models/quality/modern_tcn.py",
+      "bytes": 24756,
+      "sha256": "ef384772ea19ddcd7b412d6879ee70f5561804180cb017edc647e75748de3514"
+    },
+    {
+      "path": "reference/source/src/geas35/models/quality/patch_tst.py",
+      "source": "GEAS/GEAS3.5/src/geas35/models/quality/patch_tst.py",
+      "bytes": 6114,
+      "sha256": "580ba3c920d8733a8759c6e5ed5cf521394500e8e593ae5e60c21ceb69ea657d"
+    },
+    {
+      "path": "reference/source/src/geas35/models/quality/rule_only.py",
+      "source": "GEAS/GEAS3.5/src/geas35/models/quality/rule_only.py",
+      "bytes": 4626,
+      "sha256": "2198eb3c5c2637b754914b38c07d6d15cc1df3e3075e87eadab8242bbbf66761"
+    },
+    {
+      "path": "reference/source/src/geas35/models/quality/selection_report.py",
+      "source": "GEAS/GEAS3.5/src/geas35/models/quality/selection_report.py",
+      "bytes": 15157,
+      "sha256": "f75f8329c142aeec0c9e620f6ef04ad02cc0e54bfe9591399e05b6284830dbf2"
+    },
+    {
+      "path": "reference/source/src/geas35/models/quality/thresholds.py",
+      "source": "GEAS/GEAS3.5/src/geas35/models/quality/thresholds.py",
+      "bytes": 8438,
+      "sha256": "ea9c150a7f1a7a02aedbdfc402d543ec300e17734de61b18bed7ccfe2d3b7067"
+    },
+    {
+      "path": "reference/source/src/geas35/models/quality/timesnet.py",
+      "source": "GEAS/GEAS3.5/src/geas35/models/quality/timesnet.py",
+      "bytes": 6263,
+      "sha256": "37b8636036507437f8019be3c4533c001202a1cc5fa95a63705c618aea8b98c3"
+    },
+    {
+      "path": "reference/source/src/geas35/preprocessing/1_input_schema_preparation.py",
+      "source": "GEAS/GEAS3.5/src/geas35/preprocessing/1_input_schema_preparation.py",
+      "bytes": 4813,
+      "sha256": "12fb48e17ca55826113f9d510e45c269cb36ddf1400b8c700feeab3a44c65669"
+    },
+    {
+      "path": "reference/source/src/geas35/preprocessing/2_unit_canonicalization.py",
+      "source": "GEAS/GEAS3.5/src/geas35/preprocessing/2_unit_canonicalization.py",
+      "bytes": 4845,
+      "sha256": "8a663fc83d856e3b165acad37a79a93c53d59179c2a9c15df1a6341dbf817831"
+    },
+    {
+      "path": "reference/source/src/geas35/preprocessing/3_missing_outliers_handling.py",
+      "source": "GEAS/GEAS3.5/src/geas35/preprocessing/3_missing_outliers_handling.py",
+      "bytes": 27590,
+      "sha256": "930f992e43234c5c2e68e5274d7d2731fb65bea1c4526ba3319248851c4799d1"
+    },
+    {
+      "path": "reference/source/src/geas35/preprocessing/__init__.py",
+      "source": "GEAS/GEAS3.5/src/geas35/preprocessing/__init__.py",
+      "bytes": 8013,
+      "sha256": "ee5b00c9056b5e6a35d151240df6287e44c1e6442ba8f678c40c6fa64d0caa71"
+    },
+    {
+      "path": "reference/source/src/geas35/preprocessing/growth_stage_features.py",
+      "source": "GEAS/GEAS3.5/src/geas35/preprocessing/growth_stage_features.py",
+      "bytes": 10554,
+      "sha256": "3826e1fbb328ea442d7aa51713a313ccef436d2c4d52616a622d0940723fd3c0"
+    },
+    {
+      "path": "reference/offline/README.md",
+      "source": "GEAS/GEAS3.5/offline_dataset_preparation/README.md",
+      "bytes": 1974,
+      "sha256": "28b72a4c599d140af5f0e5fb3280339e62396c3fcffcaae888de49393977a176"
+    },
+    {
+      "path": "reference/offline/scripts/03_control_quality.py",
+      "source": "GEAS/GEAS3.5/offline_dataset_preparation/scripts/03_control_quality.py",
+      "bytes": 36695,
+      "sha256": "ea45335ede490d3c8b3222395ba0a1c22af48b7a5f986576d6447f0904e0b57b"
+    },
+    {
+      "path": "reference/offline/scripts/01_resample.py",
+      "source": "GEAS/GEAS3.5/offline_dataset_preparation/scripts/01_resample.py",
+      "bytes": 19106,
+      "sha256": "471f3b8e64475c09067792cff7e0e9d072aa821f432f4b0edc810f3a5f8049d6"
+    },
+    {
+      "path": "reference/offline/scripts/02_split.py",
+      "source": "GEAS/GEAS3.5/offline_dataset_preparation/scripts/02_split.py",
+      "bytes": 10138,
+      "sha256": "b83be68f959d260f47bf59d51f8bd403a8bb52d3345131e79f4798be21451c4c"
+    },
+    {
+      "path": "reference/offline/configs/qc/smartfarm_korea_domain_ranges.csv",
+      "source": "GEAS/GEAS3.5/offline_dataset_preparation/configs/qc/smartfarm_korea_domain_ranges.csv",
+      "bytes": 1150,
+      "sha256": "be52e1b99db7f56c2a1e1c94b87a734c1eec18528d1d23a9a2d22d8d2c4c9799"
+    },
+    {
+      "path": "data/preprocessing/01_resampled/resampling_summary.csv",
+      "source": "GEAS/GEAS3.5/offline_dataset_preparation/datasets/01_resampled/resampling_summary.csv",
+      "bytes": 350,
+      "sha256": "826592e9b6752ff99118d88fdf7bdc2c4156febef4996dbea77f3028e0249cf6"
+    },
+    {
+      "path": "data/preprocessing/02_split/crop_cycle_filter_summary.csv",
+      "source": "GEAS/GEAS3.5/offline_dataset_preparation/datasets/02_split/crop_cycle_filter_summary.csv",
+      "bytes": 409,
+      "sha256": "70fdee486e05129b06f25330308874b41bd4651bbba370633e3bc314bac657df"
+    },
+    {
+      "path": "data/preprocessing/02_split/rule_outlier_summary_train_validation.csv",
+      "source": "GEAS/GEAS3.5/offline_dataset_preparation/datasets/02_split/rule_outlier_summary_train_validation.csv",
+      "bytes": 9638,
+      "sha256": "ca0485c792c3a799505460ae009e0b4fe6349a45cf042cf5ba387ea460a480e2"
+    }
+  ],
+  "excluded": [
+    "model weights",
+    "parquet datasets",
+    "backup/legacy experiments",
+    "virtual environments"
+  ],
+  "availability": {
+    "final_experiment_metrics": true,
+    "qc_applied_before_after_timeseries": false,
+    "manual_selection_rationale": false
+  },
+  "configured_default_models": {
+    "strawberry": "modern_tcn",
+    "melon": "modern_tcn",
+    "cucumber": "patch_tst"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "name": "timesnet_seed42_candidate035",
+  "common": {
+    "lookback": 288,
+    "mask_fraction": 0.3,
+    "batch_size": 32,
+    "epochs": 100,
+    "learning_rate": 0.00020256697060067028,
+    "weight_decay": 5.21282604642237e-06,
+    "dropout": 0.17981483745625304,
+    "random_state": 42,
+    "expected_frequency": "5min"
+  },
+  "model_specific": {
+    "temporal_blocks": 3,
+    "top_k_periods": 5,
+    "period_embedding_dim": 128
+  }
+}

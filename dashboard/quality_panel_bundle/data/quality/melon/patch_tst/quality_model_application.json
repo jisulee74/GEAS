@@ -1,0 +1,52 @@
+{
+  "stage": "quality_model_application_artifact",
+  "model_name": "patch_tst",
+  "model_pickle_path": "quality_model.pkl",
+  "artifact_format": "pickle",
+  "threshold": {
+    "in_medium_temp1": 14.138551077518532,
+    "in_temp": 15.498781537007556,
+    "in_temp2": 16.33639209389481,
+    "in_hum": 30.57176957842535,
+    "in_hum2": 33.63997500057889,
+    "in_medium_hum1": 10.298279458832846,
+    "in_co2": 136.1724046708107,
+    "in_co2_2": 140.7411511060028
+  },
+  "observation_columns": [
+    "in_medium_temp1",
+    "in_temp",
+    "in_temp2",
+    "in_hum",
+    "in_hum2",
+    "in_medium_hum1",
+    "in_co2",
+    "in_co2_2"
+  ],
+  "imputation_confidence_threshold": null,
+  "automatic_best_model_selection": false,
+  "test_used_for_selection": false,
+  "metadata": {
+    "source": "quality_threshold_calibration",
+    "hpo_best_candidate": {
+      "name": "patch_tst_seed42_candidate042",
+      "common": {
+        "lookback": 288,
+        "mask_fraction": 0.3,
+        "batch_size": 64,
+        "epochs": 100,
+        "learning_rate": 0.0003130971582758558,
+        "weight_decay": 8.844014623112437e-06,
+        "dropout": 0.2238042840730339,
+        "random_state": 42,
+        "expected_frequency": "5min"
+      },
+      "model_specific": {
+        "patch_length": 32,
+        "transformer_depth": 4,
+        "attention_heads": 16,
+        "embedding_dim": 32
+      }
+    }
+  }
+}

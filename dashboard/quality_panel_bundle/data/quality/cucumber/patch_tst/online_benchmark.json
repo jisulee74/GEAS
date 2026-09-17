@@ -1,0 +1,20 @@
+{
+  "model_name": "patch_tst",
+  "validation": {
+    "inference_latency_ms_per_row": 0.37147708318078554,
+    "peak_memory_bytes": 54198996,
+    "model_size_bytes": 4357152,
+    "measured_rows": 4896,
+    "repeats": 3
+  },
+  "test": {
+    "inference_latency_ms_per_row": 0.367812227244901,
+    "peak_memory_bytes": 60979958,
+    "model_size_bytes": 4357152,
+    "measured_rows": 5472,
+    "repeats": 3
+  },
+  "online_benchmark_included": true,
+  "automatic_best_model_selection": false,
+  "test_used_for_selection": false
+}

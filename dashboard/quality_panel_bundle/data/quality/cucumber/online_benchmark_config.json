@@ -1,0 +1,21 @@
+{
+  "stage": "quality_model_online_benchmark",
+  "observation_columns": [
+    "in_medium_temp1",
+    "in_temp",
+    "in_temp2",
+    "in_hum",
+    "in_hum2",
+    "in_medium_hum1",
+    "in_co2",
+    "in_co2_2"
+  ],
+  "repeats": 3,
+  "benchmark_splits": [
+    "validation",
+    "test"
+  ],
+  "online_benchmark_included": true,
+  "automatic_best_model_selection": false,
+  "test_used_for_selection": false
+}

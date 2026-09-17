@@ -1,0 +1,68 @@
+{
+  "stage": "quality_model_online_benchmark",
+  "online_benchmark_included": true,
+  "automatic_best_model_selection": false,
+  "test_used_for_selection": false,
+  "models": {
+    "modern_tcn": {
+      "model_name": "modern_tcn",
+      "validation": {
+        "inference_latency_ms_per_row": 0.36396410523950323,
+        "peak_memory_bytes": 56676069,
+        "model_size_bytes": 3053344,
+        "measured_rows": 4896,
+        "repeats": 3
+      },
+      "test": {
+        "inference_latency_ms_per_row": 0.33789187135105886,
+        "peak_memory_bytes": 63461943,
+        "model_size_bytes": 3053344,
+        "measured_rows": 5472,
+        "repeats": 3
+      },
+      "online_benchmark_included": true,
+      "automatic_best_model_selection": false,
+      "test_used_for_selection": false
+    },
+    "timesnet": {
+      "model_name": "timesnet",
+      "validation": {
+        "inference_latency_ms_per_row": 0.3370556116513989,
+        "peak_memory_bytes": 54905933,
+        "model_size_bytes": 102432,
+        "measured_rows": 4896,
+        "repeats": 3
+      },
+      "test": {
+        "inference_latency_ms_per_row": 0.3363865811298792,
+        "peak_memory_bytes": 61664040,
+        "model_size_bytes": 102432,
+        "measured_rows": 5472,
+        "repeats": 3
+      },
+      "online_benchmark_included": true,
+      "automatic_best_model_selection": false,
+      "test_used_for_selection": false
+    },
+    "patch_tst": {
+      "model_name": "patch_tst",
+      "validation": {
+        "inference_latency_ms_per_row": 0.37147708318078554,
+        "peak_memory_bytes": 54198996,
+        "model_size_bytes": 4357152,
+        "measured_rows": 4896,
+        "repeats": 3
+      },
+      "test": {
+        "inference_latency_ms_per_row": 0.367812227244901,
+        "peak_memory_bytes": 60979958,
+        "model_size_bytes": 4357152,
+        "measured_rows": 5472,
+        "repeats": 3
+      },
+      "online_benchmark_included": true,
+      "automatic_best_model_selection": false,
+      "test_used_for_selection": false
+    }
+  }
+}

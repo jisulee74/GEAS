@@ -1,0 +1,55 @@
+{
+  "stage": "quality_model_application_artifact",
+  "model_name": "modern_tcn",
+  "model_pickle_path": "quality_model.pkl",
+  "artifact_format": "pickle",
+  "threshold": {
+    "in_medium_temp1": 12.079848924495414,
+    "in_temp": 13.679892929023291,
+    "in_temp2": 12.538899231952227,
+    "in_hum": 28.267846933918154,
+    "in_hum2": 30.746914466572758,
+    "in_medium_hum1": 27.842425302819354,
+    "in_co2": 114.38446423868224,
+    "in_co2_2": 136.79410411253818
+  },
+  "observation_columns": [
+    "in_medium_temp1",
+    "in_temp",
+    "in_temp2",
+    "in_hum",
+    "in_hum2",
+    "in_medium_hum1",
+    "in_co2",
+    "in_co2_2"
+  ],
+  "imputation_confidence_threshold": null,
+  "automatic_best_model_selection": false,
+  "test_used_for_selection": false,
+  "metadata": {
+    "source": "quality_threshold_calibration",
+    "hpo_best_candidate": {
+      "name": "modern_tcn_seed42_candidate004",
+      "common": {
+        "lookback": 288,
+        "mask_fraction": 0.3,
+        "batch_size": 128,
+        "epochs": 100,
+        "learning_rate": 0.006112828938332493,
+        "weight_decay": 0.0012987752032221336,
+        "dropout": 0.05839161235559027,
+        "random_state": 42,
+        "expected_frequency": "5min"
+      },
+      "model_specific": {
+        "channel_width": 64,
+        "depth": [
+          1,
+          1,
+          1
+        ],
+        "kernel_size": 31
+      }
+    }
+  }
+}

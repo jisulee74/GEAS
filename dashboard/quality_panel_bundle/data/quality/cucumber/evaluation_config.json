@@ -1,0 +1,21 @@
+{
+  "stage": "quality_model_validation_test_evaluation",
+  "observation_columns": [
+    "in_medium_temp1",
+    "in_temp",
+    "in_temp2",
+    "in_hum",
+    "in_hum2",
+    "in_medium_hum1",
+    "in_co2",
+    "in_co2_2"
+  ],
+  "mask_fraction": 0.1,
+  "anomaly_fraction": 0.1,
+  "anomaly_scale": 8.0,
+  "random_state": 42,
+  "include_efficiency": false,
+  "online_benchmark_included": false,
+  "automatic_best_model_selection": false,
+  "test_used_for_selection": false
+}

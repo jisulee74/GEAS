@@ -1,0 +1,44 @@
+name: Deploy GEAS dashboard
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'dashboard/**'
+      - '.github/workflows/deploy-dashboard.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/configure-pages@v5
+      - name: Prepare dashboard website
+        run: |
+          mkdir -p _site/quality_panel_bundle
+          cp dashboard/index.html _site/
+          cp -R dashboard/src _site/src
+          cp dashboard/table_*.csv dashboard/table_manifest.json _site/
+          cp -R dashboard/quality_panel_bundle/data _site/quality_panel_bundle/data
+          touch _site/.nojekyll
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: _site
+      - name: Deploy website
+        id: deployment
+        uses: actions/deploy-pages@v4
