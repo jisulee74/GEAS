@@ -9,10 +9,11 @@ RL 학습, 온라인 추론과 receive-only 수집 코드가 포함됩니다.
 
 ## 설치
 
-검증에 사용한 환경은 Python 3.11입니다. 프로젝트 폴더에서:
+최신 전이모델과 재현 smoke는 Python 3.12, 기존 CUDA 환경 검증은 Python 3.11을 사용합니다.
+실험별 패키지 기록은 [재현 안내](../reproducibility/README.md)를 확인하세요. 프로젝트 폴더에서:
 
 ```bash
-python3.11 -m venv .venv
+python3.12 -m venv .venv
 source .venv/bin/activate
 python -m pip install -r requirements.txt
 cp .env.example .env

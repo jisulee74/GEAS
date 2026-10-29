@@ -1,0 +1,78 @@
+{
+  "algorithm": "lightgbm",
+  "crop": "cucumber",
+  "dependencies": {
+    "lightgbm": "4.7.0",
+    "numpy": "2.5.1",
+    "pandas": "3.0.5",
+    "scikit-learn": "1.9.0",
+    "scipy": "1.18.0",
+    "xgboost": "3.4.0"
+  },
+  "eligible_ranking": [
+    {
+      "label": "lightgbm",
+      "score": 0.07000528132682134
+    },
+    {
+      "label": "extra_trees",
+      "score": 0.07043959358647581
+    },
+    {
+      "label": "xgboost",
+      "score": 0.07486736532370032
+    },
+    {
+      "label": "knn",
+      "score": 0.09339443275589225
+    },
+    {
+      "label": "linear_regression",
+      "score": 0.10928086669356867
+    },
+    {
+      "label": "linear_svr",
+      "score": 0.1163405480388778
+    },
+    {
+      "label": "mlp_seed_42",
+      "score": 0.1704505955753697
+    }
+  ],
+  "evaluation_code_sha256": "46c65cd65486f9cca3fd8d331719b1ef83f7c906e7248a451567f607a701680a",
+  "execution_sha256": "f64d1f851941d11a5236119e49155a966ca8d040e799733f3fbcd1e1ef805c44",
+  "failures": [],
+  "gates": {
+    "action_response": true,
+    "all_horizons_finite_physical": true,
+    "finite_one_step_metrics": true,
+    "finite_score": true,
+    "fresh_same_seed_repeat": true,
+    "model_scalar_batch_parity": true,
+    "one_step_finite_physical": true,
+    "reload": true,
+    "strict_persistence_improvement": true
+  },
+  "leader": "lightgbm",
+  "margin_vs_persistence": 0.03170032705066601,
+  "model_artifact": "experiments/rl_policy_training/artifacts/transition_4ch_candidate_reselection_v1/cucumber/lightgbm/fit/model.pkl",
+  "model_sha256": "45ed3eb8e2066e97d62bd2508a338026e9f7132dc845947881b7415f08753be3",
+  "persistence_score": 0.10170560837748735,
+  "reason": "Frozen score minimum; all gates + strict Persistence guard + repeat/reload passed; pending handoff/support/Step16",
+  "repeat_model_sha256": "47f7ee88d23915845ef2a9c5a10393797504f4b27e49bb66ee081dc532d0c46b",
+  "reproducibility": {
+    "atol": 1e-08,
+    "one_step_max_abs_diff": 3.552713678800501e-15,
+    "reload": true,
+    "rollout_max_abs_diff": null,
+    "rtol": 1e-06,
+    "seed": 43
+  },
+  "scaler_sha256": "b9ac430a20aadd8827ba859639f8f06073c121ba7a07618ed58002275351dd49",
+  "schema_sha256": "99f87b2aafe1f773a51303f789c6eccfcb291ac58539f78e05c14e2ae18824c2",
+  "score": 0.07000528132682134,
+  "selected": "lightgbm",
+  "status": "PASS",
+  "train_registry_sha256": "5e46424a0f7362cc687aa855fcf766f56ab2d4b5c863e3ec40e202d6142d5857",
+  "window_registry_sha256": "eac6b0068f7298ae420a110847546a23b96042460a7be38e12964ee6c9f9acf4"
+}

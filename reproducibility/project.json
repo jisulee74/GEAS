@@ -1,0 +1,47 @@
+{
+  "working_directory": "GEAS3.5",
+  "python_paths": [
+    "GEAS3.5/src"
+  ],
+  "smoke_tests": [
+    "tests/test_experiment_contracts.py",
+    "tests/test_quality_experiment_smoke.py",
+    "tests/test_transition_experiment_step3.py",
+    "tests/test_realtime_end_to_end.py",
+    "tests/test_transition_four_channel_phase0.py"
+  ],
+  "restore_mappings": [
+    {
+      "member_prefix": "GEAS/GEAS3.5/offline_dataset_preparation/datasets/",
+      "restore_prefix": "GEAS3.5/offline_dataset_preparation/datasets/"
+    },
+    {
+      "member_prefix": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/",
+      "restore_prefix": "GEAS3.5/experiments/quality_control_model_selection/artifacts/"
+    },
+    {
+      "member_prefix": "GEAS/GEAS3.5/experiments/transition_model_selection/artifacts/",
+      "restore_prefix": "GEAS3.5/experiments/transition_model_selection/artifacts/"
+    },
+    {
+      "member_prefix": "GEAS/GEAS3.5/experiments/transition_model_selection_random_restart_v1_3/artifacts/",
+      "restore_prefix": "GEAS3.5/experiments/transition_model_selection_random_restart_v1_3/artifacts/"
+    },
+    {
+      "member_prefix": "GEAS/GEAS3.5/experiments/rl_policy_training/artifacts/",
+      "restore_prefix": "GEAS3.5/experiments/rl_policy_training/artifacts/"
+    },
+    {
+      "member_prefix": "GEAS/GEAS3.5/experiments/rl_policy_training_v2_1/artifacts/",
+      "restore_prefix": "GEAS3.5/experiments/rl_policy_training_v2_1/artifacts/"
+    },
+    {
+      "member_prefix": "GEAS/GEAS3.5/prospective_collection/",
+      "restore_prefix": "GEAS3.5/prospective_collection/"
+    },
+    {
+      "member_prefix": "GEAS/GEAS3.5/prospective_evaluation/",
+      "restore_prefix": "GEAS3.5/prospective_evaluation/"
+    }
+  ]
+}

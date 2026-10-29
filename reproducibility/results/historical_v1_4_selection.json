@@ -1,0 +1,49 @@
+{
+  "schema_version": "geas35.transition.researcher_decision.v1_4",
+  "decision_author": "researcher",
+  "decided_at_utc": "2026-09-11T05:31:53.536446Z",
+  "decision_source": "researcher_explicit_approval",
+  "framework_generated_recommendation": false,
+  "reselection_after_test_prohibited": true,
+  "decisions": {
+    "strawberry": {
+      "candidate_name": "lightgbm",
+      "feature_variant": "deduplicated_without_quality_flags",
+      "model_sha256": "65cf60f7cb8de2b361781a75578fd0e6cdfdd28ef634b14af8f27d3266a58059",
+      "schema_hash": "c5ff55a51746d19740d2caeb271400c86c9038bb72d82c49b52381003710daaf",
+      "selection_basis": "Validation only",
+      "validation_rollout_weighted_score": 0.23733292349645485,
+      "validation_60min_nrmse": 0.3203116742472904,
+      "validation_60min_physical_violation_rate": 0.0,
+      "limitations": [],
+      "test_observed_at_decision_time": false
+    },
+    "melon": {
+      "candidate_name": "xgboost",
+      "feature_variant": "deduplicated_without_quality_flags",
+      "model_sha256": "d088cbc7f41afec0e7f1e5ce9be980e941570a764fb70f8ed21c46089e4ee5d8",
+      "schema_hash": "c5ff55a51746d19740d2caeb271400c86c9038bb72d82c49b52381003710daaf",
+      "selection_basis": "Validation only",
+      "validation_rollout_weighted_score": 0.12049840494122173,
+      "validation_60min_nrmse": 0.1722801694414375,
+      "validation_60min_physical_violation_rate": 0.0,
+      "limitations": [
+        "Negative 60-minute CO2 Persistence skill.",
+        "Only one action has sufficient action-change support."
+      ],
+      "test_observed_at_decision_time": false
+    },
+    "cucumber": {
+      "candidate_name": "lightgbm",
+      "feature_variant": "deduplicated_without_quality_flags",
+      "model_sha256": "2cb99fc38f19da688c991ed608868327a2006a8f68dc52f9d51cb57b1feae8d6",
+      "schema_hash": "c5ff55a51746d19740d2caeb271400c86c9038bb72d82c49b52381003710daaf",
+      "selection_basis": "Validation only",
+      "validation_rollout_weighted_score": 0.11167383308225641,
+      "validation_60min_nrmse": 0.1578674138536498,
+      "validation_60min_physical_violation_rate": 0.0,
+      "limitations": [],
+      "test_observed_at_decision_time": false
+    }
+  }
+}

@@ -1,0 +1,149 @@
+[
+  {
+    "published_file": "reproducibility/results/quality_validation_results.csv",
+    "source_member": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/validation_results.csv",
+    "source_sha256": "7ec5e4ff32ed68b88ffc3cd3e53620cb424c299293c6bdd5e1662eb0979f5845",
+    "published_sha256": "7ec5e4ff32ed68b88ffc3cd3e53620cb424c299293c6bdd5e1662eb0979f5845",
+    "transformed": false
+  },
+  {
+    "published_file": "reproducibility/results/quality_test_results.csv",
+    "source_member": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/test_results.csv",
+    "source_sha256": "e995778b9d5e98b2ef6dca6f54cd0555e0030b1146de14c8782fbbfa1313231e",
+    "published_sha256": "e995778b9d5e98b2ef6dca6f54cd0555e0030b1146de14c8782fbbfa1313231e",
+    "transformed": false
+  },
+  {
+    "published_file": "reproducibility/configs/quality/cucumber/modern_tcn.json",
+    "source_member": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/cucumber/modern_tcn/best_config.json",
+    "source_sha256": "5d21eeb204a71ba1e007897d0f04827a14e07c13212fc3e26350e706205a6239",
+    "published_sha256": "5d21eeb204a71ba1e007897d0f04827a14e07c13212fc3e26350e706205a6239",
+    "transformed": false
+  },
+  {
+    "published_file": "reproducibility/configs/quality/cucumber/timesnet.json",
+    "source_member": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/cucumber/timesnet/best_config.json",
+    "source_sha256": "7700f3ec6e51e41e88ac8bac4ea49c9cb22b4b20d5d28115a9103af3172e676d",
+    "published_sha256": "7700f3ec6e51e41e88ac8bac4ea49c9cb22b4b20d5d28115a9103af3172e676d",
+    "transformed": false
+  },
+  {
+    "published_file": "reproducibility/configs/quality/cucumber/patch_tst.json",
+    "source_member": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/cucumber/patch_tst/best_config.json",
+    "source_sha256": "e9728350c44e1bae73cb4f64915c7e0c9de475b16831a6bdd7dbc509d8c73f4b",
+    "published_sha256": "e9728350c44e1bae73cb4f64915c7e0c9de475b16831a6bdd7dbc509d8c73f4b",
+    "transformed": false
+  },
+  {
+    "published_file": "reproducibility/configs/quality/melon/modern_tcn.json",
+    "source_member": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/melon/modern_tcn/best_config.json",
+    "source_sha256": "28594d523ae35b03e1f3f1cba3cad27d2ccc1c7a929cd942b814b5dab5800e79",
+    "published_sha256": "28594d523ae35b03e1f3f1cba3cad27d2ccc1c7a929cd942b814b5dab5800e79",
+    "transformed": false
+  },
+  {
+    "published_file": "reproducibility/configs/quality/melon/timesnet.json",
+    "source_member": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/melon/timesnet/best_config.json",
+    "source_sha256": "8211eafc89328e62a070b9354203ae24f7d04f9482b645d7801c39bef7225afd",
+    "published_sha256": "8211eafc89328e62a070b9354203ae24f7d04f9482b645d7801c39bef7225afd",
+    "transformed": false
+  },
+  {
+    "published_file": "reproducibility/configs/quality/melon/patch_tst.json",
+    "source_member": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/melon/patch_tst/best_config.json",
+    "source_sha256": "5ab2a3937b2668a157547a09a846adaa78139e9107cdf03a58a306037c3249b0",
+    "published_sha256": "5ab2a3937b2668a157547a09a846adaa78139e9107cdf03a58a306037c3249b0",
+    "transformed": false
+  },
+  {
+    "published_file": "reproducibility/configs/quality/strawberry/modern_tcn.json",
+    "source_member": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/strawberry/modern_tcn/best_config.json",
+    "source_sha256": "2c98b2d79b9624aea49eba22ae4af4e9dd7df150e994ebc058f3d9ed7d5a6d68",
+    "published_sha256": "2c98b2d79b9624aea49eba22ae4af4e9dd7df150e994ebc058f3d9ed7d5a6d68",
+    "transformed": false
+  },
+  {
+    "published_file": "reproducibility/configs/quality/strawberry/timesnet.json",
+    "source_member": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/strawberry/timesnet/best_config.json",
+    "source_sha256": "a82902b06a7b90f58954472eaf161cb5aa1a7f5a5cdaaac5c01c036fc4293a59",
+    "published_sha256": "a82902b06a7b90f58954472eaf161cb5aa1a7f5a5cdaaac5c01c036fc4293a59",
+    "transformed": false
+  },
+  {
+    "published_file": "reproducibility/configs/quality/strawberry/patch_tst.json",
+    "source_member": "GEAS/GEAS3.5/experiments/quality_control_model_selection/artifacts/strawberry/patch_tst/best_config.json",
+    "source_sha256": "537ae0c2427c48adcdac1770c34eae4eece609827c518c192d370f18698fb3fa",
+    "published_sha256": "537ae0c2427c48adcdac1770c34eae4eece609827c518c192d370f18698fb3fa",
+    "transformed": false
+  },
+  {
+    "published_file": "reproducibility/results/transition_4ch_comparison.csv",
+    "source_member": "GEAS/GEAS3.5/experiments/rl_policy_training/artifacts/transition_4ch_candidate_reselection_v1/candidate_channel_horizon_metrics.csv",
+    "source_sha256": "946303c85aa52846e9a76e1d8654d232148e0cb5587f3544c0f18156b47bb213",
+    "published_sha256": "946303c85aa52846e9a76e1d8654d232148e0cb5587f3544c0f18156b47bb213",
+    "transformed": false
+  },
+  {
+    "published_file": "reproducibility/results/transition_4ch_selected_cucumber.json",
+    "source_member": "GEAS/GEAS3.5/experiments/rl_policy_training/artifacts/transition_4ch_candidate_reselection_v1/cucumber/selected_model_manifest.json",
+    "source_sha256": "9a24418812963b377577daddadca987ce91d64d25780de0ce44ad99a4402e06c",
+    "published_sha256": "9a24418812963b377577daddadca987ce91d64d25780de0ce44ad99a4402e06c",
+    "transformed": false
+  },
+  {
+    "published_file": "reproducibility/results/transition_4ch_selected_melon.json",
+    "source_member": "GEAS/GEAS3.5/experiments/rl_policy_training/artifacts/transition_4ch_candidate_reselection_v1/melon/selected_model_manifest.json",
+    "source_sha256": "37243bb2d455d85dad7594e4844704fd9abe3fe4e0f0c63b282c7c9ef39f3c9d",
+    "published_sha256": "37243bb2d455d85dad7594e4844704fd9abe3fe4e0f0c63b282c7c9ef39f3c9d",
+    "transformed": false
+  },
+  {
+    "published_file": "reproducibility/results/transition_4ch_selected_strawberry.json",
+    "source_member": "GEAS/GEAS3.5/experiments/rl_policy_training/artifacts/transition_4ch_candidate_reselection_v1/strawberry/selected_model_manifest.json",
+    "source_sha256": "62610644be013321a5cf8b308faa5ff053b41a32e1a25bdd081d1e03c6074aa6",
+    "published_sha256": "62610644be013321a5cf8b308faa5ff053b41a32e1a25bdd081d1e03c6074aa6",
+    "transformed": false
+  },
+  {
+    "published_file": "reproducibility/results/historical_v1_4_selection.json",
+    "source_member": "GEAS/GEAS3.5/experiments/transition_model_selection/artifacts/step14_v1_4/researcher_decision.json",
+    "source_sha256": "04f49e32b260d1032c3a6e98ae0a1fba5a159a4cc0012fcbd384b1b3ee262ec6",
+    "published_sha256": "04f49e32b260d1032c3a6e98ae0a1fba5a159a4cc0012fcbd384b1b3ee262ec6",
+    "transformed": false
+  },
+  {
+    "published_file": "reproducibility/data_splits.csv",
+    "source_member": "GEAS/GEAS3.5/offline_dataset_preparation/datasets/02_split/split_manifest.csv",
+    "source_sha256": "cf3187b0789dd2692145dbd81477f55cb48352ec413334568aeda80547f0e46b",
+    "published_sha256": "cf3187b0789dd2692145dbd81477f55cb48352ec413334568aeda80547f0e46b",
+    "transformed": false
+  },
+  {
+    "published_file": "reproducibility/configs/profile_a_ppo.json",
+    "source_member": "GEAS/GEAS3.5/experiments/rl_policy_training/artifacts/cucumber_profile_a_ppo_experiment_prereg_v1/ppo_experiment_contract.json",
+    "source_sha256": "62d566708845fb19922dd8edb22ed9fff7528f8b3b02a543139fdc99519c77fe",
+    "published_sha256": "0384698211ebca2bef04cb75b991664e6f69733472926051df83df119c3afb8a",
+    "transformed": true
+  },
+  {
+    "published_file": "reproducibility/results/profile_a_main_status.json",
+    "source_member": "GEAS/GEAS3.5/experiments/rl_policy_training/artifacts/cucumber_profile_a_ppo_main_v1/main_manifest.json",
+    "source_sha256": "3b2e95b3879ad49d388ebe975577ae91e9c07ab3da546cf0761fe1c0bb7cfc72",
+    "published_sha256": "5f6b1747aef72304d34cc89b89a819a3f206837b93cd1f24b39b5346da04b8e4",
+    "transformed": true
+  },
+  {
+    "published_file": "reproducibility/results/profile_a_main_metrics.json",
+    "source_member": "GEAS/GEAS3.5/experiments/rl_policy_training/artifacts/cucumber_profile_a_ppo_main_v1/cross_seed_summary.json",
+    "source_sha256": "114b0cafe63a15f11943acc7411c64669e78ad66416b7756bcd0de37d04bcdbd",
+    "published_sha256": "114b0cafe63a15f11943acc7411c64669e78ad66416b7756bcd0de37d04bcdbd",
+    "transformed": false
+  },
+  {
+    "published_file": "reproducibility/results/profile_a_migrated_environment.json",
+    "source_member": "GEAS/GEAS3.5/experiments/rl_policy_training/artifacts/cucumber_profile_a_final_action_env_v1/cross_seed_summary.json",
+    "source_sha256": "f731015f71cd9975e15624902bbedfa1f70c7fc29fdba3a9d08d3593a082d675",
+    "published_sha256": "f731015f71cd9975e15624902bbedfa1f70c7fc29fdba3a9d08d3593a082d675",
+    "transformed": false
+  }
+]

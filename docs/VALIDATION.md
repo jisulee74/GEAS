@@ -1,17 +1,16 @@
-# Source snapshot validation — 2026-10-29
+# Validation scope — 2026-10-29
 
-- New/updated Python sources parse; changed JSON and shell scripts were checked.
-- New/updated files were checked for known local credential values and common key formats.
-- Frozen random-restart snapshot files match every recorded SHA-256 hash.
-- AX core suite (in its repository): 59 passed.
-- GEAS main suite before retaining the final target-profile contracts: 443 passed,
-  53 failed, 56 setup errors, 2 skipped. Reported failures require workspace artifacts
-  excluded from Git (datasets, trained models and experiment manifests).
-- After retaining the target profiles and their frozen evidence document, the targeted
-  cucumber-profile and final-action synthetic suite passed all 30 tests.
+- `python scripts/reproduce.py smoke`: 39 synthetic checks passed with the recorded Python 3.12 environment.
+  Includes QC training, transition experiment contracts, realtime boundaries and four-channel behavior.
+- Frozen random-restart snapshot: every recorded source SHA-256 matched; 4 standalone tests passed.
+- Original Profile-A PPO preflight passed its frozen input/configuration hashes without training.
+- The 30 targeted profile/final-action tests passed when the private interview evidence was available.
+  The evidence text is excluded from the public tree; its hash test requires private restoration.
+- Full research tests also validate historical local outputs, datasets and trained models. They do not
+  all pass in a source-only clone; no full-suite pass or new real-data training result is claimed.
+- Source syntax, JSON, shell syntax and Git whitespace were checked. New exports contain aggregate
+  metrics and hashes, without facility memberships, observation rows or credential values.
 
-The entire GEAS suite is not claimed to pass in a clone without workspace artifacts.
-Restore the local data/model directories before running integration checks. Existing
-absolute paths inside frozen experiment contracts must also be reviewed after relocation.
-GPU training, live control and new model-quality claims were outside this source cleanup.
-Existing dashboard assets were retained from origin/main.
+Clone validation details and private-input checks are recorded in `reproducibility/clone_validation.json`
+when completed. Fresh package installation and full GPU retraining are separate from using a fresh clone
+with the recorded existing environment.

@@ -1,2 +1,5 @@
 # Preserve the frozen experiment snapshot, including recorded trailing newlines.
 GEAS3.5/experiments/transition_model_selection_random_restart_v1_3/runtime_src/** whitespace=-blank-at-eof
+
+# Retain source CSV bytes and provenance hashes, including CRLF line endings.
+reproducibility/**/*.csv whitespace=cr-at-eol

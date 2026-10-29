@@ -1,0 +1,267 @@
+{
+  "execution_status": "FINAL-ACTION ENV v1 — PASS / FROZEN-POLICY REVIEW READY",
+  "primary_policy_status": "MIGRATED ENV STRUCTURAL REVIEW REQUIRED",
+  "seed_summaries": [
+    {
+      "seed": 42,
+      "episode_rate_denominator": 25,
+      "outcomes": {
+        "COMPLETE": 19,
+        "STATE_SUPPORT_FAILURE": 6,
+        "EXECUTED_JOINT_SUPPORT_FAILURE": 0,
+        "OTHER_EXISTING_TERMINATION": 0,
+        "SYSTEM_INVALID": 0,
+        "UNSCORABLE": 0
+      },
+      "comparison_classes": {
+        "SAME_COMPLETE": 19,
+        "SAME_FAILURE_MECHANISM": 5,
+        "DIFFERENT_FAILURE_MECHANISM": 1
+      },
+      "state_rows": 1972,
+      "final_queries": 1966,
+      "proposal_severe": 25,
+      "final_severe": 3,
+      "proposal_reliability_recovered_events": 20,
+      "projection": 337,
+      "fallback": 20,
+      "weather": 64,
+      "scheduled_transitions": 2811,
+      "outcome_rates": {
+        "COMPLETE": 0.76,
+        "STATE_SUPPORT_FAILURE": 0.24,
+        "EXECUTED_JOINT_SUPPORT_FAILURE": 0.0,
+        "OTHER_EXISTING_TERMINATION": 0.0,
+        "SYSTEM_INVALID": 0.0,
+        "UNSCORABLE": 0.0
+      },
+      "failure_rate": 0.24,
+      "action_rates": {
+        "proposal_severe": {
+          "count": 25,
+          "denominator": 1972,
+          "rate": 0.012677484787018255
+        },
+        "final_severe": {
+          "count": 3,
+          "denominator": 1966,
+          "rate": 0.001525940996948118
+        },
+        "proposal_reliability_recovered_events": {
+          "count": 20,
+          "denominator": 1966,
+          "rate": 0.01017293997965412
+        },
+        "projection": {
+          "count": 337,
+          "denominator": 1966,
+          "rate": 0.17141403865717192
+        },
+        "fallback": {
+          "count": 20,
+          "denominator": 1966,
+          "rate": 0.01017293997965412
+        },
+        "weather": {
+          "count": 64,
+          "denominator": 1966,
+          "rate": 0.03255340793489318
+        }
+      },
+      "proposal_reliability_event_definition": "proposal severe AND valid final nonsevere; raw proposal severe rate reported separately; denominator final-action queries",
+      "complete_return_summary": {
+        "n": 19,
+        "mean": 17.34098281198336,
+        "median": 9.103756640870476,
+        "min": 1.0235050514637196,
+        "max": 44.674959723134364
+      },
+      "valid_run_length_summary": {
+        "n": 25,
+        "mean": 78.64,
+        "median": 44,
+        "min": 2,
+        "max": 284
+      }
+    },
+    {
+      "seed": 43,
+      "episode_rate_denominator": 25,
+      "outcomes": {
+        "COMPLETE": 19,
+        "STATE_SUPPORT_FAILURE": 6,
+        "EXECUTED_JOINT_SUPPORT_FAILURE": 0,
+        "OTHER_EXISTING_TERMINATION": 0,
+        "SYSTEM_INVALID": 0,
+        "UNSCORABLE": 0
+      },
+      "comparison_classes": {
+        "SAME_COMPLETE": 19,
+        "SAME_FAILURE_MECHANISM": 5,
+        "DIFFERENT_FAILURE_MECHANISM": 1
+      },
+      "state_rows": 1971,
+      "final_queries": 1965,
+      "proposal_severe": 17,
+      "final_severe": 6,
+      "proposal_reliability_recovered_events": 11,
+      "projection": 319,
+      "fallback": 13,
+      "weather": 64,
+      "scheduled_transitions": 2811,
+      "outcome_rates": {
+        "COMPLETE": 0.76,
+        "STATE_SUPPORT_FAILURE": 0.24,
+        "EXECUTED_JOINT_SUPPORT_FAILURE": 0.0,
+        "OTHER_EXISTING_TERMINATION": 0.0,
+        "SYSTEM_INVALID": 0.0,
+        "UNSCORABLE": 0.0
+      },
+      "failure_rate": 0.24,
+      "action_rates": {
+        "proposal_severe": {
+          "count": 17,
+          "denominator": 1971,
+          "rate": 0.008625063419583967
+        },
+        "final_severe": {
+          "count": 6,
+          "denominator": 1965,
+          "rate": 0.0030534351145038168
+        },
+        "proposal_reliability_recovered_events": {
+          "count": 11,
+          "denominator": 1965,
+          "rate": 0.0055979643765903305
+        },
+        "projection": {
+          "count": 319,
+          "denominator": 1965,
+          "rate": 0.1623409669211196
+        },
+        "fallback": {
+          "count": 13,
+          "denominator": 1965,
+          "rate": 0.0066157760814249365
+        },
+        "weather": {
+          "count": 64,
+          "denominator": 1965,
+          "rate": 0.03256997455470738
+        }
+      },
+      "proposal_reliability_event_definition": "proposal severe AND valid final nonsevere; raw proposal severe rate reported separately; denominator final-action queries",
+      "complete_return_summary": {
+        "n": 19,
+        "mean": 17.334807812461563,
+        "median": 9.075081806496806,
+        "min": 1.0232823052738316,
+        "max": 44.87358727745124
+      },
+      "valid_run_length_summary": {
+        "n": 25,
+        "mean": 78.6,
+        "median": 44,
+        "min": 2,
+        "max": 284
+      }
+    },
+    {
+      "seed": 44,
+      "episode_rate_denominator": 25,
+      "outcomes": {
+        "COMPLETE": 18,
+        "STATE_SUPPORT_FAILURE": 5,
+        "EXECUTED_JOINT_SUPPORT_FAILURE": 2,
+        "OTHER_EXISTING_TERMINATION": 0,
+        "SYSTEM_INVALID": 0,
+        "UNSCORABLE": 0
+      },
+      "comparison_classes": {
+        "SAME_COMPLETE": 18,
+        "DIFFERENT_FAILURE_MECHANISM": 5,
+        "SAME_FAILURE_MECHANISM": 2
+      },
+      "state_rows": 2007,
+      "final_queries": 2002,
+      "proposal_severe": 131,
+      "final_severe": 11,
+      "proposal_reliability_recovered_events": 120,
+      "projection": 624,
+      "fallback": 127,
+      "weather": 87,
+      "scheduled_transitions": 2811,
+      "outcome_rates": {
+        "COMPLETE": 0.72,
+        "STATE_SUPPORT_FAILURE": 0.2,
+        "EXECUTED_JOINT_SUPPORT_FAILURE": 0.08,
+        "OTHER_EXISTING_TERMINATION": 0.0,
+        "SYSTEM_INVALID": 0.0,
+        "UNSCORABLE": 0.0
+      },
+      "failure_rate": 0.28,
+      "action_rates": {
+        "proposal_severe": {
+          "count": 131,
+          "denominator": 2007,
+          "rate": 0.06527154957648232
+        },
+        "final_severe": {
+          "count": 11,
+          "denominator": 2002,
+          "rate": 0.005494505494505495
+        },
+        "proposal_reliability_recovered_events": {
+          "count": 120,
+          "denominator": 2002,
+          "rate": 0.059940059940059943
+        },
+        "projection": {
+          "count": 624,
+          "denominator": 2002,
+          "rate": 0.3116883116883117
+        },
+        "fallback": {
+          "count": 127,
+          "denominator": 2002,
+          "rate": 0.06343656343656344
+        },
+        "weather": {
+          "count": 87,
+          "denominator": 2002,
+          "rate": 0.043456543456543456
+        }
+      },
+      "proposal_reliability_event_definition": "proposal severe AND valid final nonsevere; raw proposal severe rate reported separately; denominator final-action queries",
+      "complete_return_summary": {
+        "n": 18,
+        "mean": 16.361152961439082,
+        "median": 8.45692640064028,
+        "min": 1.0232823052738316,
+        "max": 44.694862151180615
+      },
+      "valid_run_length_summary": {
+        "n": 25,
+        "mean": 80.08,
+        "median": 44,
+        "min": 2,
+        "max": 284
+      }
+    }
+  ],
+  "comparison_counts": {
+    "SAME_COMPLETE": 56,
+    "SAME_FAILURE_MECHANISM": 12,
+    "DIFFERENT_FAILURE_MECHANISM": 7
+  },
+  "outcome_counts": {
+    "COMPLETE": 56,
+    "STATE_SUPPORT_FAILURE": 17,
+    "EXECUTED_JOINT_SUPPORT_FAILURE": 2
+  },
+  "migration_induced_regressions": 0,
+  "historical_shadow_cases_consistent": 7,
+  "interpretation": "technical migration passes; all remaining failures are state/final support, requiring structural review; no arbitrary completion threshold; compatibility does not certify policy sufficiency",
+  "retraining_approved": false,
+  "HPO_approved": false
+}

@@ -1,0 +1,62 @@
+{
+  "algorithm": "xgboost",
+  "crop": "strawberry",
+  "dependencies": {
+    "lightgbm": "4.7.0",
+    "numpy": "2.5.1",
+    "pandas": "3.0.5",
+    "scikit-learn": "1.9.0",
+    "scipy": "1.18.0",
+    "xgboost": "3.4.0"
+  },
+  "eligible_ranking": [
+    {
+      "label": "xgboost",
+      "score": 0.09639771149651405
+    },
+    {
+      "label": "extra_trees",
+      "score": 0.1081243015718067
+    },
+    {
+      "label": "lightgbm",
+      "score": 0.11265896313677691
+    }
+  ],
+  "evaluation_code_sha256": "46c65cd65486f9cca3fd8d331719b1ef83f7c906e7248a451567f607a701680a",
+  "execution_sha256": "f64d1f851941d11a5236119e49155a966ca8d040e799733f3fbcd1e1ef805c44",
+  "failures": [],
+  "gates": {
+    "action_response": true,
+    "all_horizons_finite_physical": true,
+    "finite_one_step_metrics": true,
+    "finite_score": true,
+    "fresh_same_seed_repeat": true,
+    "model_scalar_batch_parity": true,
+    "one_step_finite_physical": true,
+    "reload": true,
+    "strict_persistence_improvement": true
+  },
+  "leader": "xgboost",
+  "margin_vs_persistence": 0.048260124123153836,
+  "model_artifact": "experiments/rl_policy_training/artifacts/transition_4ch_candidate_reselection_v1/strawberry/xgboost/fit/model.pkl",
+  "model_sha256": "3bc333d6a2c39dd567edde941bfc0131e7b9e1f84b9e8eb8d9421e5436538ce4",
+  "persistence_score": 0.14465783561966788,
+  "reason": "Frozen score minimum; all gates + strict Persistence guard + repeat/reload passed; pending handoff/support/Step16",
+  "repeat_model_sha256": "3bc333d6a2c39dd567edde941bfc0131e7b9e1f84b9e8eb8d9421e5436538ce4",
+  "reproducibility": {
+    "atol": 1e-08,
+    "one_step_max_abs_diff": 0.0,
+    "reload": true,
+    "rollout_max_abs_diff": null,
+    "rtol": 1e-06,
+    "seed": 43
+  },
+  "scaler_sha256": "600f04f89154594345f8871902cd1e41d2acfb1bbf90a41f743dd34c1fcf879a",
+  "schema_sha256": "99f87b2aafe1f773a51303f789c6eccfcb291ac58539f78e05c14e2ae18824c2",
+  "score": 0.09639771149651405,
+  "selected": "xgboost",
+  "status": "PASS",
+  "train_registry_sha256": "76307a304aacf09d1eeaffc29fb3dc1ea85a212884adf5d77d32380034e049ce",
+  "window_registry_sha256": "59afe86b3416be64e7ceaedb391bee414a8c9503a78727dff22f9934e918cc29"
+}

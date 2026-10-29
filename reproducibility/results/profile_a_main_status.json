@@ -1,0 +1,15 @@
+{
+  "status": "CUCUMBER PROFILE-A PPO MAIN — COMPLETE / POLICY REVIEW READY",
+  "seed_status": {
+    "42": "PASS",
+    "43": "PASS",
+    "44": "PASS"
+  },
+  "trainer_sha256": "b808352a376af3b7ec5825bb7f3553d9f29b779d9c12398ff12b0acfc6eab8b9",
+  "main_executed": true,
+  "optimizer_steps_total": 6820,
+  "hpo_executed": false,
+  "test_accessed": false,
+  "validation_policy_evaluated": false,
+  "scope": "MAIN ONLY"
+}

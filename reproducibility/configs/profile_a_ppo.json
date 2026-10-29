@@ -1,0 +1,1049 @@
+{
+  "version": "cucumber_profile_a_ppo_experiment.v1",
+  "status": "CUCUMBER PROFILE-A PPO EXPERIMENT — PREREGISTERED / SMOKE READY",
+  "hyperparameters": {
+    "learning_rate": {
+      "value": 0.0003,
+      "provenance": "step18_v1_4 config / hybrid_ppo.py",
+      "compatibility_or_rationale": "차원/작물 target와 독립인 기존 고정 algorithmic baseline을 명시 재채택; 최적성 주장 없음"
+    },
+    "clip_range": {
+      "value": 0.2,
+      "provenance": "step18_v1_4 config / hybrid_ppo.py",
+      "compatibility_or_rationale": "차원/작물 target와 독립인 기존 고정 algorithmic baseline을 명시 재채택; 최적성 주장 없음"
+    },
+    "value_loss_coefficient": {
+      "value": 0.5,
+      "provenance": "step18_v1_4 config / hybrid_ppo.py",
+      "compatibility_or_rationale": "차원/작물 target와 독립인 기존 고정 algorithmic baseline을 명시 재채택; 최적성 주장 없음"
+    },
+    "entropy_coefficient": {
+      "value": 0.01,
+      "provenance": "step18_v1_4 config / hybrid_ppo.py",
+      "compatibility_or_rationale": "차원/작물 target와 독립인 기존 고정 algorithmic baseline을 명시 재채택; 최적성 주장 없음"
+    },
+    "max_gradient_norm": {
+      "value": 0.5,
+      "provenance": "step18_v1_4 config / hybrid_ppo.py",
+      "compatibility_or_rationale": "차원/작물 target와 독립인 기존 고정 algorithmic baseline을 명시 재채택; 최적성 주장 없음"
+    },
+    "update_epochs": {
+      "value": 10,
+      "provenance": "step18_v1_4 config / hybrid_ppo.py",
+      "compatibility_or_rationale": "차원/작물 target와 독립인 기존 고정 algorithmic baseline을 명시 재채택; 최적성 주장 없음"
+    },
+    "minibatch_size": {
+      "value": 64,
+      "provenance": "step18_v1_4 config / hybrid_ppo.py",
+      "compatibility_or_rationale": "차원/작물 target와 독립인 기존 고정 algorithmic baseline을 명시 재채택; 최적성 주장 없음"
+    },
+    "value_clip_range": {
+      "value": 0.2,
+      "provenance": "step18_v1_4 config / hybrid_ppo.py",
+      "compatibility_or_rationale": "차원/작물 target와 독립인 기존 고정 algorithmic baseline을 명시 재채택; 최적성 주장 없음"
+    },
+    "hidden_sizes": {
+      "value": [
+        128,
+        128
+      ],
+      "provenance": "step18_v1_4 config / hybrid_ppo.py",
+      "compatibility_or_rationale": "차원/작물 target와 독립인 기존 고정 algorithmic baseline을 명시 재채택; 최적성 주장 없음"
+    },
+    "activation": {
+      "value": "tanh",
+      "provenance": "step18_v1_4 config / hybrid_ppo.py",
+      "compatibility_or_rationale": "차원/작물 target와 독립인 기존 고정 algorithmic baseline을 명시 재채택; 최적성 주장 없음"
+    },
+    "beta_concentration_floor": {
+      "value": 1.01,
+      "provenance": "step18_v1_4 config / hybrid_ppo.py",
+      "compatibility_or_rationale": "차원/작물 target와 독립인 기존 고정 algorithmic baseline을 명시 재채택; 최적성 주장 없음"
+    },
+    "target_kl": {
+      "value": 0.03,
+      "provenance": "step18_v1_4 config / hybrid_ppo.py",
+      "compatibility_or_rationale": "차원/작물 target와 독립인 기존 고정 algorithmic baseline을 명시 재채택; 최적성 주장 없음"
+    },
+    "normalize_advantages": {
+      "value": true,
+      "provenance": "step18_v1_4 config / hybrid_ppo.py",
+      "compatibility_or_rationale": "차원/작물 target와 독립인 기존 고정 algorithmic baseline을 명시 재채택; 최적성 주장 없음"
+    },
+    "gamma": {
+      "value": 0.99,
+      "provenance": "frozen Profile-A semantic contract",
+      "compatibility_or_rationale": "변경 없이 계승"
+    },
+    "gae_lambda": {
+      "value": 0.95,
+      "provenance": "frozen Profile-A semantic contract",
+      "compatibility_or_rationale": "변경 없이 계승"
+    },
+    "policy_seeds": {
+      "value": [
+        42,
+        43,
+        44
+      ],
+      "provenance": "frozen Profile-A semantic contract",
+      "compatibility_or_rationale": "변경 없이 계승"
+    },
+    "num_workers": {
+      "value": 1,
+      "provenance": "frozen Profile-A semantic contract",
+      "compatibility_or_rationale": "변경 없이 계승"
+    },
+    "observation_dimension": {
+      "value": 56,
+      "provenance": "frozen Profile-A semantic contract",
+      "compatibility_or_rationale": "변경 없이 계승"
+    },
+    "continuous_actions": {
+      "value": 3,
+      "provenance": "frozen Profile-A semantic contract",
+      "compatibility_or_rationale": "변경 없이 계승"
+    },
+    "binary_actions": {
+      "value": 3,
+      "provenance": "frozen Profile-A semantic contract",
+      "compatibility_or_rationale": "변경 없이 계승"
+    },
+    "optimizer": {
+      "value": "torch.optim.Adam",
+      "provenance": "explicit v1 freeze; optimizer/loss basis: hybrid_ppo.py",
+      "compatibility_or_rationale": "누락된 library default를 명시; CPU/단일 worker 재현성. constant LambdaLR(1)과 같은 LR, scheduler 자체 disabled"
+    },
+    "adam_betas": {
+      "value": [
+        0.9,
+        0.999
+      ],
+      "provenance": "explicit v1 freeze; optimizer/loss basis: hybrid_ppo.py",
+      "compatibility_or_rationale": "누락된 library default를 명시; CPU/단일 worker 재현성. constant LambdaLR(1)과 같은 LR, scheduler 자체 disabled"
+    },
+    "adam_eps": {
+      "value": 1e-08,
+      "provenance": "explicit v1 freeze; optimizer/loss basis: hybrid_ppo.py",
+      "compatibility_or_rationale": "누락된 library default를 명시; CPU/단일 worker 재현성. constant LambdaLR(1)과 같은 LR, scheduler 자체 disabled"
+    },
+    "weight_decay": {
+      "value": 0.0,
+      "provenance": "explicit v1 freeze; optimizer/loss basis: hybrid_ppo.py",
+      "compatibility_or_rationale": "누락된 library default를 명시; CPU/단일 worker 재현성. constant LambdaLR(1)과 같은 LR, scheduler 자체 disabled"
+    },
+    "amsgrad": {
+      "value": false,
+      "provenance": "explicit v1 freeze; optimizer/loss basis: hybrid_ppo.py",
+      "compatibility_or_rationale": "누락된 library default를 명시; CPU/단일 worker 재현성. constant LambdaLR(1)과 같은 LR, scheduler 자체 disabled"
+    },
+    "maximize": {
+      "value": false,
+      "provenance": "explicit v1 freeze; optimizer/loss basis: hybrid_ppo.py",
+      "compatibility_or_rationale": "누락된 library default를 명시; CPU/단일 worker 재현성. constant LambdaLR(1)과 같은 LR, scheduler 자체 disabled"
+    },
+    "foreach": {
+      "value": false,
+      "provenance": "explicit v1 freeze; optimizer/loss basis: hybrid_ppo.py",
+      "compatibility_or_rationale": "누락된 library default를 명시; CPU/단일 worker 재현성. constant LambdaLR(1)과 같은 LR, scheduler 자체 disabled"
+    },
+    "fused": {
+      "value": false,
+      "provenance": "explicit v1 freeze; optimizer/loss basis: hybrid_ppo.py",
+      "compatibility_or_rationale": "누락된 library default를 명시; CPU/단일 worker 재현성. constant LambdaLR(1)과 같은 LR, scheduler 자체 disabled"
+    },
+    "capturable": {
+      "value": false,
+      "provenance": "explicit v1 freeze; optimizer/loss basis: hybrid_ppo.py",
+      "compatibility_or_rationale": "누락된 library default를 명시; CPU/단일 worker 재현성. constant LambdaLR(1)과 같은 LR, scheduler 자체 disabled"
+    },
+    "differentiable": {
+      "value": false,
+      "provenance": "explicit v1 freeze; optimizer/loss basis: hybrid_ppo.py",
+      "compatibility_or_rationale": "누락된 library default를 명시; CPU/단일 worker 재현성. constant LambdaLR(1)과 같은 LR, scheduler 자체 disabled"
+    },
+    "decoupled_weight_decay": {
+      "value": false,
+      "provenance": "explicit v1 freeze; optimizer/loss basis: hybrid_ppo.py",
+      "compatibility_or_rationale": "누락된 library default를 명시; CPU/단일 worker 재현성. constant LambdaLR(1)과 같은 LR, scheduler 자체 disabled"
+    },
+    "zero_grad_set_to_none": {
+      "value": true,
+      "provenance": "explicit v1 freeze; optimizer/loss basis: hybrid_ppo.py",
+      "compatibility_or_rationale": "누락된 library default를 명시; CPU/단일 worker 재현성. constant LambdaLR(1)과 같은 LR, scheduler 자체 disabled"
+    },
+    "lr_scheduler": {
+      "value": null,
+      "provenance": "explicit v1 freeze; optimizer/loss basis: hybrid_ppo.py",
+      "compatibility_or_rationale": "누락된 library default를 명시; CPU/단일 worker 재현성. constant LambdaLR(1)과 같은 LR, scheduler 자체 disabled"
+    },
+    "learning_rate_schedule": {
+      "value": "constant",
+      "provenance": "explicit v1 freeze; optimizer/loss basis: hybrid_ppo.py",
+      "compatibility_or_rationale": "누락된 library default를 명시; CPU/단일 worker 재현성. constant LambdaLR(1)과 같은 LR, scheduler 자체 disabled"
+    },
+    "target_kl_behavior": {
+      "value": "after minibatch optimizer step, pre-step approx_KL > 0.03 stops remaining minibatches/epochs of this update only",
+      "provenance": "explicit v1 freeze; optimizer/loss basis: hybrid_ppo.py",
+      "compatibility_or_rationale": "누락된 library default를 명시; CPU/단일 worker 재현성. constant LambdaLR(1)과 같은 LR, scheduler 자체 disabled"
+    },
+    "loss": {
+      "value": "policy_loss + 0.5*value_loss - 0.01*entropy",
+      "provenance": "explicit v1 freeze; optimizer/loss basis: hybrid_ppo.py",
+      "compatibility_or_rationale": "누락된 library default를 명시; CPU/단일 worker 재현성. constant LambdaLR(1)과 같은 LR, scheduler 자체 disabled"
+    },
+    "value_loss": {
+      "value": "0.5*mean(max((V-return)^2,(V_old+clip(V-V_old,-0.2,0.2)-return)^2))",
+      "provenance": "explicit v1 freeze; optimizer/loss basis: hybrid_ppo.py",
+      "compatibility_or_rationale": "누락된 library default를 명시; CPU/단일 worker 재현성. constant LambdaLR(1)과 같은 LR, scheduler 자체 disabled"
+    },
+    "advantage_normalization": {
+      "value": "all finalized update rows, population std(ddof=0), eps=1e-8; before minibatching",
+      "provenance": "explicit v1 freeze; optimizer/loss basis: hybrid_ppo.py",
+      "compatibility_or_rationale": "누락된 library default를 명시; CPU/단일 worker 재현성. constant LambdaLR(1)과 같은 LR, scheduler 자체 disabled"
+    },
+    "advantage_eps": {
+      "value": 1e-08,
+      "provenance": "explicit v1 freeze; optimizer/loss basis: hybrid_ppo.py",
+      "compatibility_or_rationale": "누락된 library default를 명시; CPU/단일 worker 재현성. constant LambdaLR(1)과 같은 LR, scheduler 자체 disabled"
+    },
+    "logprob_probability_clamp": {
+      "value": 1e-06,
+      "provenance": "explicit v1 freeze; optimizer/loss basis: hybrid_ppo.py",
+      "compatibility_or_rationale": "누락된 library default를 명시; CPU/단일 worker 재현성. constant LambdaLR(1)과 같은 LR, scheduler 자체 disabled"
+    },
+    "explained_variance": {
+      "value": "1-var(return-V)/var(return); variance<=1e-12 reports0 with degenerate flag",
+      "provenance": "explicit v1 freeze; optimizer/loss basis: hybrid_ppo.py",
+      "compatibility_or_rationale": "누락된 library default를 명시; CPU/단일 worker 재현성. constant LambdaLR(1)과 같은 LR, scheduler 자체 disabled"
+    },
+    "device": {
+      "value": "cpu",
+      "provenance": "explicit v1 freeze; optimizer/loss basis: hybrid_ppo.py",
+      "compatibility_or_rationale": "누락된 library default를 명시; CPU/단일 worker 재현성. constant LambdaLR(1)과 같은 LR, scheduler 자체 disabled"
+    },
+    "tensor_dtype": {
+      "value": "float32",
+      "provenance": "explicit v1 freeze; optimizer/loss basis: hybrid_ppo.py",
+      "compatibility_or_rationale": "누락된 library default를 명시; CPU/단일 worker 재현성. constant LambdaLR(1)과 같은 LR, scheduler 자체 disabled"
+    },
+    "gae_compute_dtype": {
+      "value": "float64",
+      "provenance": "explicit v1 freeze; optimizer/loss basis: hybrid_ppo.py",
+      "compatibility_or_rationale": "누락된 library default를 명시; CPU/단일 worker 재현성. constant LambdaLR(1)과 같은 LR, scheduler 자체 disabled"
+    },
+    "torch_threads": {
+      "value": 1,
+      "provenance": "explicit v1 freeze; optimizer/loss basis: hybrid_ppo.py",
+      "compatibility_or_rationale": "누락된 library default를 명시; CPU/단일 worker 재현성. constant LambdaLR(1)과 같은 LR, scheduler 자체 disabled"
+    },
+    "torch_interop_threads": {
+      "value": 1,
+      "provenance": "explicit v1 freeze; optimizer/loss basis: hybrid_ppo.py",
+      "compatibility_or_rationale": "누락된 library default를 명시; CPU/단일 worker 재현성. constant LambdaLR(1)과 같은 LR, scheduler 자체 disabled"
+    },
+    "blas_threads": {
+      "value": 1,
+      "provenance": "explicit v1 freeze; optimizer/loss basis: hybrid_ppo.py",
+      "compatibility_or_rationale": "누락된 library default를 명시; CPU/단일 worker 재현성. constant LambdaLR(1)과 같은 LR, scheduler 자체 disabled"
+    },
+    "torch_deterministic_algorithms": {
+      "value": true,
+      "provenance": "explicit v1 freeze; optimizer/loss basis: hybrid_ppo.py",
+      "compatibility_or_rationale": "누락된 library default를 명시; CPU/단일 worker 재현성. constant LambdaLR(1)과 같은 LR, scheduler 자체 disabled"
+    },
+    "mixed_precision": {
+      "value": false,
+      "provenance": "explicit v1 freeze; optimizer/loss basis: hybrid_ppo.py",
+      "compatibility_or_rationale": "누락된 library default를 명시; CPU/단일 worker 재현성. constant LambdaLR(1)과 같은 LR, scheduler 자체 disabled"
+    },
+    "gradient_accumulation": {
+      "value": false,
+      "provenance": "explicit v1 freeze; optimizer/loss basis: hybrid_ppo.py",
+      "compatibility_or_rationale": "누락된 library default를 명시; CPU/단일 worker 재현성. constant LambdaLR(1)과 같은 LR, scheduler 자체 disabled"
+    },
+    "recurrent_policy": {
+      "value": false,
+      "provenance": "explicit v1 freeze; optimizer/loss basis: hybrid_ppo.py",
+      "compatibility_or_rationale": "누락된 library default를 명시; CPU/단일 worker 재현성. constant LambdaLR(1)과 같은 LR, scheduler 자체 disabled"
+    },
+    "dropout": {
+      "value": null,
+      "provenance": "explicit v1 freeze; optimizer/loss basis: hybrid_ppo.py",
+      "compatibility_or_rationale": "누락된 library default를 명시; CPU/단일 worker 재현성. constant LambdaLR(1)과 같은 LR, scheduler 자체 disabled"
+    },
+    "observation_online_refit": {
+      "value": false,
+      "provenance": "explicit v1 freeze; optimizer/loss basis: hybrid_ppo.py",
+      "compatibility_or_rationale": "누락된 library default를 명시; CPU/단일 worker 재현성. constant LambdaLR(1)과 같은 LR, scheduler 자체 disabled"
+    },
+    "reward_normalization": {
+      "value": null,
+      "provenance": "explicit v1 freeze; optimizer/loss basis: hybrid_ppo.py",
+      "compatibility_or_rationale": "누락된 library default를 명시; CPU/단일 worker 재현성. constant LambdaLR(1)과 같은 LR, scheduler 자체 disabled"
+    },
+    "reward_clipping": {
+      "value": null,
+      "provenance": "explicit v1 freeze; optimizer/loss basis: hybrid_ppo.py",
+      "compatibility_or_rationale": "누락된 library default를 명시; CPU/단일 worker 재현성. constant LambdaLR(1)과 같은 LR, scheduler 자체 disabled"
+    },
+    "return_normalization": {
+      "value": null,
+      "provenance": "explicit v1 freeze; optimizer/loss basis: hybrid_ppo.py",
+      "compatibility_or_rationale": "누락된 library default를 명시; CPU/단일 worker 재현성. constant LambdaLR(1)과 같은 LR, scheduler 자체 disabled"
+    },
+    "weight_initialization": {
+      "value": "fresh torch Linear reset_parameters: kaiming_uniform(a=sqrt(5)); bias uniform +/-1/sqrt(fan_in); frozen torch version",
+      "provenance": "explicit v1 freeze; optimizer/loss basis: hybrid_ppo.py",
+      "compatibility_or_rationale": "누락된 library default를 명시; CPU/단일 worker 재현성. constant LambdaLR(1)과 같은 LR, scheduler 자체 disabled"
+    },
+    "minibatch_shuffle": {
+      "value": "torch.Generator(cpu).manual_seed(seed + zero_based_update_index); randperm each epoch using same generator",
+      "provenance": "explicit v1 freeze; optimizer/loss basis: hybrid_ppo.py",
+      "compatibility_or_rationale": "누락된 library default를 명시; CPU/단일 worker 재현성. constant LambdaLR(1)과 같은 LR, scheduler 자체 disabled"
+    },
+    "last_minibatch": {
+      "value": "keep remainder; no drop_last",
+      "provenance": "explicit v1 freeze; optimizer/loss basis: hybrid_ppo.py",
+      "compatibility_or_rationale": "누락된 library default를 명시; CPU/단일 worker 재현성. constant LambdaLR(1)과 같은 LR, scheduler 자체 disabled"
+    },
+    "initial_weights": {
+      "value": "fresh for each seed and for smoke/main independently; no smoke warm start",
+      "provenance": "explicit v1 freeze; optimizer/loss basis: hybrid_ppo.py",
+      "compatibility_or_rationale": "누락된 library default를 명시; CPU/단일 worker 재현성. constant LambdaLR(1)과 같은 LR, scheduler 자체 disabled"
+    },
+    "train_inference": {
+      "value": "Beta.sample and Bernoulli.sample on unconstrained hard domain",
+      "provenance": "explicit v1 freeze; optimizer/loss basis: hybrid_ppo.py",
+      "compatibility_or_rationale": "누락된 library default를 명시; CPU/단일 worker 재현성. constant LambdaLR(1)과 같은 LR, scheduler 자체 disabled"
+    },
+    "development_inference": {
+      "value": "Beta mean alpha/(alpha+beta); Bernoulli probability>=0.5",
+      "provenance": "explicit v1 freeze; optimizer/loss basis: hybrid_ppo.py",
+      "compatibility_or_rationale": "누락된 library default를 명시; CPU/단일 worker 재현성. constant LambdaLR(1)과 같은 LR, scheduler 자체 disabled"
+    },
+    "upstream_support_masking": {
+      "value": false,
+      "provenance": "explicit v1 freeze; optimizer/loss basis: hybrid_ppo.py",
+      "compatibility_or_rationale": "누락된 library default를 명시; CPU/단일 worker 재현성. constant LambdaLR(1)과 같은 LR, scheduler 자체 disabled"
+    },
+    "gradient_finite_check": {
+      "value": "before optimizer.step; nonfinite loss/gradient/parameter is fatal",
+      "provenance": "explicit v1 freeze; optimizer/loss basis: hybrid_ppo.py",
+      "compatibility_or_rationale": "누락된 library default를 명시; CPU/단일 worker 재현성. constant LambdaLR(1)과 같은 LR, scheduler 자체 disabled"
+    },
+    "reward_based_early_stop": {
+      "value": false,
+      "provenance": "explicit v1 freeze; optimizer/loss basis: hybrid_ppo.py",
+      "compatibility_or_rationale": "누락된 library default를 명시; CPU/단일 worker 재현성. constant LambdaLR(1)과 같은 LR, scheduler 자체 disabled"
+    },
+    "adaptive_kl_controller": {
+      "value": false,
+      "provenance": "explicit v1 freeze; optimizer/loss basis: hybrid_ppo.py",
+      "compatibility_or_rationale": "누락된 library default를 명시; CPU/단일 worker 재현성. constant LambdaLR(1)과 같은 LR, scheduler 자체 disabled"
+    }
+  },
+  "budgets": {
+    "smoke": {
+      "label": "IMPLEMENTATION / TRAINABILITY SMOKE ONLY",
+      "seeds": [
+        42,
+        43,
+        44
+      ],
+      "nominal_update_target": 256,
+      "minimum_optimizer_ready_batch": 256,
+      "max_optimizer_ready_batch": 540,
+      "required_completed_updates": 2,
+      "max_optimizer_updates": 2,
+      "nominal_admitted_lower_bound": 512,
+      "max_admitted_training_transitions": 1080,
+      "max_attempted_simulator_decisions": 10800,
+      "max_started_train_runs": 10800,
+      "epochs_per_update_max": 10,
+      "minibatch_size": 64,
+      "evaluation_interval_updates": 1,
+      "checkpoint_interval_updates": 1,
+      "evaluation_update_indices": [
+        0,
+        1,
+        2
+      ],
+      "checkpoint_update_indices": [
+        0,
+        1,
+        2
+      ],
+      "max_development_evaluations": 3,
+      "max_retained_checkpoints": 3,
+      "max_minibatch_optimizer_steps": 180,
+      "hard_cap_semantics": "stop after U completed updates; threshold whole-episode batching ensures cap; no episode partial discard",
+      "technical_cap_result": "INCOMPLETE_TECHNICAL_BUDGET_EXHAUSTED, never PASS; no reward-dependent budget extension"
+    },
+    "main": {
+      "label": "BOUNDED PROFILE-A BASELINE",
+      "seeds": [
+        42,
+        43,
+        44
+      ],
+      "nominal_update_target": 1024,
+      "minimum_optimizer_ready_batch": 1024,
+      "max_optimizer_ready_batch": 1308,
+      "required_completed_updates": 16,
+      "max_optimizer_updates": 16,
+      "nominal_admitted_lower_bound": 16384,
+      "max_admitted_training_transitions": 20928,
+      "max_attempted_simulator_decisions": 209280,
+      "max_started_train_runs": 209280,
+      "epochs_per_update_max": 10,
+      "minibatch_size": 64,
+      "evaluation_interval_updates": 4,
+      "checkpoint_interval_updates": 4,
+      "evaluation_update_indices": [
+        0,
+        4,
+        8,
+        12,
+        16
+      ],
+      "checkpoint_update_indices": [
+        0,
+        4,
+        8,
+        12,
+        16
+      ],
+      "max_development_evaluations": 5,
+      "max_retained_checkpoints": 5,
+      "max_minibatch_optimizer_steps": 3360,
+      "hard_cap_semantics": "stop after U completed updates; threshold whole-episode batching ensures cap; no episode partial discard",
+      "technical_cap_result": "INCOMPLETE_TECHNICAL_BUDGET_EXHAUSTED, never PASS; no reward-dependent budget extension"
+    }
+  },
+  "scope": "GEAS3.5 cucumber Profile-A-specific offline simulator policy; not universal/optimal/live policy",
+  "training_unit": "one valid finalized admitted simulator decision transition, counted once when committed to this on-policy update; PPO epochs do not multiply training_steps",
+  "sampling": {
+    "unit": "uniform by natural Train run, not parent episode or transition",
+    "rule": "sorted run_id schedule, PCG64 default_rng(seed) shuffle without replacement each full pass; same RNG persists; no reward-conditioned replacement",
+    "short_runs": "all included, natural length, no padding/filter",
+    "reset": "run first legal row with frozen history/carry; explicit run_id and policy seed; no random interior reset",
+    "run_schedule": {
+      "train": [
+        {
+          "run_id": "013f1630c1e930cc58f9ba8707731d0a7c0111b6b7b59a16d0f764d2d1c79afa",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260503",
+          "steps": 25
+        },
+        {
+          "run_id": "016dceff72441897b3f13cc46f23d580461396f66dfb4b3a77a58886ca360a04",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260430",
+          "steps": 261
+        },
+        {
+          "run_id": "0274d5cc8444be3ae2a70d26cda53fb6340d514ca4f9c1ac90c8181539c810c1",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260401",
+          "steps": 100
+        },
+        {
+          "run_id": "04dd9d79178c383c67b669308b051e5ad7e15774ea6a38b325d087643b1e12e0",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260420",
+          "steps": 284
+        },
+        {
+          "run_id": "08ea051638e846aeb06df3e28a842364bf1570cb5b219faa704f5e156bfd2059",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260522",
+          "steps": 1
+        },
+        {
+          "run_id": "0abf8f08186727fd21570dc619ea9cc385536e2297c05fa11d04c6deec3d69e3",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260416",
+          "steps": 34
+        },
+        {
+          "run_id": "0b6ce882dc422fb69c0ae4b902e422302e190472c7d27909fe15070eea10dcd1",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260429",
+          "steps": 284
+        },
+        {
+          "run_id": "0de6dd4ee4464b4914158a1408b1459bc9c430529ca2b3f6d6736c9bf29e4ca5",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260422",
+          "steps": 17
+        },
+        {
+          "run_id": "10284f0ac9e7ac3d798bed040090f615ceec726e2f8cbe687a386bfe6f210318",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260403",
+          "steps": 284
+        },
+        {
+          "run_id": "117116670170e5963a5c3038b6ded607636a1a3030231e3f7c9e34e8f29b1064",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260524",
+          "steps": 4
+        },
+        {
+          "run_id": "16ffd6fdbef145080f513ea5e84b0802a911abc2b3193b0837abcaafe37340a1",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260409",
+          "steps": 141
+        },
+        {
+          "run_id": "18da10165cd69ea167d199efcf88a811868d439a2f4ff0947c20d2b4be90ab8b",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260423",
+          "steps": 284
+        },
+        {
+          "run_id": "210918aaf6109dd3ddb77b9462a4e12256e3b429383669ee6617ec137f2d4d9f",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260502",
+          "steps": 27
+        },
+        {
+          "run_id": "23b1cd19c22d03f57ab532d06e937002365ef7ba131d35e0b2d470db46c1be8b",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260411",
+          "steps": 285
+        },
+        {
+          "run_id": "24a075005f5cd728dc5f0dea0fca43f7eee374bd1154e2612ca69acea101a662",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260422",
+          "steps": 62
+        },
+        {
+          "run_id": "2b5a7651f87ab1705d2f2f1dad51157b647d0347cbfe4e8b71d9166707f87bea",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260410",
+          "steps": 284
+        },
+        {
+          "run_id": "2e143db5da410eca8daac23ba730c1fd063680adcbaaab9431a69988b8260e1a",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260507",
+          "steps": 284
+        },
+        {
+          "run_id": "31526c92eee98631ea24dacb629c7048f9ccfe7ecb7822ecf51275d53571ee53",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260519",
+          "steps": 284
+        },
+        {
+          "run_id": "326fa77f2f9a20e276103975e626465b268448e66deb09d691b5195ad4f73dbb",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260524",
+          "steps": 81
+        },
+        {
+          "run_id": "39dd611e23d0650a8fd710b7d4b18b401425e34729b385d26f074cbb10059e87",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260522",
+          "steps": 140
+        },
+        {
+          "run_id": "3e8c7318d718cc1d11cb37a72d866df606ec58f9657d12decd716eb712789c20",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260422",
+          "steps": 1
+        },
+        {
+          "run_id": "41d42ac9986f278c8968b24800195af10387f5d5b96b183a69cee8ae546473a2",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260404",
+          "steps": 284
+        },
+        {
+          "run_id": "434cac033ad68817bcef5a2447c0726a7ec402b3da70c420c4c0c7253d9c5d04",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260425",
+          "steps": 136
+        },
+        {
+          "run_id": "56ae0d578def24bb2a8d38fb6e44dc7a1f6eb7076195dc96c0d72afff74cbb19",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260405",
+          "steps": 284
+        },
+        {
+          "run_id": "571c7ec1dc6ad4bcc61f03b2be32cc489eac03406b277f6e75d04f276db6c55a",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260518",
+          "steps": 284
+        },
+        {
+          "run_id": "5b0fba4dd2c7264a0888ab8681dd36b508fd4f9c00803aa2cea0898608cbbe98",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260421",
+          "steps": 212
+        },
+        {
+          "run_id": "5b46256be5c0310434124b9b2af7532da10b9deecfeb77a53273ffb952aa73fd",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260426",
+          "steps": 284
+        },
+        {
+          "run_id": "5cec180210630a009e64966007f49b2863aa0e0048c038e356fe686878688ea7",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260521",
+          "steps": 7
+        },
+        {
+          "run_id": "5e9e0c9547a9f130a88f2b8b052a9079d8abe5c7687624f967ecd12aa37bb357",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260501",
+          "steps": 285
+        },
+        {
+          "run_id": "600620d6eaae6842c8215e10e4aa6b6bd2c6555e24e22918fd1d20c397e2f411",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260504",
+          "steps": 284
+        },
+        {
+          "run_id": "663abc4434a6564cfe759b35167b5ddfc70c4e452af846487a095659a631ee50",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260502",
+          "steps": 122
+        },
+        {
+          "run_id": "69cfbd48f7502498216b1c1bdec13a249d4ce0ee1bf50583cca5b2bb7d709c86",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260515",
+          "steps": 138
+        },
+        {
+          "run_id": "6ca0165c59e7bb618e9dc340ca99f75c8bce73f7dc18b6e1b4850ec22146618d",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260407",
+          "steps": 86
+        },
+        {
+          "run_id": "6d02175e4a19f652a47b5fa36884ad5b2bdb3b4b0013aa34048a5c2c2d577a6c",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260417",
+          "steps": 284
+        },
+        {
+          "run_id": "703fc245849e772a89a91981f0b9c647a91f0bbe0b6ea37f04cfef3313f74da3",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260430",
+          "steps": 12
+        },
+        {
+          "run_id": "815f3866c97c27a2fc81d3863c53164c7f416d16f7cf4e15d21f90ba1bfd9314",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260520",
+          "steps": 103
+        },
+        {
+          "run_id": "81a9179be527d0f56b2e8386c291a79f070e74c58932d0be45ca01caaef902bf",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260524",
+          "steps": 18
+        },
+        {
+          "run_id": "83541b7556823ebda70dba37f1be65d7d3df70c7839b32a28439886e0430bf20",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260430",
+          "steps": 5
+        },
+        {
+          "run_id": "87f6602f3266b404062f1374fcedfc19d95ade23ac8bcee0328064929955b4b5",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260521",
+          "steps": 7
+        },
+        {
+          "run_id": "90bd5bcd2ba77ebe80d943d4b526602ba918d5e99ad3842951916b54016f295f",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260524",
+          "steps": 12
+        },
+        {
+          "run_id": "90d95f4f8a2c90bcdfd7b63da7871f64b1afb742985de412dc1321cb7446e94e",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260522",
+          "steps": 85
+        },
+        {
+          "run_id": "938e4db1e46a5d83b60733b05e1a2bfa3f69ad18cda9acf02be9e5bc17e07962",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260516",
+          "steps": 284
+        },
+        {
+          "run_id": "93b3f968e65f087c2b258713d919e3ff168470d569757abf54900c635fca3c8d",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260510",
+          "steps": 284
+        },
+        {
+          "run_id": "9c326d48a95665754beec42ee1611fb08e10f89e6bc4ff36b3235fdc21896197",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260521",
+          "steps": 28
+        },
+        {
+          "run_id": "9cf39686a1b70f9fbad5880a03bba763c58087c31d924013329e08ef09d85d22",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260407",
+          "steps": 12
+        },
+        {
+          "run_id": "9e5588690d47377e3054356b2febb4940203796ccb49c574f55f476f3fe3b76d",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260413",
+          "steps": 96
+        },
+        {
+          "run_id": "a5e688d4a66808e80f87d2846db3453ab6052cdd32f191858e92d16a01747e9c",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260414",
+          "steps": 284
+        },
+        {
+          "run_id": "a6c7e2add4d16ffa05496bff9192918fbf67bea3ec9c128ac5e4ad3b06d2c194",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260427",
+          "steps": 80
+        },
+        {
+          "run_id": "a89a06a60f4d1276a3036d831171e5e50d537f691296c03e2aba70e128baa07c",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260522",
+          "steps": 1
+        },
+        {
+          "run_id": "a9315badb1a254829769827190401f202aa7bccab368b6e32ca5eb6ed002707f",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260520",
+          "steps": 155
+        },
+        {
+          "run_id": "abf73837e569d204f417b798862038d5482a241ed34725fd2b2b1f674053cf18",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260517",
+          "steps": 284
+        },
+        {
+          "run_id": "ad2248c1ec24e95565fd787593b2d83b6825140c12b44d640ff378d0a8831676",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260427",
+          "steps": 201
+        },
+        {
+          "run_id": "ad371d5e2a6ac7ff2eaae53cb60fa5ec49270a7e8aa31a310cf742ebb05ac240",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260416",
+          "steps": 246
+        },
+        {
+          "run_id": "af0c2a8a0532a7d914f9982ff59978dc158c007f9c429f6cc804e253e499107f",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260522",
+          "steps": 10
+        },
+        {
+          "run_id": "b28e1cb3796fedebd6e07f9cce607c7cab2b0c663d8a46f8ce7fd412af8c9807",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260413",
+          "steps": 24
+        },
+        {
+          "run_id": "b39de5286e98eccc053c0b7a2fda3086ac9c75555b7b928c74243540b7cafe36",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260412",
+          "steps": 284
+        },
+        {
+          "run_id": "b58133de3926eb1750f473cfbfc610e5b8856fdd5444fe5d3758a864d57ae06f",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260415",
+          "steps": 284
+        },
+        {
+          "run_id": "b6877c1adf7894da7067eeea01294041b16fd045847351d4b17cef91b5c52d9f",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260521",
+          "steps": 9
+        },
+        {
+          "run_id": "b6a60e68ea1f9ec145e3bef182b105a2810a81569646e157fe61b80c58b2d229",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260402",
+          "steps": 284
+        },
+        {
+          "run_id": "b8d12ab85e2eacec6f09ea9ea221bbf3f574aa2c291e4d04b0a3fd5f300efcb7",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260521",
+          "steps": 11
+        },
+        {
+          "run_id": "b9e1560eb5e5c4c4f74f590b7f14470040c92a01add699732ab5b34684fe47c1",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260520",
+          "steps": 20
+        },
+        {
+          "run_id": "ba9b7f6830fbd00b436344649fc18f32fe721d8591a2f5ca0d2139a2d236e852",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260521",
+          "steps": 56
+        },
+        {
+          "run_id": "bf0b2bc35812cbef3b48090bed8a161e3f21cc97805c968c005ba05754b2e480",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260521",
+          "steps": 7
+        },
+        {
+          "run_id": "c1ca3a190a21ac126c782e14a8ab76a9d76a4858df9efbb54e41db8fd22197c3",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260407",
+          "steps": 59
+        },
+        {
+          "run_id": "c3013b86139f604b1e62dbb3739bb190a388bc9da1cbfe41bc6ec359607deecd",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260522",
+          "steps": 2
+        },
+        {
+          "run_id": "c466f1a39484722dba41dc59e784c26ba9812b815ffbe0eb5fc4e0d77431ea47",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260524",
+          "steps": 134
+        },
+        {
+          "run_id": "c6b1b3e3b658a5aac5b2c42660793adbaa049e1a49955f5557042e81b0721c53",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260524",
+          "steps": 2
+        },
+        {
+          "run_id": "c744b7981f82491d7d2540c776b3db1e179af88750a85c002109379758ffbc0e",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260514",
+          "steps": 121
+        },
+        {
+          "run_id": "cb628a4f9c1d71465038bfaa72159d01bebb80bbb8945133da0701e90a55ac3b",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260407",
+          "steps": 118
+        },
+        {
+          "run_id": "cf5b789d84607b9cbb9876b1b67dcacef695fcd63253ca7dec4f1f44bf2c131a",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260522",
+          "steps": 11
+        },
+        {
+          "run_id": "d25d02f70d9508ec8982e91c1fa7eff864da3ce4f33204e9854acd6bd25a729a",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260515",
+          "steps": 143
+        },
+        {
+          "run_id": "d6a0a9d125f74d0031cc47cb87bbd670ca5686726fcdaef3dbb20a5ac9c45205",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260503",
+          "steps": 244
+        },
+        {
+          "run_id": "db3cdf02d7157bfe2ce058b37e5a4be148b8499493eddd953615f4a16ff9aa9e",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260521",
+          "steps": 20
+        },
+        {
+          "run_id": "db84759f289929a047d69157a73b26c43e0c760c71114f945c1db1e1e059296d",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260502",
+          "steps": 119
+        },
+        {
+          "run_id": "e347c7ff72e8f75cd9c18758605f2dcbd96ff4a457305b38224fa26bce9076ae",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260425",
+          "steps": 145
+        },
+        {
+          "run_id": "e53e473cdf2de73a4eba953f5bf9c55b5b3db81c9e569f7b1268432dcea7253d",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260521",
+          "steps": 16
+        },
+        {
+          "run_id": "e8e1d941a4820eafa39d0f0979f67ec05d619cd063f1c8effc21b7eefcf0fd35",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260521",
+          "steps": 82
+        },
+        {
+          "run_id": "ea9413e35233df232193232b341305dfe018c49ea73a63aef4fde60deb4d36e6",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260413",
+          "steps": 22
+        },
+        {
+          "run_id": "eae16d245e68dbbb71b03de31ad48124f148c1a04ba1f38fbb7876a0508b6127",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260409",
+          "steps": 138
+        },
+        {
+          "run_id": "ec196225abf2bd2be1085a18e0a7d7ffe1f0d6308d81d4915b5984a7e5854a15",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260506",
+          "steps": 284
+        },
+        {
+          "run_id": "ef1715fcad6f4e1e8d65b5f97c7f9f328ba5d7e7a8bc319208328372b02ee44a",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260413",
+          "steps": 108
+        },
+        {
+          "run_id": "f3251b29ed834b5090ed3c2550174139b8cc11ff4e322705d9becbf04cf3132e",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260509",
+          "steps": 284
+        },
+        {
+          "run_id": "f72caf4110a6980aa98b2f97f63eb86fd8658ab85f5d8600e730fdaf3ce90fb5",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260422",
+          "steps": 1
+        },
+        {
+          "run_id": "fa2d15eace23b260ac18458be738c55f8998480ef95ae98b041152b789176f49",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260419",
+          "steps": 284
+        }
+      ],
+      "development": [
+        {
+          "run_id": "000db2aadcd443cbeb4af6eda6bbe9e28733193c72cc894013dcc741ed3b69e2",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260523",
+          "steps": 14
+        },
+        {
+          "run_id": "0c893fcf1164a6866c159f5ddff451ff0ff36da22fd713e1d419a3aa532290bf",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260523",
+          "steps": 100
+        },
+        {
+          "run_id": "0cad85e0c77dd5bf396102f8d3b60dcee36ff9c2a7e3b6e98694f76e615c741c",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260523",
+          "steps": 10
+        },
+        {
+          "run_id": "3f1626c156fe01651a629c900081b16897a8a5191fa2536cce117d70ec9a0f5c",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260418",
+          "steps": 284
+        },
+        {
+          "run_id": "43829da3e651a6ebafd442bf1d3011dc5e9ad5bba6758573df2b30387e87555d",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260428",
+          "steps": 125
+        },
+        {
+          "run_id": "43b637a791a2f86eefa4bb2b82e5ac69379801ad222ae3abe2e2b667e4533cef",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260525",
+          "steps": 3
+        },
+        {
+          "run_id": "44d7f745e68b41de2afffdbddecbe6639d1963d547eda0083ea10898783ce3eb",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260508",
+          "steps": 284
+        },
+        {
+          "run_id": "48c132a213f5ba0a58b1749a2ad13378b70767596f6e69ea4c48a68f1556f153",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260512",
+          "steps": 29
+        },
+        {
+          "run_id": "496480404cb25435b65c1ae9b9ad74567b7130c881b01600fbff4a81607e17e2",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260408",
+          "steps": 284
+        },
+        {
+          "run_id": "591f8a57ee8a0be5e7fe11863e2b53ef559756f7fdfe653c76d5d85d8d231084",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260525",
+          "steps": 78
+        },
+        {
+          "run_id": "5b15a846263552c47acecb64445272f0b89ade268bda0817e8dbaccfef62b726",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260523",
+          "steps": 86
+        },
+        {
+          "run_id": "640025eee53f9dccaf5d679a5d0db20f9deb4f2ada697f9c948e61c9abb8b28a",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260428",
+          "steps": 156
+        },
+        {
+          "run_id": "65770a47a58c26109e2654baf0d32681e8b72fae6ca7acc54aab90492fda2d23",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260523",
+          "steps": 2
+        },
+        {
+          "run_id": "7c3cd56cc016aafd19d9db2eb067312cc02a5ba264fe548781d38e37251a5e71",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260512",
+          "steps": 10
+        },
+        {
+          "run_id": "854f115e0e81c1734ba94f0fdee92146c1758baac6dd04d1e15fb8d59b4a5ed5",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260511",
+          "steps": 219
+        },
+        {
+          "run_id": "8dbb5a1a27d4631353a04f40fc444eccb2419739fb48d0765a6959c6a07f4a58",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260523",
+          "steps": 7
+        },
+        {
+          "run_id": "9ff85eaa7879a37d7d1a8c027e9f4bdf327cbe2b14a968b8ee05854e39905258",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260525",
+          "steps": 162
+        },
+        {
+          "run_id": "a02b1c1aef5190f312ea1f62e378162473d0e6b53f2eb7610a365f12566db9ec",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260424",
+          "steps": 284
+        },
+        {
+          "run_id": "d2d0e99bfd019d3f72265d84d5fe305763e81733cc56f4cd1a2303bf9bc79e47",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260525",
+          "steps": 16
+        },
+        {
+          "run_id": "dcc94aa403a0e208d501343dcb859509694f610db9222efc1e851f411d3b8145",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260523",
+          "steps": 11
+        },
+        {
+          "run_id": "df29418c5b8f5bb6dd45a48b6dfd570cef6722456c972713d3c94a8dfdfd9103",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260505",
+          "steps": 284
+        },
+        {
+          "run_id": "edb486edd589d5e30dca977a66f376ceb4776d786942ac06eea24194d2b3ead0",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260523",
+          "steps": 15
+        },
+        {
+          "run_id": "f4d1951a0d9f185d2d3db854b4fec65193899e36124fb5e55fb7e0e88f5d7115",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260511",
+          "steps": 62
+        },
+        {
+          "run_id": "f9b42156498e0f1ae35e4f932216604757ba724aed01de136adac1c6c576526f",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260523",
+          "steps": 2
+        },
+        {
+          "run_id": "fe3e9f96d4139450bd6bd3cf3632f8601067cd712efddd6ee0d56d92cbf92dd2",
+          "episode_id": "iot97_cucumber_geas2_5_seg01_20260406",
+          "steps": 284
+        }
+      ]
+    },
+    "train_run_schedule_sha256": "7664916a90acf578e133b17990250c020cf90d1dd6950d07d9d948a21c4a44c0",
+    "development_run_schedule_sha256": "d3ccc22717da343f00bdb845399ebf7ab5f142683732ba0aef2b1bf594b6037b",
+    "longest_train_run": 285,
+    "train_rng": "dedicated np.random.Generator(PCG64(seed)); torch CPU policy RNG seeded seed; Python/NumPy global seeded seed separately",
+    "development_rng": "deterministic complete sorted schedule; separate env; save and restore Python/NumPy/torch plus sampler RNG states; verify exact equality before/after",
+    "cohort_unchanged": true
+  },
+  "batching": {
+    "collect": "freeze policy parameters while gathering batch; finish each natural run before checking >= target; consume entire finalized batch exactly once",
+    "no_pending_at_update": true,
+    "no_stale_leftover": true,
+    "gae": "compute identity/fragment-aware dual-mask GAE with old-policy final values; concatenate then batch-normalize advantages",
+    "nominal_boundary": "do not truncate a simulator run at nominal target, continue to terminal; no fragment optimization",
+    "administrative_truncation": "only explicit interruption; b=1,c=0 genuine final obs; keep all fragments provisional, complete same in-memory episode before update; invalid rollback/failure mask correction preserved",
+    "resume": "only post-update clean episode boundary, empty provisional and ready buffers; interrupted unfinished batch must restart from last approved checkpoint, no partial resume",
+    "zero_length_failure": "log failure attempt, no row; advance predetermined schedule",
+    "system_invalid_unscorable": "quarantine entire episode then technical stop seed; never repeatedly omit invalid runs to fill a batch",
+    "attempt_limit": "do not reset a new run if remaining attempted allowance < that run length; stop technical if no full-run allowance; no mid-run budget fabrication"
+  },
+  "development": {
+    "schedule": "all fixed development natural runs, sorted run_id; 11 parent episodes; no skip",
+    "selection_denominator": "all scheduled natural runs, including zero-step and quarantined",
+    "ranking": [
+      "min SYSTEM_INVALID+UNSCORABLE rate",
+      "min FAILURE rate",
+      "max mean discounted COMPLETE return",
+      "earliest update checkpoint"
+    ],
+    "no_complete_mean": "null, ranking key +infinity for negative-return term; not zero reward",
+    "baseline": "evaluate fresh seed-specific update0 before learning; include update0 in ranking",
+    "inference": "Beta mean / Bernoulli >=0.5; no sampling",
+    "validation_used": false,
+    "test_used": false,
+    "selected_per_seed": "one per seed from development only; no winning seed discard",
+    "quality_improvement_claim": "compare to same-seed update0 using full lexicographic outcomes; conditional COMPLETE reward alone insufficient"
+  },
+  "checkpoint": {
+    "indices": "budgets.*.checkpoint_update_indices",
+    "contents": [
+      "policy weights",
+      "optimizer state including Adam step",
+      "all hyperparameters",
+      "experiment payload hash",
+      "semantic/cohort payload and file hashes",
+      "implementation hashes",
+      "Profile A and target binding identity/registry hash",
+      "scale/scalarization hashes",
+      "Transition/support/schema/scaler hashes",
+      "action order protocol hash",
+      "gamma/lambda/seed",
+      "Python/NumPy/torch RNG",
+      "dedicated sampler RNG + current permutation + position/pass",
+      "update/admitted/attempted counters",
+      "empty staging assertion",
+      "development history and selection rank",
+      "device/library/runtime metadata"
+    ],
+    "scheduler_state": null,
+    "retention": "retain every scheduled checkpoint within fixed cap; update0 included, selected references existing file; reload creates no extra checkpoint",
+    "atomic_save": true,
+    "resume_mismatch": "reject, never update pinned original metadata",
+    "budget_placeholder": "future authorized training driver binds this experiment payload hash; original minimal adapter artifact remains unchanged",
+    "clean_boundary": "post-update only; update0 before any batch; no pending fragments/rows",
+    "stop_during_batch": "preserve diagnostics; last scheduled checkpoint remains authoritative; unfinished data cannot silently become admitted"
+  },
+  "final_test": "sealed candidate only; no read/hash/evaluation now or in smoke/main",
+  "experiment_payload_sha256": "3580155904fc600015e6c6ce55d5b305771ce275cef68e09e134dbb6de43726e"
+}

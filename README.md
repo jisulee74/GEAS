@@ -22,3 +22,8 @@
 
 `.env`와 모델·데이터가 없는 새 clone에서는 실제 데이터 실험을 바로 실행할 수 없습니다.
 설정 템플릿은 `GEAS3.5/.env.example`입니다. 실제 인증정보는 로컬에서만 관리합니다.
+
+## 실험 재현
+
+환경·입력·선정 근거와 재현 명령은 [재현 안내](reproducibility/README.md)를 확인하세요.
+`python scripts/reproduce.py smoke`는 실제 데이터 없이 합성 실험을 검증합니다.

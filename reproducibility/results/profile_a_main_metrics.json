@@ -1,0 +1,40 @@
+{
+  "experiment_hash": "3580155904fc600015e6c6ce55d5b305771ce275cef68e09e134dbb6de43726e",
+  "selected_metrics": {
+    "COMPLETE": {
+      "median": 0.76,
+      "min": 0.72,
+      "max": 0.76,
+      "valid_seed_count": 3
+    },
+    "FAILURE": {
+      "median": 0.24,
+      "min": 0.24,
+      "max": 0.28,
+      "valid_seed_count": 3
+    },
+    "SYSTEM_INVALID": {
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.0,
+      "valid_seed_count": 3
+    },
+    "UNSCORABLE": {
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.0,
+      "valid_seed_count": 3
+    },
+    "return": {
+      "median": 17.334807812461563,
+      "min": 16.361152961439082,
+      "max": 17.340982811983363,
+      "valid_seed_count": 3
+    }
+  },
+  "all_seeds_reported": [
+    42,
+    43,
+    44
+  ]
+}
