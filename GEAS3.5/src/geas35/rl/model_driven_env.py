@@ -12,7 +12,9 @@ import numpy as np
 import pandas as pd
 
 from geas35.features import add_mdp_context_features, add_mdp_derived_features
+from geas35.models.transition.causal_state import CausalStateUpdater
 from geas35.models.transition.inference import load_transition_model_from_artifact_dir
+from geas35.models.transition.feature_variants import prepare_frame_for_feature_variant
 from geas35.models.transition.rollout import (
     ExogenousProvider,
     ForecastWeatherProvider,
@@ -34,6 +36,7 @@ from geas35.rl.mdp_v1 import (
 from geas35.rl.support_v1 import StateActionSupportModel
 
 STEP15_VERSION = "geas35.rl.step15.v1"
+STEP15_V1_4_VERSION = "geas35.rl.step15.v1_4"
 STEP16_ENV_VERSION = "geas35.rl.model_driven_env.step16.v1"
 _EXOGENOUS_DERIVED_COLUMNS = (
     "obs_derived_dli_mol_m2",
@@ -195,6 +198,7 @@ class GeasModelDrivenEnv:
         self.transition_bundle = transition_bundle
         self.model = transition_bundle.model
         self.scaler = observation_scaler
+        self.state_updater = CausalStateUpdater(self.scaler)
         self.support = support_model
         self.exogenous_provider = exogenous_provider or RecordedWeatherProvider()
         self.mdp_config = mdp_config or MdpV1Config()
@@ -231,10 +235,9 @@ class GeasModelDrivenEnv:
         self._done = False
         self._consecutive_severe = 0
         self._current_scaled = self.frame.iloc[self._position].copy()
-        self._current_physical = self.scaler.inverse_transform_frame(
-            pd.DataFrame([self._current_scaled])
-        ).iloc[0]
-        self._physical_history = pd.DataFrame([self._current_physical])
+        self.state_updater.reset(self._current_scaled)
+        self._current_physical = self.state_updater.current_physical
+        self._physical_history = self.state_updater.history_frame
         logged = {
             column: float(self._current_scaled[column]) for column in self.action_columns
         }
@@ -418,18 +421,19 @@ class GeasModelDrivenEnv:
             next_source_position=next_position,
             recorded_next_row=recorded_next_physical,
         )
-        for column in targets:
-            next_physical[column] = float(predicted_physical[column])
-        for column, value in executed_action.items():
-            next_physical[f"obs_prev_{column}"] = value
-        next_physical["_mdp_v1_logged_vent_pct"] = executed_action["vent_pct"]
-        history = pd.concat([
-            self._physical_history,
-            pd.DataFrame([next_physical]),
-        ], ignore_index=True)
-        history = self._recompute_history(history)
-        next_physical = history.iloc[-1].copy()
-        next_scaled = self.scaler.transform_frame(pd.DataFrame([next_physical])).iloc[0]
+        provided_next_scaled = self.scaler.transform_frame(
+            pd.DataFrame([next_physical])
+        ).iloc[0]
+        next_scaled = self.state_updater.advance(
+            current_scaled=self._current_scaled,
+            recorded_next_scaled=provided_next_scaled,
+            prediction_physical={
+                column: float(predicted_physical[column]) for column in targets
+            },
+            action=executed_action,
+        )
+        next_physical = self.state_updater.current_physical
+        history = self.state_updater.history_frame
         observation_values = next_scaled.loc[list(self.observation_columns)].to_numpy(dtype=float)
         if not np.isfinite(observation_values).all():
             raise RuntimeError("Predicted next observation contains NaN or Inf.")
@@ -542,7 +546,7 @@ def load_model_driven_env_from_step15(
         root / "experiments/rl_policy_training/artifacts/step15/rl_protocol_manifest.json"
     )
     protocol = _read_json(protocol_path)
-    if protocol.get("schema_version") != STEP15_VERSION or protocol.get("status") != "passed":
+    if protocol.get("schema_version") not in (STEP15_VERSION, STEP15_V1_4_VERSION) or protocol.get("status") != "passed":
         raise ValueError("Step 16 requires a passed frozen Step 15 protocol.")
     if crop not in protocol.get("crops", {}):
         raise ValueError(f"Unsupported crop: {crop}")
@@ -554,8 +558,15 @@ def load_model_driven_env_from_step15(
     if split == "test":
         if test_authorization_path is None:
             raise ValueError("Test environment is locked without final-test authorization.")
-        from geas35.experiments.rl.step15_contract import authorize_test_access
-        dataset_path = authorize_test_access(protocol_path, test_authorization_path)
+        if protocol.get("schema_version") == STEP15_V1_4_VERSION:
+            from geas35.experiments.rl.step15_v1_4 import authorize_rl_test_access
+            dataset_path = authorize_rl_test_access(
+                protocol_path, test_authorization_path, crop=crop,
+                final_evaluation=True,
+            )
+        else:
+            from geas35.experiments.rl.step15_contract import authorize_test_access
+            dataset_path = authorize_test_access(protocol_path, test_authorization_path)
         expected = Path(dataset_record["path"]).resolve()
         if dataset_path != expected:
             raise ValueError("Test authorization crop/path differs from requested environment.")
@@ -572,8 +583,11 @@ def load_model_driven_env_from_step15(
     feature_schema = _read_json(feature_schema_path)
     bundle = load_transition_model_from_artifact_dir(model_path.parent)
     if tuple(bundle.model.input_columns_ or ()) != tuple(feature_schema["input_columns"]):
-        raise ValueError("ExtraTrees input schema differs from the frozen feature schema.")
+        raise ValueError("Transition input schema differs from the frozen feature schema.")
     frame = pd.read_parquet(dataset_path)
+    feature_variant = crop_record.get("feature_variant")
+    if feature_variant is not None:
+        frame = prepare_frame_for_feature_variant(frame, feature_variant)
     return GeasModelDrivenEnv(
         crop=crop, split=split, frame=frame,
         transition_bundle=bundle, observation_scaler=_load_scaler(scaler_path),

@@ -1,0 +1,411 @@
+{
+  "version": "cucumber_profile_a_ppo_semantics.v1",
+  "status": "CUCUMBER PROFILE-A PPO SEMANTICS — PREREGISTERED / MINIMAL IMPLEMENTATION READY",
+  "training_authorized": false,
+  "authority": "current user explicit semantic/accounting/cohort approval",
+  "claim": "GEAS3.5 cucumber Profile-A-specific offline simulator policy",
+  "profile": {
+    "id": "cucumber72_interview_a",
+    "version": "v1",
+    "hash": "430ac240bf8fc7892b8124842a1d9aacaa2b8f4c4ce0b01db5e2f7f342f1b27e",
+    "temperature": 30,
+    "rh": 90,
+    "context_label": "fruit_enlargement + morning",
+    "selection_reason": "first bounded technical profile lineage; not superiority",
+    "fixed_for_entire_experiment": true,
+    "automatic_selection": false,
+    "original_cycle72_identity_preserved_not_relabelled_historical": true,
+    "historical_context_inference": false,
+    "profile_B_untouched": true
+  },
+  "reward": {
+    "evaluator": "frozen QualityEvaluator",
+    "channels": [
+      "T1",
+      "T2",
+      "RH1",
+      "RH2"
+    ],
+    "S_T": 9.100000000000001,
+    "S_RH": 20.470000000000006,
+    "scale_hash": "6102b15a3887573cb9dbfd1be1ed6f8fa026200e8f59727b6c2f1b42c42b5dce",
+    "scalarization_hash": "38ef3b5f0c318b7f18256b2ead75d3407b711aa188b5449852c342337cad95c8",
+    "weights": [
+      0.5,
+      0.5
+    ],
+    "timing": "predicted next four channels after final action and derived/history/carry update",
+    "extra_penalties": false,
+    "legacy_reward_allowed": false,
+    "simulation_not_sensor_observation": true
+  },
+  "observation": {
+    "dimension": 56,
+    "profile_feature_added": false,
+    "remaining_horizon_added": false,
+    "historical_target_features_unchanged": true
+  },
+  "proposal": {
+    "order": [
+      "vent_pct",
+      "shade_curtain_pct",
+      "thermal_curtain_pct",
+      "heat_run",
+      "cool_run",
+      "fan_run"
+    ],
+    "continuous": "3 Beta, hard bounds [0,1]; empirical support/weather do not narrow proposal distribution",
+    "binary": "3 Bernoulli, hard domain {0,1}",
+    "ppo_probability": "proposal only",
+    "store": [
+      "proposal",
+      "proposal_log_prob",
+      "support_info",
+      "intervention",
+      "projected_or_fallback_action",
+      "weather_capped_final_action"
+    ]
+  },
+  "action_order": [
+    "proposal",
+    "joint OOD",
+    "warning local projection / severe fallback",
+    "weather cap",
+    "final research action"
+  ],
+  "collector": {
+    "workers": 1,
+    "parallel_forbidden": true,
+    "resume": "clean episode boundary unless full cursor/history/buffer explicitly restored",
+    "provisional_episode_staging": "all fragments wait for whole episode validity before optimization; later invalidation removes every fragment",
+    "administrative_chunks": "TRUNCATED fragment is not a fabricated natural episode; full episode identity retained",
+    "cursor_resume_without_explicit_restore": false
+  },
+  "algorithm": {
+    "gamma": 0.99,
+    "gae_lambda": 0.95,
+    "seeds": [
+      42,
+      43,
+      44
+    ],
+    "basis": "explicit fixed algorithmic baseline, not HPO/agronomy",
+    "other_hyperparameters": "separate experiment preregistration; identical across seeds"
+  },
+  "horizon": "frozen legal natural run boundary, exact continuity; no arbitrary 60min",
+  "episode_accounting": {
+    "COMPLETE": {
+      "admission": "all valid transitions",
+      "bootstrap": 0,
+      "trace": 0,
+      "extra_terminal_reward": null,
+      "return": "discounted valid quality sequence"
+    },
+    "TRUNCATED": {
+      "admission": "valid continuable fragment; provisional until whole-episode validity known",
+      "bootstrap": 1,
+      "trace": 0,
+      "value_source": "final_observation, never reset observation",
+      "full_episode_return": "not complete"
+    },
+    "FAILURE": {
+      "admission": "all prior valid transitions retained",
+      "bootstrap": 0,
+      "trace": 0,
+      "failure_event_reward": null,
+      "return": "discounted valid prefix only; no synthetic remainder",
+      "empty_prefix_return": null,
+      "event_separate": true
+    },
+    "SYSTEM_INVALID": {
+      "admission": "quarantine whole episode",
+      "return": null,
+      "bootstrap": false,
+      "trace": false
+    },
+    "UNSCORABLE": {
+      "admission": "quarantine whole episode",
+      "return": null,
+      "bootstrap": false,
+      "trace": false
+    }
+  },
+  "failure_terminal_alignment": "when failure occurs before another legal transition, apply b=c=0 to final real prefix transition; no fake step; provisional chunk final bootstrap must be corrected before optimization",
+  "gae": {
+    "delta": "r + gamma*b*V(next) - V(s)",
+    "advantage": "delta + gamma*lambda*c*A_next",
+    "normal_masks": [
+      1,
+      1
+    ],
+    "reset_crossing": false
+  },
+  "cohort_registry": {
+    "path": "experiments/rl_policy_training/artifacts/cucumber_profile_a_ppo_semantics_v1/ppo_cohort_registry.json",
+    "sha256": "134152c6135300ddbb69ee6d62a930a063a1eceb54c4de3a7937ba4a4484248e"
+  },
+  "cohort_payload_sha256": "ce8cbbc3b5b14b086b18ba7bf6d326975fe395e6e4a8de394f7e072d74cf7a5c",
+  "checkpoint_selection": {
+    "population": "all fixed development episodes/runs",
+    "lexicographic": [
+      "min SYSTEM_INVALID+UNSCORABLE rate",
+      "min FAILURE rate",
+      "max mean discounted COMPLETE episode return",
+      "earliest checkpoint"
+    ],
+    "no_complete": "return statistic null; rank key negative infinity (not reward); equal missing keys use earliest checkpoint",
+    "all_seeds_reported": true,
+    "final_test_seed_selection": false,
+    "rates_denominator": "all scheduled development natural runs, includes zero-step and quarantined",
+    "development_episode_ids": 11
+  },
+  "budget": {
+    "status": "TRAINING BUDGET — SEPARATE PREREGISTRATION REQUIRED",
+    "total_steps": null,
+    "reason": "old step18 configs not new 4CH budget; step19 v1_4 16+8 steps is old implementation_trainability_only pilot",
+    "remaining_experiment_parameters": [
+      "training budget and counting convention",
+      "rollout/update size and checkpoint/evaluation cadence",
+      "remaining PPO hyperparameters",
+      "development inference deterministic/stochastic convention fixed across checkpoints/seeds",
+      "Train run sampling schedule"
+    ]
+  },
+  "checkpoint_binding_required": [
+    "profile id/version/hash",
+    "simulator target binding registry hash",
+    "quality scale/scalarization hash",
+    "schema/scaler/model/support bundle hash",
+    "action-order hash",
+    "this semantic protocol hash",
+    "gamma/lambda/seed",
+    "cohort registry hashes",
+    "proposed distribution version/hash",
+    "separate experiment protocol hash"
+  ],
+  "implementation_regression_tests": [
+    {
+      "id": 1,
+      "test": "Profile A bound before reset",
+      "status": "PREREGISTERED_NOT_EXECUTED"
+    },
+    {
+      "id": 2,
+      "test": "no automatic profile switching",
+      "status": "PREREGISTERED_NOT_EXECUTED"
+    },
+    {
+      "id": 3,
+      "test": "independent T1/T2/RH1/RH2 unit mapping",
+      "status": "PREREGISTERED_NOT_EXECUTED"
+    },
+    {
+      "id": 4,
+      "test": "legacy reward forbidden",
+      "status": "PREREGISTERED_NOT_EXECUTED"
+    },
+    {
+      "id": 5,
+      "test": "proposed/final separation",
+      "status": "PREREGISTERED_NOT_EXECUTED"
+    },
+    {
+      "id": 6,
+      "test": "log-prob of proposal only",
+      "status": "PREREGISTERED_NOT_EXECUTED"
+    },
+    {
+      "id": 7,
+      "test": "frozen Step16 order",
+      "status": "PREREGISTERED_NOT_EXECUTED"
+    },
+    {
+      "id": 8,
+      "test": "COMPLETE masks 0/0",
+      "status": "PREREGISTERED_NOT_EXECUTED"
+    },
+    {
+      "id": 9,
+      "test": "TRUNCATED masks 1/0 final observation",
+      "status": "PREREGISTERED_NOT_EXECUTED"
+    },
+    {
+      "id": 10,
+      "test": "no cross-reset advantage leakage",
+      "status": "PREREGISTERED_NOT_EXECUTED"
+    },
+    {
+      "id": 11,
+      "test": "FAILURE prefix retention no fake reward",
+      "status": "PREREGISTERED_NOT_EXECUTED"
+    },
+    {
+      "id": 12,
+      "test": "SYSTEM_INVALID whole-episode quarantine",
+      "status": "PREREGISTERED_NOT_EXECUTED"
+    },
+    {
+      "id": 13,
+      "test": "UNSCORABLE whole-episode quarantine",
+      "status": "PREREGISTERED_NOT_EXECUTED"
+    },
+    {
+      "id": 14,
+      "test": "single-worker only",
+      "status": "PREREGISTERED_NOT_EXECUTED"
+    },
+    {
+      "id": 15,
+      "test": "43/11 disjoint episode split",
+      "status": "PREREGISTERED_NOT_EXECUTED"
+    },
+    {
+      "id": 16,
+      "test": "Validation forbidden in buffer and selection",
+      "status": "PREREGISTERED_NOT_EXECUTED"
+    },
+    {
+      "id": 17,
+      "test": "Test access forbidden",
+      "status": "PREREGISTERED_NOT_EXECUTED"
+    },
+    {
+      "id": 18,
+      "test": "checkpoint mismatch rejection",
+      "status": "PREREGISTERED_NOT_EXECUTED"
+    },
+    {
+      "id": 19,
+      "test": "seed replay determinism",
+      "status": "PREREGISTERED_NOT_EXECUTED"
+    },
+    {
+      "id": 20,
+      "test": "no future recorded indoor leakage",
+      "status": "PREREGISTERED_NOT_EXECUTED"
+    },
+    {
+      "id": 21,
+      "test": "late invalidation rolls back every staged episode fragment",
+      "status": "PREREGISTERED_NOT_EXECUTED"
+    },
+    {
+      "id": 22,
+      "test": "failure before first action keeps empty prefix no synthetic transition",
+      "status": "PREREGISTERED_NOT_EXECUTED"
+    },
+    {
+      "id": 23,
+      "test": "failure after chunk boundary changes last real transition masks to 0/0",
+      "status": "PREREGISTERED_NOT_EXECUTED"
+    },
+    {
+      "id": 24,
+      "test": "empty COMPLETE development set has unavailable return rank not zero reward",
+      "status": "PREREGISTERED_NOT_EXECUTED"
+    },
+    {
+      "id": 25,
+      "test": "natural end priority and repeated-joint counter parity",
+      "status": "PREREGISTERED_NOT_EXECUTED"
+    },
+    {
+      "id": 26,
+      "test": "no pre-sampling weather/support narrowing",
+      "status": "PREREGISTERED_NOT_EXECUTED"
+    }
+  ],
+  "exclusions": [
+    "PPO",
+    "smoke",
+    "code edits",
+    "Test access",
+    "P0/live",
+    "reward modification",
+    "Transition/support/Step16 modification"
+  ],
+  "evidence": [
+    {
+      "path": "experiments/rl_policy_training/artifacts/transition_4ch_phase0_canonical_v1/dataset/past_only_qc_hlv15_b60_r6_4ch_v1/cucumber/train_physical.parquet",
+      "sha256": "590882691b7e42565ae65b57f2697207d93c521555bdd7d4d45d679eee0e20cb"
+    },
+    {
+      "path": "experiments/rl_policy_training/artifacts/transition_4ch_phase0_canonical_v1/dataset/past_only_qc_hlv15_b60_r6_4ch_v1/cucumber/train_registry.parquet",
+      "sha256": "5e46424a0f7362cc687aa855fcf766f56ab2d4b5c863e3ec40e202d6142d5857"
+    },
+    {
+      "path": "experiments/rl_policy_training/artifacts/transition_4ch_phase0_canonical_v1/dataset/past_only_qc_hlv15_b60_r6_4ch_v1/cucumber/train_windows.parquet",
+      "sha256": "cf09783848811f82412c3e302acd7afff33843b352575ac549d07235f0efbb9e"
+    },
+    {
+      "path": "experiments/rl_policy_training/artifacts/transition_4ch_phase0_canonical_v1/dataset/past_only_qc_hlv15_b60_r6_4ch_v1/cucumber/train_sensor_prehistory.parquet",
+      "sha256": "f4070dbaffd4aee6e586f16fd7e364247cb3047cd9ee5c1659944b590c5a552b"
+    },
+    {
+      "path": "experiments/rl_policy_training/artifacts/transition_4ch_phase0_canonical_v1/dataset/past_only_qc_hlv15_b60_r6_4ch_v1/schema.json",
+      "sha256": "99f87b2aafe1f773a51303f789c6eccfcb291ac58539f78e05c14e2ae18824c2"
+    },
+    {
+      "path": "experiments/rl_policy_training/artifacts/transition_4ch_phase0_canonical_v1/dataset/past_only_qc_hlv15_b60_r6_4ch_v1/cucumber/observation_scaler.json",
+      "sha256": "b9ac430a20aadd8827ba859639f8f06073c121ba7a07618ed58002275351dd49"
+    },
+    {
+      "path": "experiments/rl_policy_training/artifacts/future_f_cucumber72_target_profiles_v1/cucumber72_target_profiles.json",
+      "sha256": "0bacddfe6ff5f5d22d56bc49655ca30a21357ed4a95d8dedf7f56a3ef8bb0dba"
+    },
+    {
+      "path": "experiments/rl_policy_training/artifacts/future_f_quality_scalarization_v1/quality_scalarization.json",
+      "sha256": "9e4d339cae01264fc1047d0f47ef43cdf83ae621d4d865499727e72a80b71985"
+    },
+    {
+      "path": "experiments/rl_policy_training/artifacts/step16_hlv15_b60_r6_4ch_v1/protocol.json",
+      "sha256": "72f81d7ca668bdb8d858a0de463724780443f883dd42f0d48d01cfdce5cf3796"
+    },
+    {
+      "path": "experiments/rl_policy_training/artifacts/step16_hlv15_b60_r6_4ch_v1/action_order_authority_confirmation_ko.json",
+      "sha256": "f73c922ff117edceabaf8e9fa8f71ac6e64849beaf13e409827c0c1a7a721d5f"
+    },
+    {
+      "path": "experiments/rl_policy_training/artifacts/step15_hlv15_b60_r6_4ch_v1/cucumber/binding.json",
+      "sha256": "7f7cc2be4956e6f97eb093516c4b80d3c9934fb8f071e95cc010ce982a52fda1"
+    },
+    {
+      "path": "experiments/rl_policy_training/artifacts/step15_hlv15_b60_r6_4ch_v1/cucumber/thresholds.json",
+      "sha256": "e64fd5b9f6f9b7dd38ccd76bcd4087b1c07f2b30f81c304f8a540bda07b4787e"
+    },
+    {
+      "path": "experiments/transition_model_selection/artifacts/step14_hlv15_b60_r6_4ch_v1/cucumber/manifest.json",
+      "sha256": "4ed2b185748c5115cc2dac5e8fb9ae7c9234702fc407ea3c8efee71b7ba8054a"
+    },
+    {
+      "path": "experiments/rl_policy_training/artifacts/step18_v1_4/support_aware_ppo_config.json",
+      "sha256": "05095def10837fea78a9a6abb764920ef99aae2360943c208dd5ddae914c4f1c"
+    },
+    {
+      "path": "experiments/rl_policy_training/artifacts/step18/support_aware_ppo_config.json",
+      "sha256": "8f9782c60a42e93e97ef8fecd33d1abe34c9e9e4523701bd8d45ba7cc699372d"
+    },
+    {
+      "path": "experiments/rl_policy_training/configs/step19_pilot_v1_4.json",
+      "sha256": "befba938ca5eac00d39fcfa90d665b9cc11bec25bfc375b28cf12e8462d60913"
+    },
+    {
+      "path": "src/geas35/rl/hybrid_ppo.py",
+      "sha256": "ac780204feedf836c202ac513acef1a8dc10fde56612f6379f1c8f3d07d5cc5c"
+    },
+    {
+      "path": "src/geas35/rl/parallel_v2.py",
+      "sha256": "ada87c89fe2fc73442d396504d3d34514e13164b42e411cb0dd876f625236905"
+    },
+    {
+      "path": "src/geas35/objectives/quality.py",
+      "sha256": "76530ed54a4ab49c5611c0613e356a12e739050fd3893475a006ccb74bc0bf41"
+    },
+    {
+      "path": "src/geas35/objectives/binding.py",
+      "sha256": "c1478c9c53cb897183e5ec823941ff36790567bb59d121c7a30a4b05d601bc03"
+    }
+  ],
+  "audit_python": "/NHNHOME/WORKSPACE/26mafra001_A/BASE/theimc/jslee/GEAS/GEAS3.5/.venv/bin/python",
+  "semantic_payload_sha256": "98a4e738bb2ba9341c7a5c90d0c66a02b592b92714b9d6f414d67207a2b45116"
+}

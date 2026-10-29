@@ -1,0 +1,5 @@
+base_config: ../../transition_model_selection/configs/cucumber_v1_2_without_flags.yaml
+output_root: ../artifacts/deduplicated_without_quality_flags/cucumber
+seeds: [42, 43, 44]
+restart_models: [mlp]
+selection_rule: median_validation_score

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import ast
+import hashlib
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Mapping
@@ -47,6 +48,7 @@ class LoadedTransitionExperimentConfig:
     validation_path: Path
     test_path: Path
     rollout_path: Path | None
+    scaler_path: Path
 
 
 def load_transition_experiment_config(
@@ -72,6 +74,7 @@ def load_transition_experiment_config(
         source_path,
         required=True,
     )
+    scaler_path = _resolve_path(dataset.get("observation_scaler", train_path.parent / "observation_scaler.json"), source_path, required=True)
     test_path = _resolve_path(dataset.get("test"), source_path, required=True)
     rollout_path = _resolve_path(dataset.get("rollout"), source_path, required=False)
     output_root = _resolve_output_path(experiment.get("output_dir"), source_path)
@@ -95,6 +98,20 @@ def load_transition_experiment_config(
         ),
         rollout_step_minutes=int(rollout.get("step_minutes", 5)),
         random_seed=int(experiment.get("random_seed", 0)),
+        target_formulation=str(experiment.get("target_formulation", "absolute_state")),
+        resume_completed=bool(experiment.get("resume_completed", False)),
+        feature_variant=(
+            None if experiment.get("feature_variant") is None
+            else str(experiment["feature_variant"])
+        ),
+        provenance={
+            **dict(_mapping(payload.get("provenance", {}), "provenance")),
+            "dataset_sha256": {
+                "train": _sha256_file(train_path),
+                "validation": _sha256_file(validation_path),
+            },
+            "test_opened_during_selection": False,
+        },
     )
     return LoadedTransitionExperimentConfig(
         source_path=source_path,
@@ -104,17 +121,20 @@ def load_transition_experiment_config(
         validation_path=validation_path,
         test_path=test_path,
         rollout_path=rollout_path,
+        scaler_path=scaler_path,
     )
 
 
 def read_configured_transition_frames(
     loaded: LoadedTransitionExperimentConfig,
-) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame | None]:
-    """Read train/validation/test and optional rollout frames from config."""
+    *,
+    include_test: bool = True,
+) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame | None, pd.DataFrame | None]:
+    """Read configured frames; Test can remain unopened during selection."""
 
     train_df = _read_rl_ready_frame(loaded.train_path, split="train")
     validation_df = _read_rl_ready_frame(loaded.validation_path, split="validation")
-    test_df = _read_rl_ready_frame(loaded.test_path, split="test")
+    test_df = _read_rl_ready_frame(loaded.test_path, split="test") if include_test else None
     rollout_df = (
         None
         if loaded.rollout_path is None
@@ -152,6 +172,9 @@ def _hpo_config(hpo: Mapping[str, Any]) -> TransitionHPOConfig:
         "enabled": bool(hpo.get("enabled", True)),
         "budget": int(hpo.get("budget", DEFAULT_HPO_BUDGET)),
         "random_seed": int(hpo.get("random_seed", DEFAULT_HPO_RANDOM_SEED)),
+        "staged_nonlinear": bool(hpo.get("staged_nonlinear", False)),
+        "nonlinear_budget": int(hpo.get("nonlinear_budget", 40)),
+        "linear_budget": int(hpo.get("linear_budget", 20)),
         "max_train_rows": (None if hpo.get("max_train_rows") is None else int(hpo["max_train_rows"])),
         "max_validation_rows": (None if hpo.get("max_validation_rows") is None else int(hpo["max_validation_rows"])),
         "search_spaces": dict(
@@ -160,6 +183,7 @@ def _hpo_config(hpo: Mapping[str, Any]) -> TransitionHPOConfig:
         "target_search_spaces": dict(
             _mapping(hpo.get("target_search_spaces", {}), "hpo.target_search_spaces")
         ),
+        "strict_eligibility": bool(hpo.get("strict_eligibility", False)),
     }
     if weights:
         kwargs["objective_weights"] = dict(weights)
@@ -177,6 +201,16 @@ def _load_yaml_mapping(path: Path) -> dict[str, Any]:
     if not isinstance(payload, dict):
         raise ValueError(f"YAML config must contain a mapping: {path}")
     return payload
+
+
+def _sha256_file(path: Path) -> str | None:
+    if not path.exists():
+        return None
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
 
 
 def _read_frame(path: Path) -> pd.DataFrame:

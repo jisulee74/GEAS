@@ -1,6 +1,8 @@
 """Transition model interfaces for GEAS model-based RL."""
 
+from geas35.models.transition.action_response import ActionResponseReport, evaluate_action_response
 from geas35.models.transition.artifacts import (
+    ACTION_RESPONSE_FILENAME,
     BEST_CONFIG_FILENAME,
     FEATURE_SCHEMA_FILENAME,
     HPO_RESULTS_FILENAME,
@@ -20,8 +22,10 @@ from geas35.models.transition.artifacts import (
 from geas35.models.transition.base import (
     BaseTransitionModel,
     TransitionDataset,
+    ResidualTransitionAdapter,
     TransitionModelCapabilities,
     TransitionPrediction,
+    TransitionTargetFormulation,
 )
 from geas35.models.transition.boosting_models import (
     LightGBMTransitionModel,
@@ -29,6 +33,8 @@ from geas35.models.transition.boosting_models import (
 )
 from geas35.models.transition.comparison import (
     ARTIFACT_INTEGRITY_JSON,
+    CANDIDATE_ACTION_RESPONSE_CSV,
+    CANDIDATE_ACTION_RESPONSE_JSON,
     CANDIDATE_METRICS_CSV,
     CANDIDATE_METRICS_JSON,
     CANDIDATE_RESOURCE_METRICS_CSV,
@@ -42,6 +48,14 @@ from geas35.models.transition.comparison import (
     validate_no_auto_selection_integrity,
     write_transition_candidate_test_outputs,
     write_transition_candidate_comparison_outputs,
+)
+from geas35.models.transition.causal_state import (
+    CausalStateUpdater,
+    ROLLOUT_PROTOCOL_VERSION,
+    RolloutEvaluationProtocol,
+    RolloutWindow,
+    build_rollout_windows,
+    load_frozen_observation_scaler,
 )
 from geas35.models.transition.datasets import (
     DEFAULT_METADATA_COLUMNS,
@@ -73,6 +87,18 @@ from geas35.models.transition.features import (
     infer_observation_columns,
     is_denied_observation_column,
     resolve_transition_feature_schema,
+)
+from geas35.models.transition.feature_variants import (
+    MdpObservationSchemaVersion,
+    TransitionFeatureVariant,
+    feature_variant_contract,
+    observation_columns_for_variant,
+    prepare_frame_for_feature_variant,
+)
+from geas35.models.transition.quality_flag_ablation import (
+    QualityFlagAblationReport,
+    compare_variant_roots,
+    paired_bootstrap_difference,
 )
 from geas35.models.transition.hyperparameters import (
     DEFAULT_HPO_BUDGET,
@@ -157,18 +183,28 @@ from geas35.models.transition.trainer import (
 )
 
 __all__ = [
+    "ACTION_RESPONSE_FILENAME",
     "ActionProvider",
+    "ActionResponseReport",
     "EXOGENOUS_WEATHER_COLUMNS",
     "ExogenousProvider",
     "ForecastWeatherProvider",
     "ARTIFACT_INTEGRITY_JSON",
     "BaseTransitionModel",
     "BEST_CONFIG_FILENAME",
+    "CausalStateUpdater",
+    "ROLLOUT_PROTOCOL_VERSION",
+    "RolloutEvaluationProtocol",
+    "RolloutWindow",
+    "build_rollout_windows",
+    "load_frozen_observation_scaler",
     "benchmark_transition_resources",
     "build_predicted_next_row",
     "build_ranking_strategy",
     "build_transition_candidate_specs",
     "build_transition_model",
+    "CANDIDATE_ACTION_RESPONSE_CSV",
+    "CANDIDATE_ACTION_RESPONSE_JSON",
     "CANDIDATE_METRICS_CSV",
     "CANDIDATE_METRICS_JSON",
     "CANDIDATE_RESOURCE_METRICS_CSV",
@@ -204,6 +240,7 @@ __all__ = [
     "RL_DONE_COLUMN",
     "RL_VALID_TRANSITION_COLUMN",
     "RESOURCE_METRICS_FILENAME",
+    "ResidualTransitionAdapter",
     "ROLLOUT_METRICS_FILENAME",
     "STATIC_METADATA_COLUMNS",
     "TRAINING_SUMMARY_FILENAME",
@@ -226,6 +263,7 @@ __all__ = [
     "TransitionModelFactory",
     "TransitionOneStepEvaluationReport",
     "TransitionPrediction",
+    "TransitionTargetFormulation",
     "TransitionRewardPrediction",
     "TransitionTargetPolicy",
     "TransitionTrainingResult",
@@ -235,6 +273,7 @@ __all__ = [
     "evaluate_transition_model_one_step",
     "evaluate_transition_predictions",
     "enrich_rollout_metrics_with_normalized_errors",
+    "evaluate_action_response",
     "ExtraTreesTransitionModel",
     "HumidityPriorityStrategy",
     "infer_action_columns",
@@ -282,4 +321,8 @@ __all__ = [
     "write_transition_candidate_test_outputs",
     "write_transition_candidate_comparison_outputs",
     "XGBoostTransitionModel",
+    "MdpObservationSchemaVersion", "TransitionFeatureVariant",
+    "feature_variant_contract", "observation_columns_for_variant",
+    "prepare_frame_for_feature_variant", "QualityFlagAblationReport",
+    "compare_variant_roots", "paired_bootstrap_difference",
 ]

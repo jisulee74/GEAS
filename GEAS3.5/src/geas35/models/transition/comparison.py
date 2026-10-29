@@ -28,6 +28,8 @@ CANDIDATE_METRICS_JSON = "candidate_metrics.json"
 CANDIDATE_ROLLOUT_METRICS_CSV = "candidate_rollout_metrics.csv"
 CANDIDATE_ROLLOUT_METRICS_JSON = "candidate_rollout_metrics.json"
 CANDIDATE_RESOURCE_METRICS_CSV = "candidate_resource_metrics.csv"
+CANDIDATE_ACTION_RESPONSE_CSV = "candidate_action_response.csv"
+CANDIDATE_ACTION_RESPONSE_JSON = "candidate_action_response.json"
 CANDIDATE_RESOURCE_METRICS_JSON = "candidate_resource_metrics.json"
 CANDIDATE_TEST_METRICS_CSV = "candidate_test_metrics.csv"
 CANDIDATE_TEST_METRICS_JSON = "candidate_test_metrics.json"
@@ -69,6 +71,7 @@ def write_transition_candidate_comparison_outputs(
     candidate_rows = _candidate_metric_rows(training_result)
     rollout_rows = _candidate_rollout_rows(training_result)
     resource_rows = _candidate_resource_rows(training_result)
+    action_response_rows = _candidate_action_response_rows(training_result)
 
     candidate_rank_specs = {
         "validation_rollout_weighted_score": False,
@@ -111,6 +114,8 @@ def write_transition_candidate_comparison_outputs(
         CANDIDATE_ROLLOUT_METRICS_CSV: root / CANDIDATE_ROLLOUT_METRICS_CSV,
         CANDIDATE_ROLLOUT_METRICS_JSON: root / CANDIDATE_ROLLOUT_METRICS_JSON,
         CANDIDATE_RESOURCE_METRICS_CSV: root / CANDIDATE_RESOURCE_METRICS_CSV,
+        CANDIDATE_ACTION_RESPONSE_CSV: root / CANDIDATE_ACTION_RESPONSE_CSV,
+        CANDIDATE_ACTION_RESPONSE_JSON: root / CANDIDATE_ACTION_RESPONSE_JSON,
         CANDIDATE_RESOURCE_METRICS_JSON: root / CANDIDATE_RESOURCE_METRICS_JSON,
         TRANSITION_SUMMARY_MD: root / TRANSITION_SUMMARY_MD,
         ARTIFACT_INTEGRITY_JSON: root / ARTIFACT_INTEGRITY_JSON,
@@ -125,6 +130,12 @@ def write_transition_candidate_comparison_outputs(
     write_json(
         paths[CANDIDATE_ROLLOUT_METRICS_JSON],
         _table_payload("transition_candidate_rollout_metrics", rollout_rows),
+        convert=True,
+    )
+    _write_table(paths[CANDIDATE_ACTION_RESPONSE_CSV], action_response_rows)
+    write_json(
+        paths[CANDIDATE_ACTION_RESPONSE_JSON],
+        _table_payload("transition_candidate_action_response", action_response_rows),
         convert=True,
     )
     _write_table(paths[CANDIDATE_RESOURCE_METRICS_CSV], resource_rows)
@@ -383,6 +394,11 @@ def _candidate_metric_rows(training_result: TransitionTrainingResult) -> list[di
                 "model_family": _model_family(result.model_name),
                 "candidate_status": "completed",
                 "hpo_status": result.hpo_result.status,
+                "target_formulation": getattr(result.model, "target_formulation", None),
+                "baseline_only": result.model_name == "persistence",
+                "deployment_eligible": bool(result.deployment_eligible),
+                "action_response_eligible": bool(result.action_response_report.eligible),
+                "fully_action_insensitive": bool(result.action_response_report.fully_action_insensitive),
                 "validation_one_step_mae": aggregate.get("mean_mae"),
                 "validation_one_step_rmse": aggregate.get("mean_rmse"),
                 "validation_one_step_r2": aggregate.get("mean_r2"),
@@ -432,7 +448,44 @@ def _candidate_rollout_rows(training_result: TransitionTrainingResult) -> list[d
         row["physical_violation_rate"] = _finite_mean(violation_values)
         row["nan_inf_count"] = _finite_sum(nan_inf_values)
         row["nan_inf_status"] = "ok" if (row["nan_inf_count"] in (None, 0.0)) else "invalid"
+        row["deployment_eligible"] = bool(result.deployment_eligible)
         rows.append(row)
+    baseline = next((row for row in rows if row["candidate_name"] == "persistence"), None)
+    if baseline is not None:
+        for row in rows:
+            for key, baseline_rmse in list(baseline.items()):
+                if not str(key).endswith("_trajectory_rmse"):
+                    continue
+                model_rmse = pd.to_numeric(row.get(key), errors="coerce")
+                baseline_value = pd.to_numeric(baseline_rmse, errors="coerce")
+                skill_key = f"{key[:-len('_trajectory_rmse')]}_persistence_skill"
+                row[skill_key] = (
+                    float(1.0 - model_rmse / baseline_value)
+                    if pd.notna(model_rmse) and pd.notna(baseline_value) and baseline_value > 0
+                    else None
+                )
+    return rows
+
+
+def _candidate_action_response_rows(
+    training_result: TransitionTrainingResult,
+) -> list[dict[str, Any]]:
+    rows = []
+    for result in training_result.candidate_results:
+        for action, report in result.action_response_report.actions.items():
+            row = {
+                "candidate_name": result.model_name,
+                "action": action,
+                "support_count": report.get("support_count"),
+                "status": report.get("status"),
+                "counterfactual_mean_absolute_sensitivity": report.get("counterfactual_mean_absolute_sensitivity"),
+                "action_insensitive": report.get("action_insensitive"),
+                "deployment_eligible": bool(result.deployment_eligible),
+            }
+            for target, metrics in report.get("target_delta_metrics", {}).items():
+                for metric in ("mae", "rmse", "r2"):
+                    row[f"{_target_label(target)}_delta_{metric}"] = metrics.get(metric)
+            rows.append(row)
     return rows
 
 
@@ -488,7 +541,7 @@ def _flatten_rollout_target_metrics(
 ) -> dict[str, Any]:
     out: dict[str, Any] = {}
     suffixes = (
-        "trajectory_mae", "trajectory_rmse", "trajectory_nrmse",
+        "trajectory_mae", "trajectory_rmse", "trajectory_nrmse", "trajectory_r2",
         "final_abs_error", "final_step_nrmse", "drift_slope_nmae",
     )
     for key, value in metrics.items():
@@ -769,6 +822,8 @@ def _model_family(model_name: str) -> str:
 
 __all__ = [
     "ARTIFACT_INTEGRITY_JSON",
+    "CANDIDATE_ACTION_RESPONSE_CSV",
+    "CANDIDATE_ACTION_RESPONSE_JSON",
     "CANDIDATE_METRICS_CSV",
     "CANDIDATE_METRICS_JSON",
     "CANDIDATE_RESOURCE_METRICS_CSV",

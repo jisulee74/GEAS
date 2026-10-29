@@ -1,0 +1,143 @@
+{
+  "decision": "FUTURE-F QUALITY SCALARIZATION — PREREGISTERED",
+  "preregistered_at_utc": "2026-10-26T01:21:37.991253+00:00",
+  "protocol": {
+    "version": "future_f_quality_scalarization.v1",
+    "calibration_source": "Historical-H cucumber Train only",
+    "paths": {
+      "train_registry.parquet": "/NHNHOME/WORKSPACE/26mafra001_A/BASE/theimc/jslee/GEAS/GEAS3.5/experiments/rl_policy_training/artifacts/past_only_qc_hlv15_b60_r6_v1/cucumber/train_registry.parquet",
+      "train_prepared_qc.parquet": "/NHNHOME/WORKSPACE/26mafra001_A/BASE/theimc/jslee/GEAS/GEAS3.5/experiments/rl_policy_training/artifacts/past_only_qc_hlv15_b60_r6_v1/cucumber/train_prepared_qc.parquet"
+    },
+    "input_sha256": {
+      "train_registry.parquet": "38b79900966709db294dccb20dbcce3219cf6a63021a99a4c328965ce679f163",
+      "train_prepared_qc.parquet": "e8f8ac511a8b3c2f3f73abbca0751006bcb63cdf4a315809f19077f48dc70963"
+    },
+    "cohort": "current observation timestamps of frozen eligible train_registry only, one-to-one join on series_id/segment_id/episode_id/reg_date; no target_next rows or windows; all four sensor raw values valid, finite and unimputed",
+    "flags_required_zero": [
+      "missing_flag",
+      "invalid_flag",
+      "imputed_flag",
+      "ffill_flag",
+      "rule_outlier_flag"
+    ],
+    "resampled_rows": "exclude",
+    "split": "train",
+    "crop": "cucumber",
+    "scale_statistic": "IQR q75-q25, numpy quantile method=linear",
+    "pooling": "equal per-row T1,T2; equal per-row RH1,RH2; common paired all-four-valid cohort",
+    "minimum_rows": 4,
+    "minimum_rows_meaning": "algorithmic quantile sanity only, not claim of statistical independence or adequacy",
+    "near_zero_rule": "S <= 64*float64_epsilon*max(abs(pooled values)) -> stop; also stop S<=0/nonfinite; no epsilon floor or alternative statistic",
+    "fusion": "mean of BOTH normalized channel errors, never mean of available channels",
+    "weights": {
+      "temperature": 0.5,
+      "RH": 0.5
+    },
+    "transform": "1/(1+E), after channel error fusion, before component fusion",
+    "range": "(0,1] mathematically; [0,1] finite-precision closure",
+    "missing": "any required binding/component/channel/unit/linkage invalid => reward null, UNSCORABLE; no renormalization",
+    "implementation_scope": "preregistration and calibration + synthetic reference tests only; no production scalar evaluator or real target activation",
+    "P0_used_for_calibration": false,
+    "Validation_Test_or_outcomes_used": false
+  },
+  "protocol_sha256": "44dd3be4bb0df177489b7c567602729c818bfc4d73075c09d970b874ff6e1cc4",
+  "calibration": {
+    "scale_payload": {
+      "version": "future_f_H_train_paired_iqr.v1",
+      "method": "linear_quantile_IQR",
+      "input_sha256": {
+        "train_registry.parquet": "38b79900966709db294dccb20dbcce3219cf6a63021a99a4c328965ce679f163",
+        "train_prepared_qc.parquet": "e8f8ac511a8b3c2f3f73abbca0751006bcb63cdf4a315809f19077f48dc70963"
+      },
+      "row_registry_hash": "e9fbac54a108ad3238cecdc1b87f7255e7d487bd33adba34f62321a1b32fe299",
+      "selected_count": 14192,
+      "per_variable_pooled_count": 28384,
+      "source_time_min": "2026-04-01 15:35:00",
+      "source_time_max_cutoff_inclusive": "2026-05-25 23:50:00",
+      "units": {
+        "temperature": "degC",
+        "RH": "percentage_points"
+      },
+      "scales": {
+        "temperature": {
+          "q25": 18.0,
+          "q75": 27.1,
+          "scale": 9.100000000000001,
+          "numerical_resolution_floor": 5.556444193643984e-13
+        },
+        "RH": {
+          "q25": 40.55,
+          "q75": 61.02,
+          "scale": 20.470000000000006,
+          "numerical_resolution_floor": 1.1780798558902462e-12
+        }
+      }
+    },
+    "scale_sha256": "6102b15a3887573cb9dbfd1be1ed6f8fa026200e8f59727b6c2f1b42c42b5dce",
+    "registry_count": 14192,
+    "excluded_count": 0,
+    "no_validation_test_p0_reads": true
+  },
+  "scalarization_contract": {
+    "version": "future_f_quality_scalarization.v1",
+    "protocol_sha256": "44dd3be4bb0df177489b7c567602729c818bfc4d73075c09d970b874ff6e1cc4",
+    "scale_sha256": "6102b15a3887573cb9dbfd1be1ed6f8fa026200e8f59727b6c2f1b42c42b5dce",
+    "formula": "E_T=(abs(dT1)+abs(dT2))/(2*S_T); E_RH=(abs(dRH1)+abs(dRH2))/(2*S_RH); R=0.5/(1+E_T)+0.5/(1+E_RH)",
+    "required_channels": [
+      "T1",
+      "T2",
+      "RH1",
+      "RH2"
+    ],
+    "required_components": [
+      "temperature",
+      "RH"
+    ],
+    "invalid_result": {
+      "reward": null,
+      "evaluation_status": "UNSCORABLE"
+    },
+    "quality_direction": "higher is better",
+    "zero_error": 1,
+    "mathematical_range": "(0,1]",
+    "finite_precision_range": "[0,1]",
+    "clipping": "none",
+    "terminal_accounting": "separate; not approved by this contract",
+    "approximate_target_semantics": "scalarization acts only on already-valid bound discrepancies; no band/tolerance/context inferred"
+  },
+  "scalarization_sha256": "38ef3b5f0c318b7f18256b2ead75d3407b711aa188b5449852c342337cad95c8",
+  "finalized_at_utc": "2026-10-26T01:24:04.470004+00:00",
+  "tests": {
+    "new_preregistration_tests": 19,
+    "binding_tests": 37,
+    "collector_tests": 30,
+    "total": 86,
+    "passed": 86,
+    "failed": 0
+  },
+  "P0_health": {
+    "pid": 2616900,
+    "alive": true,
+    "checkpoint_before": 2725,
+    "checkpoint_after": 2746,
+    "seccomp": 2,
+    "no_new_privs": 1,
+    "socket_count": 1,
+    "collector_unchanged": true,
+    "live_bindings_bytes": 0,
+    "readonly": "unchanged code verifies READ ONLY every completed poll"
+  },
+  "live_reward_activated": false,
+  "live_targets_created": false,
+  "PPO_run": false,
+  "production_scalar_implemented": false,
+  "files_added": [
+    "src/geas35/objectives/normalization_prereg.py",
+    "tests/test_future_f_quality_prereg.py"
+  ],
+  "next_step": "IMPLEMENT THE PREREGISTERED SCALARIZATION AND RUN NON-LEARNING REWARD VALIDATION ON FIXTURES / FROZEN NON-TEST DATA",
+  "code_sha256": {
+    "src/geas35/objectives/normalization_prereg.py": "986137035e9ae3018957d90f86f1367d28ee640bdc9fa9c6e21c69b76a666abe",
+    "tests/test_future_f_quality_prereg.py": "f688862fcd1cd658f09744d1ed5d1d46f3dbf5ce5469212b55306075f3186ae0"
+  }
+}

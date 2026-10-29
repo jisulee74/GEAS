@@ -21,6 +21,7 @@ from geas35.models.transition import (
     build_transition_model,
     default_transition_model_registry,
 )
+from geas35.rl import MdpV1ObservationScaler
 
 
 OFFICIAL_CANDIDATES = (
@@ -92,7 +93,10 @@ def test_default_config_uses_exactly_official_candidates() -> None:
 
 def test_persistence_carries_dynamic_observations_forward() -> None:
     dataset = _dataset()
-    model = PersistenceTransitionModel().fit(dataset)
+    columns = dataset.target_columns
+    scaler = MdpV1ObservationScaler(columns=columns,
+        means={column: 0.0 for column in columns}, scales={column: 1.0 for column in columns})
+    model = PersistenceTransitionModel(observation_scaler=scaler).fit(dataset)
 
     prediction = model.predict(dataset)
 

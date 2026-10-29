@@ -1,0 +1,160 @@
+{
+  "profiles": [
+    {
+      "profile_id": "cucumber72_interview_a",
+      "profile_version": "v1",
+      "crop": "cucumber",
+      "crop_cycle": 72,
+      "source": 97,
+      "context_label": "fruit_enlargement + morning",
+      "temperature": {
+        "reference_value": 30,
+        "unit": "degC",
+        "approximate": true,
+        "interview_evidence": {
+          "artifact": "experiments/rl_policy_training/artifacts/future_f_cucumber_objective_from_interview_v1/final_cucumber_objective_from_interview.md",
+          "sha256": "08471bcf51bf404a38e0cc069a1243191c8734b88896be41671d5bb683255dbe",
+          "primary_document": "GEAS_농가_인터뷰_Evidence_Summary__오이토마토.pdf",
+          "page": 2,
+          "evidence_class": "EXTERNAL DOMAIN-EXPERT PRACTICE EVIDENCE",
+          "respondent": "Cucumber-G1",
+          "context": "순천 외부 상업농가 1명 / 백다다기계 굿모닝 / 남부 가을작형 / 토양관비",
+          "limitations": "보존 구조화 요약본에 기반; 별도 전사/음성 검증 아님. 상주 운영 또는 보편 최적값 증거 아님.",
+          "locator": "CU01",
+          "meaning": "fruit enlargement × morning practice reference"
+        },
+        "semantics": "PROJECT_OPERATIONAL_POINT_DISCREPANCY"
+      },
+      "rh": {
+        "reference_value": 90,
+        "unit": "percentage_points",
+        "approximate": true,
+        "interview_evidence": {
+          "artifact": "experiments/rl_policy_training/artifacts/future_f_cucumber_objective_from_interview_v1/final_cucumber_objective_from_interview.md",
+          "sha256": "08471bcf51bf404a38e0cc069a1243191c8734b88896be41671d5bb683255dbe",
+          "primary_document": "GEAS_농가_인터뷰_Evidence_Summary__오이토마토.pdf",
+          "page": 2,
+          "evidence_class": "EXTERNAL DOMAIN-EXPERT PRACTICE EVIDENCE",
+          "respondent": "Cucumber-G1",
+          "context": "순천 외부 상업농가 1명 / 백다다기계 굿모닝 / 남부 가을작형 / 토양관비",
+          "limitations": "보존 구조화 요약본에 기반; 별도 전사/음성 검증 아님. 상주 운영 또는 보편 최적값 증거 아님.",
+          "locator": "CU03",
+          "meaning": "morning RH practice reference"
+        },
+        "semantics": "PROJECT_OPERATIONAL_POINT_DISCREPANCY"
+      },
+      "claim": "PROJECT_OPERATIONAL_EVALUATION_TARGET",
+      "status": "DECLARED_NOT_ACTIVE",
+      "project_pairing": "Independently supported references combined by project; not a grower-stated joint optimum.",
+      "context_selection": "EXPLICIT_PROJECT_CONTEXT_ONLY",
+      "effective_from": null,
+      "profile_hash": "430ac240bf8fc7892b8124842a1d9aacaa2b8f4c4ce0b01db5e2f7f342f1b27e"
+    },
+    {
+      "profile_id": "cucumber72_interview_b",
+      "profile_version": "v1",
+      "crop": "cucumber",
+      "crop_cycle": 72,
+      "source": 97,
+      "context_label": "fruit_enlargement + afternoon/daytime",
+      "temperature": {
+        "reference_value": 23,
+        "unit": "degC",
+        "approximate": true,
+        "interview_evidence": {
+          "artifact": "experiments/rl_policy_training/artifacts/future_f_cucumber_objective_from_interview_v1/final_cucumber_objective_from_interview.md",
+          "sha256": "08471bcf51bf404a38e0cc069a1243191c8734b88896be41671d5bb683255dbe",
+          "primary_document": "GEAS_농가_인터뷰_Evidence_Summary__오이토마토.pdf",
+          "page": 2,
+          "evidence_class": "EXTERNAL DOMAIN-EXPERT PRACTICE EVIDENCE",
+          "respondent": "Cucumber-G1",
+          "context": "순천 외부 상업농가 1명 / 백다다기계 굿모닝 / 남부 가을작형 / 토양관비",
+          "limitations": "보존 구조화 요약본에 기반; 별도 전사/음성 검증 아님. 상주 운영 또는 보편 최적값 증거 아님.",
+          "locator": "CU01",
+          "meaning": "fruit enlargement × afternoon practice reference"
+        },
+        "semantics": "PROJECT_OPERATIONAL_POINT_DISCREPANCY"
+      },
+      "rh": {
+        "reference_value": 60,
+        "unit": "percentage_points",
+        "approximate": true,
+        "interview_evidence": {
+          "artifact": "experiments/rl_policy_training/artifacts/future_f_cucumber_objective_from_interview_v1/final_cucumber_objective_from_interview.md",
+          "sha256": "08471bcf51bf404a38e0cc069a1243191c8734b88896be41671d5bb683255dbe",
+          "primary_document": "GEAS_농가_인터뷰_Evidence_Summary__오이토마토.pdf",
+          "page": 2,
+          "evidence_class": "EXTERNAL DOMAIN-EXPERT PRACTICE EVIDENCE",
+          "respondent": "Cucumber-G1",
+          "context": "순천 외부 상업농가 1명 / 백다다기계 굿모닝 / 남부 가을작형 / 토양관비",
+          "limitations": "보존 구조화 요약본에 기반; 별도 전사/음성 검증 아님. 상주 운영 또는 보편 최적값 증거 아님.",
+          "locator": "CU03",
+          "meaning": "daytime RH practice reference"
+        },
+        "semantics": "PROJECT_OPERATIONAL_POINT_DISCREPANCY"
+      },
+      "claim": "PROJECT_OPERATIONAL_EVALUATION_TARGET",
+      "status": "DECLARED_NOT_ACTIVE",
+      "project_pairing": "Independently supported references combined by project; not a grower-stated joint optimum.",
+      "context_selection": "EXPLICIT_PROJECT_CONTEXT_ONLY",
+      "effective_from": null,
+      "profile_hash": "e0ec81f3a446cdda40e933b085adaea63e6766b584b3d8bfb0fa062b9fec81de"
+    }
+  ],
+  "verdict": "CUCUMBER72 PROJECT TARGET PROFILES — READY FOR EXPLICIT CONTEXT ACTIVATION",
+  "live_target_bound_evaluation_started": false,
+  "activation_status": "DECLARED_NOT_ACTIVE",
+  "tests": {
+    "total": 150,
+    "passed": 150,
+    "new_profile_tests": 15,
+    "existing_tests": 135,
+    "ResourceWarning_as_error": true
+  },
+  "implementation_hashes": {
+    "src/geas35/objectives/profiles.py": "57dbf79a5c3911053c679bb0ea95a152794fde230e9807065b0da163bb451f9a",
+    "src/geas35/objectives/live.py": "b1c1fbfbc38f3c2f41eedf0f144c33c5b7cb52ddf86e58fa2612d6fe9169ac3d",
+    "tests/test_future_f_cucumber_profiles.py": "7c394327b6fe218ed0e8af06410bd869363a22fb51b12616819eae8d3fa3426b"
+  },
+  "frozen_quality_file_unchanged": true,
+  "oracle_unchanged": true,
+  "p0_health": {
+    "checked_at": "2026-10-26T22:48:29.890145+09:00",
+    "collector_alive": true,
+    "pid": 2616900,
+    "checkpoint_previous": 8939,
+    "checkpoint_current": 9120,
+    "decision_bindings_bytes": 0,
+    "NoNewPrivs": "1",
+    "Seccomp": "2",
+    "collector_sha256": "d5e32796be9cb1d9f9291a4b9b5c946c04a19af3093c7a3b16913921561e8db5",
+    "restarted": false,
+    "P0_mutated_by_task": false
+  },
+  "activation_contract": {
+    "interface": "geas35.objectives.profiles.schedule_profile",
+    "required_inputs": [
+      "profile",
+      "activation_id",
+      "activation_context.context_label",
+      "activation_context.selection_method=EXPLICIT_PROJECT_DECLARATION",
+      "activation_context.asserted_by",
+      "activation_context.evidence_source",
+      "effective_from > trusted current time",
+      "declared_by",
+      "declaration_basis"
+    ],
+    "storage": "existing LivePath separate immutable evaluation journal",
+    "candidate_hash": "frozen candidate content hash",
+    "declaration_hash": "distinct hash binds candidate hash, explicit context, identity and effective/available timestamps",
+    "real_activation_performed": false
+  },
+  "next_step": "Explicit project declaration selecting one profile for a future bounded SHADOW evaluation window",
+  "scope": {
+    "PPO": false,
+    "control_commands": false,
+    "literature_search": false,
+    "old_P0_reward": false,
+    "real_target_declaration": false
+  }
+}

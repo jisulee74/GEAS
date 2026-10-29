@@ -12,10 +12,13 @@ import pandas as pd
 from geas35.models.transition.base import (
     BaseTransitionModel,
     TransitionDataset,
+    ResidualTransitionAdapter,
     TransitionModelCapabilities,
     TransitionPrediction,
+    TransitionTargetFormulation,
 )
 
+from geas35.rl import MdpV1ObservationScaler
 
 class OptionalDependencyError(ImportError):
     """Raised when a transition model optional dependency is unavailable."""
@@ -29,6 +32,11 @@ class PersistenceTransitionModel(BaseTransitionModel):
 
     model_name = "persistence"
     capabilities = TransitionModelCapabilities(multi_output_strategy="deterministic")
+
+    def __init__(self, *, observation_scaler: MdpV1ObservationScaler | None = None) -> None:
+        self.observation_scaler = observation_scaler
+        self.target_formulation = TransitionTargetFormulation.RESIDUAL_PHYSICAL_DELTA.value
+        self.deployment_eligible = False
 
     def fit(
         self,
@@ -62,9 +70,14 @@ class PersistenceTransitionModel(BaseTransitionModel):
         if missing:
             raise KeyError(f"Missing persistence input column: {missing[0]}")
         return TransitionPrediction(
-            next_observation=frame.loc[:, list(target_columns)].copy(),
+            next_observation=self._physical_targets(frame, target_columns),
             target_columns=target_columns,
         )
+
+    def _physical_targets(self, frame, target_columns):
+        if self.observation_scaler is None:
+            raise ValueError("Persistence requires the frozen Train observation scaler.")
+        return self.observation_scaler.inverse_transform_frame(frame).loc[:, list(target_columns)].copy()
 
 
 class IndependentTargetTransitionModel(BaseTransitionModel):
@@ -91,6 +104,24 @@ class IndependentTargetTransitionModel(BaseTransitionModel):
         if capabilities is not None:
             self.capabilities = capabilities
         self.estimators_: dict[str, Any] | None = None
+        self.target_formulation = TransitionTargetFormulation.ABSOLUTE_STATE.value
+        self.observation_scaler: MdpV1ObservationScaler | None = None
+
+    def configure_target_formulation(
+        self,
+        formulation: TransitionTargetFormulation | str,
+        *,
+        observation_scaler: MdpV1ObservationScaler | None = None,
+    ) -> "IndependentTargetTransitionModel":
+        value = TransitionTargetFormulation(formulation).value
+        if (
+            value == TransitionTargetFormulation.RESIDUAL_PHYSICAL_DELTA.value
+            and observation_scaler is None
+        ):
+            raise ValueError("Residual transition models require the frozen Train scaler.")
+        self.target_formulation = value
+        self.observation_scaler = observation_scaler
+        return self
 
     def fit(
         self,
@@ -99,6 +130,14 @@ class IndependentTargetTransitionModel(BaseTransitionModel):
     ) -> "IndependentTargetTransitionModel":
         del validation_dataset
         x = dataset.x.loc[:, list(dataset.input_columns)]
+        residual_targets: pd.DataFrame | None = None
+        if self.target_formulation == TransitionTargetFormulation.RESIDUAL_PHYSICAL_DELTA.value:
+            if self.observation_scaler is None:
+                raise ValueError("Residual transition models require the frozen Train scaler.")
+            current_physical = self.observation_scaler.inverse_transform_frame(x)
+            residual_targets = dataset.y.loc[:, list(dataset.target_columns)].subtract(
+                current_physical.loc[:, list(dataset.target_columns)]
+            )
         estimators: dict[str, Any] = {}
         for target in dataset.target_columns:
             estimator = self.estimator_factory()
@@ -110,7 +149,8 @@ class IndependentTargetTransitionModel(BaseTransitionModel):
                         f"Estimator for {target} does not support target-specific parameters."
                     )
                 estimator.set_params(**target_kwargs)
-            estimator.fit(x, dataset.y[target])
+            fit_target = residual_targets[target] if residual_targets is not None else dataset.y[target]
+            estimator.fit(x, fit_target)
             estimators[target] = estimator
         self.estimators_ = estimators
         self.input_columns_ = dataset.input_columns
@@ -134,9 +174,22 @@ class IndependentTargetTransitionModel(BaseTransitionModel):
             target: _prediction_1d(self.estimators_[target].predict(x))
             for target in target_columns
         }
+        raw_prediction = pd.DataFrame(predictions, index=frame.index)
+        next_observation = raw_prediction
+        if self.target_formulation == TransitionTargetFormulation.RESIDUAL_PHYSICAL_DELTA.value:
+            if self.observation_scaler is None:
+                raise ValueError("Residual transition models require the frozen Train scaler.")
+            next_observation = ResidualTransitionAdapter(
+                self.observation_scaler
+            ).to_physical_next_state(x, raw_prediction, target_columns)
         return TransitionPrediction(
-            next_observation=pd.DataFrame(predictions, index=frame.index),
+            next_observation=next_observation,
             target_columns=target_columns,
+            raw_prediction=(
+                raw_prediction
+                if self.target_formulation == TransitionTargetFormulation.RESIDUAL_PHYSICAL_DELTA.value
+                else None
+            ),
         )
 
 
@@ -294,6 +347,21 @@ class MLPTransitionModel(BaseTransitionModel):
         }
         self.estimator_: Any | None = None
         self.independent_model_: IndependentTargetTransitionModel | None = None
+        self.target_formulation = TransitionTargetFormulation.ABSOLUTE_STATE.value
+        self.observation_scaler: MdpV1ObservationScaler | None = None
+
+    def configure_target_formulation(
+        self,
+        formulation: TransitionTargetFormulation | str,
+        *,
+        observation_scaler: MdpV1ObservationScaler | None = None,
+    ) -> "MLPTransitionModel":
+        value = TransitionTargetFormulation(formulation).value
+        if value == TransitionTargetFormulation.RESIDUAL_PHYSICAL_DELTA.value and observation_scaler is None:
+            raise ValueError("Residual transition models require the frozen Train scaler.")
+        self.target_formulation = value
+        self.observation_scaler = observation_scaler
+        return self
         self.capabilities = TransitionModelCapabilities(
             supports_native_multi_output=True,
             multi_output_strategy=multi_output_strategy,
@@ -312,16 +380,22 @@ class MLPTransitionModel(BaseTransitionModel):
                 model_name=self.model_name,
                 capabilities=self.capabilities,
                 target_estimator_kwargs=self.target_estimator_kwargs,
+            ).configure_target_formulation(
+                self.target_formulation, observation_scaler=self.observation_scaler
             ).fit(dataset)
             self.input_columns_ = self.independent_model_.input_columns_
             self.target_columns_ = self.independent_model_.target_columns_
             return self
 
         estimator = self._build_estimator()
-        estimator.fit(
-            dataset.x.loc[:, list(dataset.input_columns)],
-            dataset.y.loc[:, list(dataset.target_columns)],
-        )
+        x = dataset.x.loc[:, list(dataset.input_columns)]
+        fit_target = dataset.y.loc[:, list(dataset.target_columns)]
+        if self.target_formulation == TransitionTargetFormulation.RESIDUAL_PHYSICAL_DELTA.value:
+            if self.observation_scaler is None:
+                raise ValueError("Residual transition models require the frozen Train scaler.")
+            current = self.observation_scaler.inverse_transform_frame(x).loc[:, list(dataset.target_columns)]
+            fit_target = fit_target.subtract(current)
+        estimator.fit(x, fit_target)
         self.estimator_ = estimator
         self.input_columns_ = dataset.input_columns
         self.target_columns_ = dataset.target_columns
@@ -349,13 +423,18 @@ class MLPTransitionModel(BaseTransitionModel):
         )
         if values.ndim == 1:
             values = values.reshape(-1, 1)
+        raw_prediction = pd.DataFrame(
+            values[:, : len(target_columns)], columns=target_columns, index=frame.index
+        )
+        next_observation = raw_prediction
+        if self.target_formulation == TransitionTargetFormulation.RESIDUAL_PHYSICAL_DELTA.value:
+            next_observation = ResidualTransitionAdapter(
+                self.observation_scaler
+            ).to_physical_next_state(frame.loc[:, list(input_columns)], raw_prediction, target_columns)
         return TransitionPrediction(
-            next_observation=pd.DataFrame(
-                values[:, : len(target_columns)],
-                columns=target_columns,
-                index=frame.index,
-            ),
+            next_observation=next_observation,
             target_columns=target_columns,
+            raw_prediction=(raw_prediction if self.target_formulation == TransitionTargetFormulation.RESIDUAL_PHYSICAL_DELTA.value else None),
         )
 
     def _build_estimator(self) -> Any:

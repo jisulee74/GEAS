@@ -12,6 +12,7 @@ from typing import Any, Mapping
 from geas35.io_utils import jsonable, write_json
 from geas35.models.crop_specific import normalize_required_crop
 from geas35.models.transition.features import OFFICIAL_TRANSITION_TARGET_COLUMNS
+from geas35.models.transition.base import TransitionTargetFormulation
 
 TRANSITION_MODEL_FILENAME = "model.pkl"
 TRANSITION_MANIFEST_FILENAME = "manifest.json"
@@ -22,6 +23,7 @@ RESOURCE_METRICS_FILENAME = "resource_metrics.json"
 TRAINING_SUMMARY_FILENAME = "training_summary.json"
 HPO_RESULTS_FILENAME = "hpo_results.json"
 BEST_CONFIG_FILENAME = "best_config.json"
+ACTION_RESPONSE_FILENAME = "action_response.json"
 TEST_METRICS_FILENAME = "test_metrics.json"
 
 
@@ -41,6 +43,7 @@ class TransitionModelArtifact:
     training_summary_path: Path
     hpo_results_path: Path
     best_config_path: Path
+    action_response_path: Path
     test_metrics_path: Path
 
 
@@ -69,6 +72,7 @@ def transition_model_artifact(
         training_summary_path=artifact_dir / TRAINING_SUMMARY_FILENAME,
         hpo_results_path=artifact_dir / HPO_RESULTS_FILENAME,
         best_config_path=artifact_dir / BEST_CONFIG_FILENAME,
+        action_response_path=artifact_dir / ACTION_RESPONSE_FILENAME,
         test_metrics_path=artifact_dir / TEST_METRICS_FILENAME,
     )
 
@@ -86,6 +90,7 @@ def save_transition_model_artifact(
     training_summary: Mapping[str, Any] | None = None,
     hpo_results: Any | None = None,
     best_config: Mapping[str, Any] | None = None,
+    action_response: Any | None = None,
     metadata: Mapping[str, Any] | None = None,
 ) -> TransitionModelArtifact:
     """Persist a fitted transition model and its candidate-level artifacts."""
@@ -100,10 +105,20 @@ def save_transition_model_artifact(
         raise ValueError(
             "Official transition artifact requires exactly temperature, humidity, and CO2 targets."
         )
+    target_formulation = str(
+        getattr(model, "target_formulation", TransitionTargetFormulation.ABSOLUTE_STATE.value)
+    )
+    feature_payload = _artifact_payload(feature_schema) if feature_schema is not None else {}
     manifest = {
         "stage": "transition_model_artifact",
-        "schema_version": "geas35.transition.three_target.v1",
+        "schema_version": feature_payload.get("schema_version", "geas35.transition.three_target.v1"),
+        **{key: feature_payload[key] for key in (
+            "mdp_observation_schema_version", "feature_variant", "quality_flags_included",
+            "observation_count", "input_dimension", "schema_hash",
+        ) if key in feature_payload},
         "target_contract": "official_three_target",
+        "target_formulation": target_formulation,
+        "deployment_eligible": bool(getattr(model, "deployment_eligible", model_name != "persistence")),
         "target_columns": list(OFFICIAL_TRANSITION_TARGET_COLUMNS),
         "multi_output_strategy": getattr(getattr(model, "capabilities", None), "multi_output_strategy", None),
         "crop": artifact.crop,
@@ -137,6 +152,8 @@ def save_transition_model_artifact(
         write_json(artifact.hpo_results_path, _artifact_payload(hpo_results), convert=True)
     if best_config is not None:
         write_json(artifact.best_config_path, best_config, convert=True)
+    if action_response is not None:
+        write_json(artifact.action_response_path, _artifact_payload(action_response), convert=True)
     return artifact
 
 
@@ -145,6 +162,7 @@ def load_transition_model_artifact(
     crop: str,
     *,
     model_name: str,
+    expected_target_formulation: str | None = None,
 ) -> Any:
     """Load a persisted transition model candidate."""
 
@@ -154,8 +172,19 @@ def load_transition_model_artifact(
             f"No transition model artifact for crop={artifact.crop!r}, "
             f"model_name={artifact.model_name!r}: {artifact.model_path}"
         )
+    manifest = json.loads(artifact.manifest_path.read_text(encoding="utf-8")) if artifact.manifest_path.exists() else {}
+    manifest_formulation = str(manifest.get("target_formulation", TransitionTargetFormulation.ABSOLUTE_STATE.value))
+    if expected_target_formulation is not None and manifest_formulation != str(expected_target_formulation):
+        raise ValueError(
+            f"Transition target formulation mismatch: expected {expected_target_formulation!r}, "
+            f"found {manifest_formulation!r}."
+        )
     with artifact.model_path.open("rb") as f:
-        return pickle.load(f)
+        model = pickle.load(f)
+    model_formulation = str(getattr(model, "target_formulation", TransitionTargetFormulation.ABSOLUTE_STATE.value))
+    if model_formulation != manifest_formulation:
+        raise ValueError("Transition model and manifest target formulations disagree.")
+    return model
 
 
 def save_transition_resource_metrics(
@@ -176,6 +205,7 @@ def _artifact_payload(value: Any) -> Any:
 
 __all__ = [
     "FEATURE_SCHEMA_FILENAME",
+    "ACTION_RESPONSE_FILENAME",
     "BEST_CONFIG_FILENAME",
     "HPO_RESULTS_FILENAME",
     "ONE_STEP_METRICS_FILENAME",

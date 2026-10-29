@@ -165,6 +165,16 @@ class RolloutWeightedRmseStrategy(RankingMetricStrategy):
         return float(np.average(values, weights=weights))
 
 
+class ValidationRolloutWeightedScoreStrategy(RankingMetricStrategy):
+    """Rank by the complete validation objective recorded by the trainer."""
+
+    name = "validation_rollout_weighted_score"
+    higher_is_better = False
+
+    def score(self, candidate: TransitionModelRankingCandidate) -> float:
+        return float(candidate.metadata.get(self.name, float("inf")))
+
+
 class CustomScoreStrategy(RankingMetricStrategy):
     """Select by a custom score stored in candidate metadata."""
 
@@ -197,6 +207,7 @@ def default_ranking_strategy_registry() -> dict[str, StrategyFactory]:
         TemperaturePriorityStrategy.name: TemperaturePriorityStrategy,
         HumidityPriorityStrategy.name: HumidityPriorityStrategy,
         RolloutWeightedRmseStrategy.name: RolloutWeightedRmseStrategy,
+        ValidationRolloutWeightedScoreStrategy.name: ValidationRolloutWeightedScoreStrategy,
         CustomScoreStrategy.name: CustomScoreStrategy,
     }
 
@@ -217,9 +228,12 @@ def rank_transition_models(
 ) -> TransitionModelRankingResult:
     """Rank transition candidates without selecting a final model."""
 
-    if not candidates:
-        raise ValueError("At least one transition model candidate is required.")
     strategy = strategy or RolloutWeightedRmseStrategy()
+    if not candidates:
+        return TransitionModelRankingResult(
+            strategy_name=strategy.name, higher_is_better=bool(strategy.higher_is_better),
+            candidate_scores=(),
+        )
     raw_scores = [
         (candidate, float(strategy.score(candidate)))
         for candidate in candidates
@@ -307,6 +321,7 @@ __all__ = [
     "HumidityPriorityStrategy",
     "MeanRmseStrategy",
     "RolloutWeightedRmseStrategy",
+    "ValidationRolloutWeightedScoreStrategy",
     "RankingMetricStrategy",
     "TemperaturePriorityStrategy",
     "TransitionModelCandidateScore",

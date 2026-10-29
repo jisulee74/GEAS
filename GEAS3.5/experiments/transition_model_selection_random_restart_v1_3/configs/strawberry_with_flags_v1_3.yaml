@@ -1,0 +1,5 @@
+base_config: ../../transition_model_selection/configs/strawberry_v1_2_with_flags.yaml
+output_root: ../artifacts/deduplicated_with_quality_flags/strawberry
+seeds: [42, 43, 44]
+restart_models: [mlp]
+selection_rule: median_validation_score

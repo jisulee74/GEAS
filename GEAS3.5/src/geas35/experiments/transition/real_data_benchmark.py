@@ -18,16 +18,18 @@ from geas35.io_utils import write_json
 from geas35.models.transition.comparison import (
     ARTIFACT_INTEGRITY_JSON,
     CANDIDATE_METRICS_CSV,
+    CANDIDATE_ACTION_RESPONSE_CSV,
     CANDIDATE_RESOURCE_METRICS_CSV,
     CANDIDATE_ROLLOUT_METRICS_CSV,
     CANDIDATE_TEST_METRICS_CSV,
     TRANSITION_SUMMARY_MD,
 )
 from geas35.models.transition.features import OFFICIAL_TRANSITION_TARGET_COLUMNS
+from geas35.models.transition.causal_state import ROLLOUT_PROTOCOL_VERSION
 from geas35.models.transition.registry import TransitionModelFactory
 
 
-STEP12_VERSION = "geas35.transition.step12.v1"
+STEP12_VERSION = "geas35.transition.step12.v2"
 STEP12_MANIFEST_NAME = "step12_benchmark_manifest.json"
 OFFICIAL_CROPS = ("strawberry", "melon", "cucumber")
 OFFICIAL_CANDIDATES = (
@@ -39,7 +41,7 @@ TABLES = {
     "candidate_metrics": CANDIDATE_METRICS_CSV,
     "rollout_metrics": CANDIDATE_ROLLOUT_METRICS_CSV,
     "resource_metrics": CANDIDATE_RESOURCE_METRICS_CSV,
-    "test_metrics": CANDIDATE_TEST_METRICS_CSV,
+    "action_response": CANDIDATE_ACTION_RESPONSE_CSV,
 }
 
 
@@ -106,6 +108,7 @@ def run_step12_real_data_benchmark(
         "target_columns": list(OFFICIAL_TARGETS),
         "test_used_for_hpo": False,
         "test_used_for_validation_ranking": False,
+        "rollout_protocol_version": ROLLOUT_PROTOCOL_VERSION,
         "test_used_for_selection": False,
         "step11_immutable_rl_manifest": {
             "path": _relative_or_absolute(immutable_path, root),
@@ -118,6 +121,10 @@ def run_step12_real_data_benchmark(
                 "output_root": _relative_or_absolute(Path(crop_outputs[crop]), root),
                 "candidate_count": len(OFFICIAL_CANDIDATES),
                 "status": "passed",
+                "observation_scaler": {
+                    "path": _relative_or_absolute(loaded_by_crop[crop].scaler_path, root),
+                    "sha256": _sha256(loaded_by_crop[crop].scaler_path),
+                },
             }
             for crop in OFFICIAL_CROPS
         },
@@ -228,21 +235,15 @@ def _validate_crop_outputs(root: Path, *, crop: str) -> None:
         _require(tuple(frame["candidate_name"]) == OFFICIAL_CANDIDATES,
                  f"{crop}/{name}: incomplete candidate rows")
     metrics = pd.read_csv(root / CANDIDATE_METRICS_CSV)
-    tests = pd.read_csv(root / CANDIDATE_TEST_METRICS_CSV)
     for target in OFFICIAL_TARGETS:
         _require(f"validation_{target.removeprefix('obs_')}_rmse" in metrics,
                  f"{crop}: missing target-specific Validation metric for {target}")
-        _require(f"test_{target.removeprefix('obs_')}_rmse" in tests,
-                 f"{crop}: missing target-specific Test metric for {target}")
-    _require(not tests[["test_used_for_hpo", "test_used_for_validation_ranking",
-                        "test_used_for_selection"]].astype(bool).any().any(),
-             f"{crop}: Test isolation flags are invalid")
     for candidate in OFFICIAL_CANDIDATES:
         artifact = root / crop / candidate
         for name in ("model.pkl", "manifest.json", "feature_schema.json",
                      "one_step_metrics.json", "rollout_metrics.json",
                      "resource_metrics.json", "hpo_results.json",
-                     "best_config.json", "training_summary.json", "test_metrics.json"):
+                     "best_config.json", "training_summary.json", "action_response.json"):
             _require((artifact / name).is_file(), f"{crop}/{candidate}: missing {name}")
 
 

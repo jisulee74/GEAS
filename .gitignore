@@ -1,26 +1,65 @@
-# Local Python environments and caches
+# Python environments and generated caches
 .venv/
 venv/
 env/
 __pycache__/
 *.py[cod]
-
-# Local editor and notebook state
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.ipynb_checkpoints/
 .idea/
 .vscode/
-.ipynb_checkpoints/
+.DS_Store
 
-# Generated experiment state and large model/data outputs
-*.sqlite3
-*.sqlite3-shm
-*.sqlite3-wal
+# Local credentials and runtime state
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.log
+*.pid
 *.lock
+*.sqlite*
+*.db
+*.db-wal
+*.db-shm
+
+# Model weights, binary datasets and archives (keep in workspace backups)
 *.pkl
 *.pickle
 *.joblib
 *.parquet
+*.pt
+*.pth
+*.ckpt
+*.bin
+*.npy
+*.npz
+*.tar
+*.tar.gz
+*.zip
 
-# Local backups and temporary experiment scripts
+# Temporary edits and historical copies
+*.orig
+*.rej
 *_backup_*/
-*_legacy/
-*_temp.py
+local_backups/
+maintenance_backups/
+
+# Only current project code and deployed dashboard assets belong in Git.
+/archive/
+/temp/
+/GEAS3.0/
+/GEAS3.0_incomplete/
+/geas_predictor_benchmark/
+/GEAS3.5/offline_dataset_preparation/datasets/
+/GEAS3.5/offline_dataset_preparation_backup_*/
+/GEAS3.5/experiments/**/artifacts*/**
+/GEAS3.5/experiments/**/logs/
+/GEAS3.5/experiments/*_legacy/
+/GEAS3.5/prospective_collection/
+/GEAS3.5/prospective_evaluation/
+/GEAS3.5/analyses/
+/GEAS3.5/paper/

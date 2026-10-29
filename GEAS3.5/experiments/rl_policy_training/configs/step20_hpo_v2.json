@@ -5,8 +5,8 @@
   "sampler_seed": 42,
   "budget_source": {
     "step": "19.5",
-    "schema": "geas35.rl.step19_5.budget.v2",
-    "path": "experiments/rl_policy_training/artifacts/step19_5_v2/calibrated_budget.json",
+    "schema": "geas35.rl.step19_5.budget.v2_2",
+    "path": "experiments/rl_policy_training/artifacts/step19_5_v2_2/calibrated_budget_manifest.json",
     "numeric_cli_override_allowed": false
   },
   "promotion_fraction": 0.3333333333333333,

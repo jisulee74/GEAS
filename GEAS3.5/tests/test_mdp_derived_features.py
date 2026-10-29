@@ -31,7 +31,7 @@ def test_documented_light_features_and_condensation_name() -> None:
 
     result = add_mdp_derived_features(df)
 
-    assert "dTcond_pred_10m" in result
+    assert "obs_derived_condensation_margin_pred_10m" in result
     assert "obs_derived_condensation_margin_10m_c" not in result
     assert result.loc[1, "obs_derived_dli_mol_m2"] == pytest.approx(0.0606)
     assert result["obs_derived_light_sum_ratio"].tolist() == pytest.approx([0.5, 0.5, 0.5])

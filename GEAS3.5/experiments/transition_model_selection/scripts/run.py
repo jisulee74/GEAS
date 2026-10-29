@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+import warnings
 import sys
 from pathlib import Path
 
@@ -22,6 +23,11 @@ def _ensure_src_on_path() -> None:
 
 
 def main(argv: list[str] | None = None) -> int:
+    warnings.filterwarnings(
+        "ignore",
+        message=r"`sklearn\.utils\.parallel\.delayed` should be used.*",
+        category=UserWarning,
+    )
     _ensure_src_on_path()
     args = [] if argv is None else list(argv)
     if "--config" not in args:

@@ -48,6 +48,11 @@ def test_learning_curve_stability_selects_observed_rungs_and_instability_blocks(
 def test_budget_artifact_hash_is_required_by_step20_v2(tmp_path):
  cfg19=tmp_path/"experiments/rl_policy_training/configs/step19_5_calibration_v2.json";cfg19.parent.mkdir(parents=True);cfg19.write_text((PROJECT_ROOT/"experiments/rl_policy_training/configs/step19_5_calibration_v2.json").read_text())
  cfg20=tmp_path/"experiments/rl_policy_training/configs/step20_hpo_v2.json";cfg20.write_text((PROJECT_ROOT/"experiments/rl_policy_training/configs/step20_hpo_v2.json").read_text())
+ # This legacy fixture exercises the generic hash gate with a v2 budget.  The
+ # repository's official config now points at the prospective v2.2 artifact.
+ cfg20_payload=json.loads(cfg20.read_text())
+ cfg20_payload["budget_source"].update({"schema":"geas35.rl.step19_5.budget.v2","path":"experiments/rl_policy_training/artifacts/step19_5_v2/calibrated_budget.json"})
+ cfg20.write_text(json.dumps(cfg20_payload))
  create_budget_artifact(tmp_path,{crop:rows() for crop in ("strawberry","melon","cucumber")})
  artifact,digest=load_calibrated_budget(tmp_path)
  assert artifact["status"]=="passed" and len(digest)==64

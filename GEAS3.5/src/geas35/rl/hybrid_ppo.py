@@ -18,12 +18,12 @@ from geas35.rl.mdp_v1 import (
     MDP_V1_CONTINUOUS_ACTION_COLUMNS,
 )
 
-STEP18_PPO_VERSION = "geas35.rl.hybrid_ppo.step18.v1"
+STEP18_PPO_VERSION = "geas35.rl.hybrid_ppo.step18.v1_4"
 
 
 @dataclass(frozen=True)
 class HybridPPOConfig:
-    observation_dim: int = 59
+    observation_dim: int = 55
     continuous_action_dim: int = 3
     binary_action_dim: int = 3
     hidden_sizes: tuple[int, ...] = (128, 128)

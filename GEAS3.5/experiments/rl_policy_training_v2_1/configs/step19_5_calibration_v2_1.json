@@ -1,0 +1,37 @@
+{
+  "schema_version": "geas35.rl.step19_5.config.v2_1",
+  "protocol_version": "geas35.rl.step19_5.v2_1",
+  "source_protocol": "geas35.rl.step19_5.v2",
+  "representative_configurations": 5,
+  "seeds": [42, 43, 44],
+  "checkpoint_grid": {
+    "base_rule": "maximum_representative_rollout_length",
+    "growth_rule": "multiply_by_two",
+    "maximum_environment_steps": 524288
+  },
+  "ranking_stability": {
+    "kendall_tau_min": 0.6,
+    "top_count": 2,
+    "minimum_shared_top_configurations": 1,
+    "consecutive_intervals": 2
+  },
+  "learning_stability": {
+    "window_intervals": 3,
+    "median_reward_delta_fraction_of_robust_scale_max": 0.15,
+    "iqr_floor_fraction_of_absolute_median_reward": 0.05,
+    "bootstrap_samples": 1000,
+    "bootstrap_confidence": 0.95,
+    "require_slope_ci_contains_zero": true,
+    "require_finite_diagnostics": true,
+    "require_safety_gate": true
+  },
+  "rung_selection": {
+    "minimum_distinct_rungs": 2,
+    "maximum_budget_fallback": "last_two_observed_budgets"
+  },
+  "split_policy": {
+    "fit": "train",
+    "evaluate": "validation",
+    "test": "locked"
+  }
+}

@@ -7,7 +7,7 @@ experiment: {output_dir: artifacts/step12/cucumber, random_seed: 42}
 provenance:
   immutable_rl_manifest: {path: ../../../offline_dataset_preparation/datasets/5_rl_dataset/step11_6_integrity_manifest.json, sha256: 7f6231f6be94b010f8a6c5510bb6769ced9fa338e378a946664b484b5c1d0145}
 models:
-  candidates: [{name: persistence, params: {}}, {name: linear_regression, params: {}}, {name: linear_svr, params: {random_state: 42}}, {name: knn, params: {n_neighbors: 5}}, {name: extra_trees, params: {n_estimators: 100, random_state: 42, n_jobs: 1}}, {name: lightgbm, params: {random_state: 42, verbosity: -1, n_jobs: 1}}, {name: xgboost, params: {random_state: 42, verbosity: 0, n_jobs: 1}}, {name: mlp, params: {hidden_layer_sizes: [64, 32], max_iter: 300, random_state: 42}}]
+  candidates: [{name: persistence, params: {}}, {name: linear_regression, params: {}}, {name: linear_svr, params: {random_state: 42}}, {name: knn, params: {n_neighbors: 5}}, {name: extra_trees, params: {n_estimators: 100, random_state: 42, n_jobs: 8}}, {name: lightgbm, params: {random_state: 42, verbosity: -1, n_jobs: 8}}, {name: xgboost, params: {random_state: 42, verbosity: 0, n_jobs: 8}}, {name: mlp, params: {hidden_layer_sizes: [64, 32], max_iter: 300, random_state: 42}}]
 ranking: {strategy: mean_rmse, params: {}}
 hpo:
   enabled: true

@@ -1,0 +1,520 @@
+{
+  "schema_version": "geas35.rl.step19_5.v2_2",
+  "validation": {
+    "mean_reward_per_scheduled_valid_step": -0.48364807628451845,
+    "scheduled_valid_steps": 17942,
+    "executed_steps": 11005,
+    "hard_constraint_violations": 0,
+    "severe_ood_rate": 0.006905951840072694,
+    "fallback_rate": 0.0027260336210813267,
+    "warning_ood_rate": 0.10277146751476601,
+    "support_projection_rate": 0.0,
+    "abnormal_termination_count": 48
+  },
+  "safety_gate_passed": true,
+  "failure_reasons": [],
+  "details": {
+    "termination_reasons": {
+      "episode_boundary": 22,
+      "severe_state_ood": 46,
+      "repeated_severe_action_ood": 2
+    },
+    "episodes": [
+      {
+        "episode_id": "iot97_strawberry_geas2_0_seg28_20250306",
+        "scheduled_steps": 286,
+        "executed_steps": 286,
+        "hard_constraint_violations": 0,
+        "termination_reason": "episode_boundary"
+      },
+      {
+        "episode_id": "iot97_strawberry_geas2_0_seg28_20250307",
+        "scheduled_steps": 286,
+        "executed_steps": 286,
+        "hard_constraint_violations": 0,
+        "termination_reason": "episode_boundary"
+      },
+      {
+        "episode_id": "iot97_strawberry_geas2_0_seg28_20250308",
+        "scheduled_steps": 286,
+        "executed_steps": 286,
+        "hard_constraint_violations": 0,
+        "termination_reason": "episode_boundary"
+      },
+      {
+        "episode_id": "iot97_strawberry_geas2_0_seg28_20250309",
+        "scheduled_steps": 286,
+        "executed_steps": 286,
+        "hard_constraint_violations": 0,
+        "termination_reason": "episode_boundary"
+      },
+      {
+        "episode_id": "iot97_strawberry_geas2_0_seg28_20250310",
+        "scheduled_steps": 286,
+        "executed_steps": 286,
+        "hard_constraint_violations": 0,
+        "termination_reason": "episode_boundary"
+      },
+      {
+        "episode_id": "iot97_strawberry_geas2_0_seg28_20250311",
+        "scheduled_steps": 286,
+        "executed_steps": 172,
+        "hard_constraint_violations": 0,
+        "termination_reason": "severe_state_ood"
+      },
+      {
+        "episode_id": "iot97_strawberry_geas2_0_seg28_20250312",
+        "scheduled_steps": 286,
+        "executed_steps": 132,
+        "hard_constraint_violations": 0,
+        "termination_reason": "repeated_severe_action_ood"
+      },
+      {
+        "episode_id": "iot97_strawberry_geas2_0_seg28_20250313",
+        "scheduled_steps": 286,
+        "executed_steps": 218,
+        "hard_constraint_violations": 0,
+        "termination_reason": "severe_state_ood"
+      },
+      {
+        "episode_id": "iot97_strawberry_geas2_0_seg28_20250314",
+        "scheduled_steps": 286,
+        "executed_steps": 179,
+        "hard_constraint_violations": 0,
+        "termination_reason": "severe_state_ood"
+      },
+      {
+        "episode_id": "iot97_strawberry_geas2_0_seg28_20250315",
+        "scheduled_steps": 286,
+        "executed_steps": 286,
+        "hard_constraint_violations": 0,
+        "termination_reason": "episode_boundary"
+      },
+      {
+        "episode_id": "iot97_strawberry_geas2_0_seg28_20250316",
+        "scheduled_steps": 286,
+        "executed_steps": 248,
+        "hard_constraint_violations": 0,
+        "termination_reason": "severe_state_ood"
+      },
+      {
+        "episode_id": "iot97_strawberry_geas2_0_seg28_20250317",
+        "scheduled_steps": 286,
+        "executed_steps": 200,
+        "hard_constraint_violations": 0,
+        "termination_reason": "repeated_severe_action_ood"
+      },
+      {
+        "episode_id": "iot97_strawberry_geas2_0_seg28_20250318",
+        "scheduled_steps": 286,
+        "executed_steps": 269,
+        "hard_constraint_violations": 0,
+        "termination_reason": "severe_state_ood"
+      },
+      {
+        "episode_id": "iot97_strawberry_geas2_0_seg28_20250319",
+        "scheduled_steps": 286,
+        "executed_steps": 216,
+        "hard_constraint_violations": 0,
+        "termination_reason": "severe_state_ood"
+      },
+      {
+        "episode_id": "iot97_strawberry_geas2_0_seg28_20250320",
+        "scheduled_steps": 286,
+        "executed_steps": 168,
+        "hard_constraint_violations": 0,
+        "termination_reason": "severe_state_ood"
+      },
+      {
+        "episode_id": "iot97_strawberry_geas2_0_seg28_20250321",
+        "scheduled_steps": 286,
+        "executed_steps": 142,
+        "hard_constraint_violations": 0,
+        "termination_reason": "severe_state_ood"
+      },
+      {
+        "episode_id": "iot97_strawberry_geas2_0_seg28_20250322",
+        "scheduled_steps": 286,
+        "executed_steps": 128,
+        "hard_constraint_violations": 0,
+        "termination_reason": "severe_state_ood"
+      },
+      {
+        "episode_id": "iot97_strawberry_geas2_0_seg28_20250323",
+        "scheduled_steps": 286,
+        "executed_steps": 167,
+        "hard_constraint_violations": 0,
+        "termination_reason": "severe_state_ood"
+      },
+      {
+        "episode_id": "iot97_strawberry_geas2_0_seg28_20250324",
+        "scheduled_steps": 286,
+        "executed_steps": 135,
+        "hard_constraint_violations": 0,
+        "termination_reason": "severe_state_ood"
+      },
+      {
+        "episode_id": "iot97_strawberry_geas2_0_seg28_20250325",
+        "scheduled_steps": 286,
+        "executed_steps": 156,
+        "hard_constraint_violations": 0,
+        "termination_reason": "severe_state_ood"
+      },
+      {
+        "episode_id": "iot97_strawberry_geas2_0_seg28_20250326",
+        "scheduled_steps": 286,
+        "executed_steps": 177,
+        "hard_constraint_violations": 0,
+        "termination_reason": "severe_state_ood"
+      },
+      {
+        "episode_id": "iot97_strawberry_geas2_0_seg28_20250327",
+        "scheduled_steps": 286,
+        "executed_steps": 286,
+        "hard_constraint_violations": 0,
+        "termination_reason": "episode_boundary"
+      },
+      {
+        "episode_id": "iot97_strawberry_geas2_0_seg28_20250328",
+        "scheduled_steps": 286,
+        "executed_steps": 286,
+        "hard_constraint_violations": 0,
+        "termination_reason": "episode_boundary"
+      },
+      {
+        "episode_id": "iot97_strawberry_geas2_0_seg28_20250329",
+        "scheduled_steps": 286,
+        "executed_steps": 129,
+        "hard_constraint_violations": 0,
+        "termination_reason": "severe_state_ood"
+      },
+      {
+        "episode_id": "iot97_strawberry_geas2_0_seg28_20250330",
+        "scheduled_steps": 286,
+        "executed_steps": 44,
+        "hard_constraint_violations": 0,
+        "termination_reason": "severe_state_ood"
+      },
+      {
+        "episode_id": "iot97_strawberry_geas2_0_seg28_20250331",
+        "scheduled_steps": 286,
+        "executed_steps": 44,
+        "hard_constraint_violations": 0,
+        "termination_reason": "severe_state_ood"
+      },
+      {
+        "episode_id": "iot97_strawberry_geas2_0_seg28_20250401",
+        "scheduled_steps": 286,
+        "executed_steps": 135,
+        "hard_constraint_violations": 0,
+        "termination_reason": "severe_state_ood"
+      },
+      {
+        "episode_id": "iot97_strawberry_geas2_0_seg28_20250402",
+        "scheduled_steps": 286,
+        "executed_steps": 154,
+        "hard_constraint_violations": 0,
+        "termination_reason": "severe_state_ood"
+      },
+      {
+        "episode_id": "iot97_strawberry_geas2_0_seg29_20250408",
+        "scheduled_steps": 286,
+        "executed_steps": 1,
+        "hard_constraint_violations": 0,
+        "termination_reason": "severe_state_ood"
+      },
+      {
+        "episode_id": "iot97_strawberry_geas2_0_seg29_20250409",
+        "scheduled_steps": 286,
+        "executed_steps": 27,
+        "hard_constraint_violations": 0,
+        "termination_reason": "severe_state_ood"
+      },
+      {
+        "episode_id": "iot97_strawberry_geas2_0_seg29_20250410",
+        "scheduled_steps": 250,
+        "executed_steps": 250,
+        "hard_constraint_violations": 0,
+        "termination_reason": "episode_boundary"
+      },
+      {
+        "episode_id": "iot97_strawberry_geas2_0_seg29_20250411",
+        "scheduled_steps": 1,
+        "executed_steps": 1,
+        "hard_constraint_violations": 0,
+        "termination_reason": "severe_state_ood"
+      },
+      {
+        "episode_id": "iot97_strawberry_geas2_0_seg29_20250411",
+        "scheduled_steps": 7,
+        "executed_steps": 1,
+        "hard_constraint_violations": 0,
+        "termination_reason": "severe_state_ood"
+      },
+      {
+        "episode_id": "iot97_strawberry_geas2_0_seg29_20250411",
+        "scheduled_steps": 1,
+        "executed_steps": 1,
+        "hard_constraint_violations": 0,
+        "termination_reason": "severe_state_ood"
+      },
+      {
+        "episode_id": "iot97_strawberry_geas2_0_seg29_20250411",
+        "scheduled_steps": 86,
+        "executed_steps": 1,
+        "hard_constraint_violations": 0,
+        "termination_reason": "severe_state_ood"
+      },
+      {
+        "episode_id": "iot97_strawberry_geas2_0_seg29_20250412",
+        "scheduled_steps": 286,
+        "executed_steps": 154,
+        "hard_constraint_violations": 0,
+        "termination_reason": "severe_state_ood"
+      },
+      {
+        "episode_id": "iot97_strawberry_geas2_0_seg29_20250413",
+        "scheduled_steps": 286,
+        "executed_steps": 78,
+        "hard_constraint_violations": 0,
+        "termination_reason": "severe_state_ood"
+      },
+      {
+        "episode_id": "iot97_strawberry_geas2_5_seg01_20251017",
+        "scheduled_steps": 187,
+        "executed_steps": 1,
+        "hard_constraint_violations": 0,
+        "termination_reason": "severe_state_ood"
+      },
+      {
+        "episode_id": "iot97_strawberry_geas2_5_seg01_20251017",
+        "scheduled_steps": 4,
+        "executed_steps": 1,
+        "hard_constraint_violations": 0,
+        "termination_reason": "severe_state_ood"
+      },
+      {
+        "episode_id": "iot97_strawberry_geas2_5_seg01_20251018",
+        "scheduled_steps": 286,
+        "executed_steps": 286,
+        "hard_constraint_violations": 0,
+        "termination_reason": "episode_boundary"
+      },
+      {
+        "episode_id": "iot97_strawberry_geas2_5_seg01_20251019",
+        "scheduled_steps": 286,
+        "executed_steps": 48,
+        "hard_constraint_violations": 0,
+        "termination_reason": "severe_state_ood"
+      },
+      {
+        "episode_id": "iot97_strawberry_geas2_5_seg01_20251020",
+        "scheduled_steps": 286,
+        "executed_steps": 116,
+        "hard_constraint_violations": 0,
+        "termination_reason": "severe_state_ood"
+      },
+      {
+        "episode_id": "iot97_strawberry_geas2_5_seg01_20251021",
+        "scheduled_steps": 286,
+        "executed_steps": 18,
+        "hard_constraint_violations": 0,
+        "termination_reason": "severe_state_ood"
+      },
+      {
+        "episode_id": "iot97_strawberry_geas2_5_seg01_20251022",
+        "scheduled_steps": 286,
+        "executed_steps": 286,
+        "hard_constraint_violations": 0,
+        "termination_reason": "episode_boundary"
+      },
+      {
+        "episode_id": "iot97_strawberry_geas2_5_seg02_20251024",
+        "scheduled_steps": 286,
+        "executed_steps": 63,
+        "hard_constraint_violations": 0,
+        "termination_reason": "severe_state_ood"
+      },
+      {
+        "episode_id": "iot97_strawberry_geas2_5_seg02_20251025",
+        "scheduled_steps": 286,
+        "executed_steps": 286,
+        "hard_constraint_violations": 0,
+        "termination_reason": "episode_boundary"
+      },
+      {
+        "episode_id": "iot97_strawberry_geas2_5_seg02_20251026",
+        "scheduled_steps": 286,
+        "executed_steps": 286,
+        "hard_constraint_violations": 0,
+        "termination_reason": "episode_boundary"
+      },
+      {
+        "episode_id": "iot97_strawberry_geas2_5_seg02_20251027",
+        "scheduled_steps": 286,
+        "executed_steps": 151,
+        "hard_constraint_violations": 0,
+        "termination_reason": "severe_state_ood"
+      },
+      {
+        "episode_id": "iot97_strawberry_geas2_5_seg02_20251028",
+        "scheduled_steps": 286,
+        "executed_steps": 286,
+        "hard_constraint_violations": 0,
+        "termination_reason": "episode_boundary"
+      },
+      {
+        "episode_id": "iot97_strawberry_geas2_5_seg02_20251029",
+        "scheduled_steps": 286,
+        "executed_steps": 286,
+        "hard_constraint_violations": 0,
+        "termination_reason": "episode_boundary"
+      },
+      {
+        "episode_id": "iot97_strawberry_geas2_5_seg02_20251030",
+        "scheduled_steps": 286,
+        "executed_steps": 286,
+        "hard_constraint_violations": 0,
+        "termination_reason": "episode_boundary"
+      },
+      {
+        "episode_id": "iot97_strawberry_geas2_5_seg02_20251031",
+        "scheduled_steps": 286,
+        "executed_steps": 286,
+        "hard_constraint_violations": 0,
+        "termination_reason": "episode_boundary"
+      },
+      {
+        "episode_id": "iot97_strawberry_geas2_5_seg02_20251101",
+        "scheduled_steps": 286,
+        "executed_steps": 85,
+        "hard_constraint_violations": 0,
+        "termination_reason": "severe_state_ood"
+      },
+      {
+        "episode_id": "iot97_strawberry_geas2_5_seg02_20251102",
+        "scheduled_steps": 286,
+        "executed_steps": 14,
+        "hard_constraint_violations": 0,
+        "termination_reason": "severe_state_ood"
+      },
+      {
+        "episode_id": "iot97_strawberry_geas2_5_seg02_20251103",
+        "scheduled_steps": 286,
+        "executed_steps": 223,
+        "hard_constraint_violations": 0,
+        "termination_reason": "severe_state_ood"
+      },
+      {
+        "episode_id": "iot97_strawberry_geas2_5_seg02_20251104",
+        "scheduled_steps": 286,
+        "executed_steps": 286,
+        "hard_constraint_violations": 0,
+        "termination_reason": "episode_boundary"
+      },
+      {
+        "episode_id": "iot97_strawberry_geas2_5_seg03_20251106",
+        "scheduled_steps": 286,
+        "executed_steps": 286,
+        "hard_constraint_violations": 0,
+        "termination_reason": "episode_boundary"
+      },
+      {
+        "episode_id": "iot97_strawberry_geas2_5_seg03_20251107",
+        "scheduled_steps": 286,
+        "executed_steps": 286,
+        "hard_constraint_violations": 0,
+        "termination_reason": "episode_boundary"
+      },
+      {
+        "episode_id": "iot97_strawberry_geas2_5_seg03_20251108",
+        "scheduled_steps": 286,
+        "executed_steps": 286,
+        "hard_constraint_violations": 0,
+        "termination_reason": "episode_boundary"
+      },
+      {
+        "episode_id": "iot97_strawberry_geas2_5_seg03_20251109",
+        "scheduled_steps": 286,
+        "executed_steps": 286,
+        "hard_constraint_violations": 0,
+        "termination_reason": "episode_boundary"
+      },
+      {
+        "episode_id": "iot97_strawberry_geas2_5_seg03_20251110",
+        "scheduled_steps": 286,
+        "executed_steps": 50,
+        "hard_constraint_violations": 0,
+        "termination_reason": "severe_state_ood"
+      },
+      {
+        "episode_id": "iot97_strawberry_geas2_5_seg03_20251111",
+        "scheduled_steps": 286,
+        "executed_steps": 1,
+        "hard_constraint_violations": 0,
+        "termination_reason": "severe_state_ood"
+      },
+      {
+        "episode_id": "iot97_strawberry_geas2_5_seg03_20251112",
+        "scheduled_steps": 286,
+        "executed_steps": 268,
+        "hard_constraint_violations": 0,
+        "termination_reason": "severe_state_ood"
+      },
+      {
+        "episode_id": "iot97_strawberry_geas2_5_seg03_20251113",
+        "scheduled_steps": 178,
+        "executed_steps": 90,
+        "hard_constraint_violations": 0,
+        "termination_reason": "severe_state_ood"
+      },
+      {
+        "episode_id": "iot97_strawberry_geas2_5_seg04_20251117",
+        "scheduled_steps": 119,
+        "executed_steps": 1,
+        "hard_constraint_violations": 0,
+        "termination_reason": "severe_state_ood"
+      },
+      {
+        "episode_id": "iot97_strawberry_geas2_5_seg04_20251118",
+        "scheduled_steps": 286,
+        "executed_steps": 1,
+        "hard_constraint_violations": 0,
+        "termination_reason": "severe_state_ood"
+      },
+      {
+        "episode_id": "iot97_strawberry_geas2_5_seg04_20251119",
+        "scheduled_steps": 212,
+        "executed_steps": 82,
+        "hard_constraint_violations": 0,
+        "termination_reason": "severe_state_ood"
+      },
+      {
+        "episode_id": "iot97_strawberry_geas2_5_seg04_20251121",
+        "scheduled_steps": 87,
+        "executed_steps": 1,
+        "hard_constraint_violations": 0,
+        "termination_reason": "severe_state_ood"
+      },
+      {
+        "episode_id": "iot97_strawberry_geas2_5_seg04_20251122",
+        "scheduled_steps": 222,
+        "executed_steps": 1,
+        "hard_constraint_violations": 0,
+        "termination_reason": "severe_state_ood"
+      },
+      {
+        "episode_id": "iot97_strawberry_geas2_5_seg04_20251123",
+        "scheduled_steps": 286,
+        "executed_steps": 57,
+        "hard_constraint_violations": 0,
+        "termination_reason": "severe_state_ood"
+      }
+    ],
+    "finite_metrics": true,
+    "test_accessed": false
+  },
+  "source_checkpoint_sha256": "55d87af4339b05829586ced190db7c879d24ee71a7f0f1ee0a620fc1d568495d",
+  "extended_checkpoint_sha256": "17fd5c3a872d6c3875124a6b950585a30fb01bc710e8a6c2db6d5e73c2676bc7",
+  "test_accessed": false
+}

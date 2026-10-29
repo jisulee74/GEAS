@@ -8,9 +8,38 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
+from enum import Enum
 from typing import ClassVar
 
 import pandas as pd
+
+
+class TransitionTargetFormulation(str, Enum):
+    """Training target representation with physical next-state output."""
+
+    ABSOLUTE_STATE = "absolute_state"
+    RESIDUAL_PHYSICAL_DELTA = "residual_physical_delta_v1"
+
+
+class ResidualTransitionAdapter:
+    """Convert physical delta predictions into physical next states."""
+
+    def __init__(self, observation_scaler) -> None:
+        if observation_scaler is None:
+            raise ValueError("ResidualTransitionAdapter requires a frozen scaler.")
+        self.observation_scaler = observation_scaler
+
+    def to_physical_next_state(
+        self,
+        scaled_input: pd.DataFrame,
+        physical_delta: pd.DataFrame,
+        target_columns,
+    ) -> pd.DataFrame:
+        columns = list(target_columns)
+        current = self.observation_scaler.inverse_transform_frame(scaled_input).loc[:, columns]
+        delta = physical_delta.loc[:, columns].copy()
+        delta.index = current.index
+        return current.add(delta)
 
 
 @dataclass(frozen=True)
@@ -114,7 +143,9 @@ def _require_columns(
 
 __all__ = [
     "BaseTransitionModel",
+    "ResidualTransitionAdapter",
     "TransitionDataset",
     "TransitionModelCapabilities",
     "TransitionPrediction",
+    "TransitionTargetFormulation",
 ]

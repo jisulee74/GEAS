@@ -10,11 +10,14 @@ import numpy as np
 import pandas as pd
 
 from geas35.models.transition.base import BaseTransitionModel, TransitionPrediction
+from geas35.models.transition.causal_state import (
+    CausalStateUpdater, ROLLOUT_PROTOCOL_VERSION, RolloutEvaluationProtocol, RolloutWindow, build_rollout_windows)
 from geas35.models.transition.features import (
     NEXT_OBSERVATION_PREFIX,
     infer_action_columns,
 )
 from geas35.rl import MDP_V1_ACTION_COLUMNS
+from geas35.rl import MdpV1ObservationScaler
 
 EXOGENOUS_WEATHER_COLUMNS = (
     "obs_outdoor_temp_c",
@@ -177,6 +180,7 @@ class TransitionRolloutResult:
     errors: pd.DataFrame
     metrics: dict[str, float]
     exogenous_provider_mode: str
+    trace: pd.DataFrame
 
 
 class TransitionRolloutSimulator:
@@ -186,10 +190,17 @@ class TransitionRolloutSimulator:
         self,
         model: BaseTransitionModel,
         action_provider: ActionProvider | None = None,
+        *,
+        scaler: MdpV1ObservationScaler,
+        state_updater: CausalStateUpdater | None = None,
         exogenous_provider: ExogenousProvider | None = None,
     ) -> None:
         self.model = model
         self.action_provider = action_provider or LoggedActionProvider()
+        if scaler is None:
+            raise ValueError("A frozen Train observation scaler is required.")
+        self.scaler = scaler
+        self.state_updater = state_updater or CausalStateUpdater(scaler)
         self.exogenous_provider = exogenous_provider or RecordedWeatherProvider()
 
     def simulate(
@@ -224,9 +235,11 @@ class TransitionRolloutSimulator:
         self.exogenous_provider.reset(rollout_context)
 
         current_row = frame.iloc[start_index].copy()
+        self.state_updater.reset(current_row)
         prediction_rows: list[dict[str, float]] = []
         truth_rows: list[dict[str, float]] = []
         action_rows: list[dict[str, float]] = []
+        trace_rows: list[dict[str, float | int]] = []
 
         for step in range(horizon_steps):
             source_position = start_index + step
@@ -249,21 +262,51 @@ class TransitionRolloutSimulator:
             prediction = self.model.predict(current_input_frame)
             predicted_next = _prediction_row(prediction, targets)
             true_next = _true_next_row(frame.iloc[source_position], targets)
+            current_physical = self.scaler.inverse_transform_frame(current_input_frame).iloc[0]
+            trace_row: dict[str, float | int] = {
+                "step": int(step + 1),
+                "source_position": int(source_position),
+                "max_abs_scaled_input": float(np.nanmax(np.abs(current_input_frame.to_numpy(dtype=float)))),
+            }
+            for column in targets:
+                trace_row[f"current_{column}"] = _numeric_value(current_physical.get(column), default=np.nan)
+                trace_row[f"predicted_{column}"] = float(predicted_next[column])
+                trace_row[f"truth_{column}"] = float(true_next[column])
+            if prediction.raw_prediction is not None and not prediction.raw_prediction.empty:
+                for column in targets:
+                    if column in prediction.raw_prediction:
+                        trace_row[f"residual_{column}"] = _numeric_value(prediction.raw_prediction.iloc[0][column], default=np.nan)
+            for column in (
+                "obs_current_vpd_kpa", "obs_current_dewpoint_c",
+                "obs_current_condensation_margin_c",
+                "obs_derived_condensation_margin_pred_10m",
+                "obs_derived_condensation_risk_10m",
+            ):
+                if column in current_physical:
+                    trace_row[f"input_{column}"] = _numeric_value(current_physical[column], default=np.nan)
+            trace_rows.append(trace_row)
 
             prediction_rows.append(predicted_next)
             truth_rows.append(true_next)
             action_rows.append({column: float(action.get(column, np.nan)) for column in actions})
 
             if step < horizon_steps - 1:
-                next_source_row = self.exogenous_provider.next_row(
+                recorded_next_scaled = frame.iloc[source_position + 1].copy()
+                recorded_next_physical = self.scaler.inverse_transform_frame(
+                    pd.DataFrame([recorded_next_scaled])
+                ).iloc[0]
+                next_source_physical = self.exogenous_provider.next_row(
                     source_frame=frame,
                     next_source_position=source_position + 1,
-                    recorded_next_row=frame.iloc[source_position + 1].copy(),
+                    recorded_next_row=recorded_next_physical,
                 )
-                for column, value in predicted_next.items():
-                    next_source_row[column] = value
-                _update_previous_action_observations(next_source_row, action)
-                current_row = next_source_row
+                next_source_scaled = self.scaler.transform_frame(pd.DataFrame([next_source_physical])).iloc[0]
+                current_row = self.state_updater.advance(
+                    current_scaled=current_row,
+                    recorded_next_scaled=next_source_scaled,
+                    prediction_physical=predicted_next,
+                    action=action,
+                )
 
         predictions = pd.DataFrame(prediction_rows, columns=targets)
         truth = pd.DataFrame(truth_rows, columns=targets)
@@ -279,6 +322,7 @@ class TransitionRolloutSimulator:
             errors=errors,
             metrics=_rollout_metrics(predictions, errors),
             exogenous_provider_mode=self.exogenous_provider.mode,
+            trace=pd.DataFrame(trace_rows),
         )
 
 
@@ -349,13 +393,27 @@ def _rollout_metrics(predictions: pd.DataFrame, errors: pd.DataFrame) -> dict[st
             else 0.0
         ),
     }
+    truth = predictions.subtract(errors)
+    target_r2_values = []
     for column in errors.columns:
         col_values = errors[column].to_numpy(dtype=float)
+        true_values = truth[column].to_numpy(dtype=float)
+        finite_pair = np.isfinite(col_values) & np.isfinite(true_values)
+        if finite_pair.sum() >= 2:
+            denominator = float(np.sum((true_values[finite_pair] - np.mean(true_values[finite_pair])) ** 2))
+            r2 = (float(1.0 - np.sum(col_values[finite_pair] ** 2) / denominator)
+                  if denominator > 0.0 else float("nan"))
+        else:
+            r2 = float("nan")
+        metrics[f"{column}_trajectory_r2"] = r2
+        if np.isfinite(r2):
+            target_r2_values.append(r2)
         metrics[f"{column}_trajectory_mae"] = _finite_mean(np.abs(col_values))
         metrics[f"{column}_trajectory_rmse"] = _finite_rmse(col_values)
         metrics[f"{column}_final_abs_error"] = (
             float(abs(col_values[-1])) if len(col_values) and np.isfinite(col_values[-1]) else float("nan")
         )
+    metrics["trajectory_r2"] = _finite_mean(target_r2_values)
     return metrics
 
 

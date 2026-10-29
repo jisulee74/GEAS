@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import sys
 from dataclasses import dataclass
 from pathlib import Path
@@ -126,6 +127,7 @@ def write_transition_smoke_fixture(root: Path) -> TransitionSmokeFixture:
         path = dataset_dir / f"{split}.parquet"
         transition_rl_ready_frame(offset=offset).to_parquet(path, index=False)
         split_paths[split] = path
+    write_identity_transition_scaler(dataset_dir / "observation_scaler.json")
 
     config_path = root / "transition_smoke.yaml"
     write_transition_smoke_config(
@@ -184,6 +186,16 @@ def write_transition_smoke_config(
         ),
         encoding="utf-8",
     )
+
+def write_identity_transition_scaler(path: Path) -> None:
+    columns = ["obs_indoor_temp_c", "obs_indoor_humidity_pct", "obs_indoor_co2_ppm"]
+    path.write_text(json.dumps({
+        "schema_version": "synthetic.identity.v1",
+        "columns": columns,
+        "mean": {column: 0.0 for column in columns},
+        "scale": {column: 1.0 for column in columns},
+    }), encoding="utf-8")
+
 
 
 def transition_rl_ready_frame(*, offset: float) -> pd.DataFrame:

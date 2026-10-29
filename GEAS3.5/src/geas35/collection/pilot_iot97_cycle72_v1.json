@@ -1,0 +1,20 @@
+{
+  "schema_version": "future_f_p0.v1",
+  "pilot_id": "pilot_iot97_cycle72",
+  "facility_id": 97,
+  "iot_data_idx": 97,
+  "crop_info_idx": 72,
+  "crop": "cucumber",
+  "crop_code": "04",
+  "transplant_date": "2026-08-14",
+  "pilot_mode": "SHADOW_ONLY",
+  "timezone": "Asia/Seoul",
+  "phase": "P0",
+  "poll_seconds": 30,
+  "batch_size": 500,
+  "initial_replay_ids": 1000,
+  "expected_sensor_interval_seconds": 300,
+  "receipt_age_warning_seconds": 600,
+  "output_relative": "prospective_collection/future_f/pilot_iot97_cycle72",
+  "sent_source_binding": "all_history_events_iot97_external_contract"
+}

@@ -56,6 +56,7 @@ def load_transition_candidate_model(
     model_name: str,
     *,
     official: bool = True,
+    expected_target_formulation: str | None = None,
 ) -> LoadedTransitionModel:
     """Load a transition candidate by explicit crop and model name."""
 
@@ -63,7 +64,10 @@ def load_transition_candidate_model(
     name = str(model_name).strip()
     if not name:
         raise ValueError("model_name is required for transition candidate loading.")
-    model = load_transition_model_artifact(models_root, crop_key, model_name=name)
+    model = load_transition_model_artifact(
+        models_root, crop_key, model_name=name,
+        expected_target_formulation=expected_target_formulation,
+    )
     artifact_dir = Path(models_root) / crop_key / name
     return _loaded_transition_model(
         crop=crop_key,
@@ -78,6 +82,7 @@ def load_transition_model_from_artifact_dir(
     artifact_dir: Path | str,
     *,
     official: bool = True,
+    expected_target_formulation: str | None = None,
 ) -> LoadedTransitionModel:
     """Load a transition candidate directly from its artifact directory."""
 
@@ -88,6 +93,12 @@ def load_transition_model_from_artifact_dir(
     with model_path.open("rb") as f:
         model = pickle.load(f)
     manifest = _model_manifest(path)
+    manifest_formulation = str((manifest or {}).get("target_formulation", "absolute_state"))
+    model_formulation = str(getattr(model, "target_formulation", "absolute_state"))
+    if expected_target_formulation is not None and manifest_formulation != str(expected_target_formulation):
+        raise ValueError("Transition target formulation mismatch.")
+    if model_formulation != manifest_formulation:
+        raise ValueError("Transition model and manifest target formulations disagree.")
     crop = str(manifest.get("crop", path.parent.name)) if manifest else path.parent.name
     model_name = str(manifest.get("model_name", path.name)) if manifest else path.name
     return _loaded_transition_model(

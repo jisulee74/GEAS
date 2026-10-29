@@ -3,6 +3,19 @@ __pycache__/
 .pytest_cache/
 .env
 
-experiments/**/artifacts/
+experiments/**/artifacts*/**
 offline_dataset_preparation/datasets/03_quality_controlled/
 offline_dataset_preparation/datasets/5_rl_dataset/
+
+# Small frozen runtime contracts required by source and synthetic tests.
+!experiments/rl_policy_training/artifacts/
+!experiments/rl_policy_training/artifacts/transition_4ch_migration_prereg_v1/
+!experiments/rl_policy_training/artifacts/transition_4ch_migration_prereg_v1/migration_preregistration.json
+!experiments/rl_policy_training/artifacts/future_f_quality_scalarization_v1/
+!experiments/rl_policy_training/artifacts/future_f_quality_scalarization_v1/quality_scalarization.json
+!experiments/rl_policy_training/artifacts/future_f_cucumber72_target_profiles_v1/
+!experiments/rl_policy_training/artifacts/future_f_cucumber72_target_profiles_v1/cucumber72_target_profiles.json
+!experiments/rl_policy_training/artifacts/cucumber_profile_a_ppo_semantics_v1/
+!experiments/rl_policy_training/artifacts/cucumber_profile_a_ppo_semantics_v1/ppo_semantics_contract.json
+!experiments/rl_policy_training/artifacts/future_f_cucumber_objective_from_interview_v1/
+!experiments/rl_policy_training/artifacts/future_f_cucumber_objective_from_interview_v1/final_cucumber_objective_from_interview.md

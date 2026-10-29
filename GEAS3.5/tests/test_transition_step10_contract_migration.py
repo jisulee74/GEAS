@@ -44,6 +44,7 @@ from geas35.rl import MDP_V1_ACTION_COLUMNS
 from synthetic_experiment_fixtures import (
     SYNTHETIC_CROP,
     transition_rl_ready_frame,
+    write_identity_transition_scaler,
 )
 
 
@@ -65,6 +66,7 @@ def test_step10_synthetic_e2e_covers_v14_transition_contract(
     dataset_dir = tmp_path / "transition_rl_dataset" / SYNTHETIC_CROP
     output_dir = tmp_path / "transition_artifacts"
     dataset_dir.mkdir(parents=True)
+    write_identity_transition_scaler(dataset_dir / "observation_scaler.json")
     split_paths = {}
     for split, offset in (("train", 0.0), ("validation", 0.25), ("test", 0.5)):
         path = dataset_dir / f"{split}.parquet"
@@ -116,8 +118,6 @@ def test_step10_synthetic_e2e_covers_v14_transition_contract(
         CANDIDATE_ROLLOUT_METRICS_JSON,
         CANDIDATE_RESOURCE_METRICS_CSV,
         CANDIDATE_RESOURCE_METRICS_JSON,
-        CANDIDATE_TEST_METRICS_CSV,
-        CANDIDATE_TEST_METRICS_JSON,
         TRANSITION_SUMMARY_MD,
         ARTIFACT_INTEGRITY_JSON,
         "config.json",
@@ -135,7 +135,6 @@ def test_step10_synthetic_e2e_covers_v14_transition_contract(
         HPO_RESULTS_FILENAME,
         BEST_CONFIG_FILENAME,
         TRAINING_SUMMARY_FILENAME,
-        TEST_METRICS_FILENAME,
     }
     for candidate_name in OFFICIAL_CANDIDATES:
         candidate_dir = output_dir / SYNTHETIC_CROP / candidate_name
@@ -155,22 +154,8 @@ def test_step10_synthetic_e2e_covers_v14_transition_contract(
     candidate_payload = json.loads(
         (output_dir / CANDIDATE_METRICS_JSON).read_text(encoding="utf-8")
     )
-    test_payload = json.loads(
-        (output_dir / CANDIDATE_TEST_METRICS_JSON).read_text(encoding="utf-8")
-    )
     assert {row["candidate_name"] for row in candidate_payload["rows"]} == set(
         OFFICIAL_CANDIDATES
-    )
-    assert {row["candidate_name"] for row in test_payload["rows"]} == set(
-        OFFICIAL_CANDIDATES
-    )
-    assert test_payload["validation_ranking_unchanged"] is True
-    assert {
-        row["candidate_name"]: row["validation_rank"] for row in test_payload["rows"]
-    } == validation_ranks
-    assert all(
-        row["test_used_for_validation_ranking"] is False
-        for row in test_payload["rows"]
     )
 
     forbidden_paths = (
@@ -206,7 +191,7 @@ def test_step10_synthetic_e2e_covers_v14_transition_contract(
         (output_dir / ARTIFACT_INTEGRITY_JSON).read_text(encoding="utf-8")
     )
     assert integrity["passed"] is True
-    assert result.experiment_result.test_output_paths
+    assert result.experiment_result.test_output_paths == {}
 
 
 def test_step10_transition_readme_uses_candidate_evaluation_language() -> None:
@@ -218,10 +203,9 @@ def test_step10_transition_readme_uses_candidate_evaluation_language() -> None:
     ).read_text(encoding="utf-8")
 
     assert "Transition Model Candidate Evaluation" in readme
-    assert "Test metrics are computed for every candidate" in readme
+    assert "Test metrics are not computed in Step 12" in readme
     assert "selected_transition_model.json" in readme
-    assert "candidate_test_metrics.csv/json" in readme
-    assert "Test metrics are not computed in this step" not in readme
+    assert "candidate_test_metrics.csv/json" not in readme
     assert "candidate-evaluation experiment" in script
 
 

@@ -1,0 +1,30 @@
+{
+  "schema_version": "geas35.rl.step15.config.v1_4",
+  "protocol_version": "geas35.rl.step15.v1_4",
+  "support": {
+    "seed": 42,
+    "calibration_episode_fraction": 0.2,
+    "warning_coverage": 0.95,
+    "severe_coverage": 0.99,
+    "neighbors": 50,
+    "max_reference_rows": 10000,
+    "max_calibration_rows": 5000
+  },
+  "hpo": {
+    "trials_per_crop": 30,
+    "sampler_seed": 42,
+    "budget_source_step": "19.5",
+    "budget_status": "pending_calibration",
+    "budget_artifact_schema": "geas35.rl.step19_5.budget.v2"
+  },
+  "final_training": {"seeds": [42, 43, 44, 45, 46, 47, 48, 49, 50, 51]},
+  "evaluation": {
+    "primary_metric": "mean_reward_per_scheduled_valid_step",
+    "episodic_return_role": "secondary_metric_only",
+    "confidence_interval": "episode_bootstrap_95pct",
+    "comparison": "paired_by_episode_and_exogenous_trajectory",
+    "failed_episode_rule": "count_scheduled_steps_with_pessimistic_terminal_cost",
+    "early_stop_rule": "validation_only",
+    "test_rule": "single_final_evaluation_after_protocol_hash_authorization"
+  }
+}

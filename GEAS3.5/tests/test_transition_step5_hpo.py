@@ -20,6 +20,7 @@ from geas35.models.transition import (
 from synthetic_experiment_fixtures import (
     SYNTHETIC_CROP,
     transition_rl_ready_frame,
+    write_identity_transition_scaler,
 )
 
 
@@ -57,6 +58,7 @@ def test_transition_hpo_writes_trainable_and_persistence_artifacts(
     dataset_dir = tmp_path / "transition_rl_dataset" / SYNTHETIC_CROP
     output_dir = tmp_path / "transition_artifacts"
     dataset_dir.mkdir(parents=True)
+    write_identity_transition_scaler(dataset_dir / "observation_scaler.json")
     split_paths = {}
     for split, offset in (("train", 0.0), ("validation", 0.25), ("test", 0.5)):
         path = dataset_dir / f"{split}.parquet"

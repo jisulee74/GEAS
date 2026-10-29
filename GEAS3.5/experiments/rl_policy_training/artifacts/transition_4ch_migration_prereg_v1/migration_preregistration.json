@@ -1,0 +1,1034 @@
+{
+  "version": "transition_4ch_migration_prereg.v1",
+  "status": "DESIGN_PREREGISTERED — PHASE0 IMPLEMENTATION REQUIRED BEFORE FIT",
+  "created_at": "2026-10-27T04:31:15.774235+00:00",
+  "scope": "design only; no data/scaler/model/runtime/support mutation",
+  "parents": {
+    "experiments/transition_model_selection/artifacts/command_carry_hlv15_b60_r6_v1/protocol.json": "8a96e21c8929339f11eefd5c08b96e92bd12649507802abe2d3694d1cdb2e9f0",
+    "experiments/rl_policy_training/artifacts/transition_4ch_migration_audit_v1/transition_4ch_migration_contract.json": "4955736dafafcaa76cd94e39f82266530c558a9eae807870655b395a9060c946"
+  },
+  "source_dataset": "past_only_qc_hlv15_b60_r6_v1",
+  "next_dataset_namespace": "past_only_qc_hlv15_b60_r6_4ch_v1",
+  "next_model_namespace": "command_carry_hlv15_b60_r6_4ch_v1",
+  "schema": {
+    "observation_columns": [
+      "obs_indoor_temp1_c",
+      "obs_indoor_temp2_c",
+      "obs_indoor_humidity1_pct",
+      "obs_indoor_humidity2_pct",
+      "obs_outdoor_temp_c",
+      "obs_outdoor_humidity_pct",
+      "obs_outdoor_light",
+      "obs_outdoor_wind_speed",
+      "obs_rain_flag",
+      "obs_hour_sin",
+      "obs_hour_cos",
+      "obs_is_daytime",
+      "obs_solar_period_day",
+      "obs_solar_period_early_night",
+      "obs_solar_period_late_night",
+      "obs_daylight_condition_sunny",
+      "obs_daylight_condition_partly_cloudy",
+      "obs_daylight_condition_cloudy",
+      "obs_daylight_condition_unknown",
+      "obs_growth_stage_1",
+      "obs_growth_stage_2",
+      "obs_growth_stage_3",
+      "obs_growth_stage_4",
+      "obs_growth_stage_5",
+      "obs_growth_stage_6",
+      "obs_growth_stage_dat",
+      "obs_target_day_temp_c",
+      "obs_target_night_temp_c",
+      "obs_current_target_temp_min_c",
+      "obs_current_target_temp_max_c",
+      "obs_current_target_temp_c",
+      "obs_current_vpd_kpa",
+      "obs_current_dewpoint_c",
+      "obs_current_condensation_margin_c",
+      "obs_derived_rh90_minutes_1h",
+      "obs_derived_low_vpd_minutes_1h",
+      "obs_derived_condensation_margin_pred_10m",
+      "obs_derived_dli_mol_m2",
+      "obs_derived_light_sum",
+      "obs_derived_clear_sky_sum",
+      "obs_derived_light_sum_ratio",
+      "obs_derived_light_eta_minutes",
+      "obs_derived_vent_loss_proxy",
+      "obs_derived_temp_diff_in_out_c",
+      "obs_derived_ach_min_day",
+      "obs_derived_ach_min_night",
+      "obs_derived_ramp_limit_pct",
+      "obs_derived_heating_degree_minutes",
+      "obs_derived_cooling_degree_minutes",
+      "obs_derived_condensation_risk_10m",
+      "obs_prev_vent_pct",
+      "obs_prev_shade_curtain_pct",
+      "obs_prev_thermal_curtain_pct",
+      "obs_prev_heat_run",
+      "obs_prev_cool_run",
+      "obs_prev_fan_run"
+    ],
+    "action_columns": [
+      "vent_pct",
+      "shade_curtain_pct",
+      "thermal_curtain_pct",
+      "heat_run",
+      "cool_run",
+      "fan_run"
+    ],
+    "input_order": [
+      "obs_indoor_temp1_c",
+      "obs_indoor_temp2_c",
+      "obs_indoor_humidity1_pct",
+      "obs_indoor_humidity2_pct",
+      "obs_outdoor_temp_c",
+      "obs_outdoor_humidity_pct",
+      "obs_outdoor_light",
+      "obs_outdoor_wind_speed",
+      "obs_rain_flag",
+      "obs_hour_sin",
+      "obs_hour_cos",
+      "obs_is_daytime",
+      "obs_solar_period_day",
+      "obs_solar_period_early_night",
+      "obs_solar_period_late_night",
+      "obs_daylight_condition_sunny",
+      "obs_daylight_condition_partly_cloudy",
+      "obs_daylight_condition_cloudy",
+      "obs_daylight_condition_unknown",
+      "obs_growth_stage_1",
+      "obs_growth_stage_2",
+      "obs_growth_stage_3",
+      "obs_growth_stage_4",
+      "obs_growth_stage_5",
+      "obs_growth_stage_6",
+      "obs_growth_stage_dat",
+      "obs_target_day_temp_c",
+      "obs_target_night_temp_c",
+      "obs_current_target_temp_min_c",
+      "obs_current_target_temp_max_c",
+      "obs_current_target_temp_c",
+      "obs_current_vpd_kpa",
+      "obs_current_dewpoint_c",
+      "obs_current_condensation_margin_c",
+      "obs_derived_rh90_minutes_1h",
+      "obs_derived_low_vpd_minutes_1h",
+      "obs_derived_condensation_margin_pred_10m",
+      "obs_derived_dli_mol_m2",
+      "obs_derived_light_sum",
+      "obs_derived_clear_sky_sum",
+      "obs_derived_light_sum_ratio",
+      "obs_derived_light_eta_minutes",
+      "obs_derived_vent_loss_proxy",
+      "obs_derived_temp_diff_in_out_c",
+      "obs_derived_ach_min_day",
+      "obs_derived_ach_min_night",
+      "obs_derived_ramp_limit_pct",
+      "obs_derived_heating_degree_minutes",
+      "obs_derived_cooling_degree_minutes",
+      "obs_derived_condensation_risk_10m",
+      "obs_prev_vent_pct",
+      "obs_prev_shade_curtain_pct",
+      "obs_prev_thermal_curtain_pct",
+      "obs_prev_heat_run",
+      "obs_prev_cool_run",
+      "obs_prev_fan_run",
+      "vent_pct",
+      "shade_curtain_pct",
+      "thermal_curtain_pct",
+      "heat_run",
+      "cool_run",
+      "fan_run"
+    ],
+    "target_order": [
+      "obs_indoor_temp1_c",
+      "obs_indoor_temp2_c",
+      "obs_indoor_humidity1_pct",
+      "obs_indoor_humidity2_pct"
+    ],
+    "units": [
+      "degC",
+      "degC",
+      "percent_RH",
+      "percent_RH"
+    ],
+    "input_dimension": 62,
+    "state_dimension": 56,
+    "representative_aliases": {
+      "obs_indoor_temp_c": "obs_indoor_temp1_c",
+      "obs_indoor_humidity_pct": "obs_indoor_humidity1_pct"
+    },
+    "alias_usage": "valid four-channel domain only, downstream derived compatibility; not duplicate model inputs",
+    "co2": "absent from new model state/output/runtime/support feature set; raw audit metadata may retain it",
+    "other_features": "unchanged ordering and causal definitions; old target/context are legacy historical covariates, never Future-F objective labels"
+  },
+  "target_formulation": "physical residual per raw channel: next_raw_j - current_raw_j; predict next via current channel inverse-scaled baseline + predicted_delta",
+  "admission": {
+    "splits": [
+      "train",
+      "validation"
+    ],
+    "parent_eligible_only": true,
+    "sensor_fields": [
+      "in_temp",
+      "in_temp2",
+      "in_hum",
+      "in_hum2"
+    ],
+    "raw_fields": true,
+    "all_flags_zero": [
+      "missing_flag",
+      "invalid_flag",
+      "imputed_flag",
+      "ffill_flag",
+      "rule_outlier_flag"
+    ],
+    "finite": true,
+    "temperature_min": -273.15,
+    "humidity_range": [
+      0,
+      100
+    ],
+    "is_resampled_row": 0,
+    "join_keys": [
+      "crop",
+      "series_id",
+      "segment_id",
+      "episode_id"
+    ],
+    "delta_minutes": 5,
+    "both_endpoints": true,
+    "preserve_source_identity": true,
+    "reuse_parent_split": true,
+    "parent_hashes": {
+      "melon/train_prepared_qc.parquet": "fb0b200f586169065ef30378c75e0c47266b35cfdf43f79e8e91f7ecae537d4c",
+      "melon/train_registry.parquet": "08acb25350103cbd86316489d60924ec72f2eebd62d134ac279041443068439b",
+      "melon/validation_prepared_qc.parquet": "a356e1bb64c2c95142a79ecd2ab796a998c7fa611731b47105e997b0ebe329a1",
+      "melon/validation_registry.parquet": "42c3993f06886a24dbc45b455f2285e11633e56b7725158838c8d07a2c4c6720",
+      "cucumber/train_prepared_qc.parquet": "e8f8ac511a8b3c2f3f73abbca0751006bcb63cdf4a315809f19077f48dc70963",
+      "cucumber/train_registry.parquet": "38b79900966709db294dccb20dbcce3219cf6a63021a99a4c328965ce679f163",
+      "cucumber/validation_prepared_qc.parquet": "74028634906d3fad5c17fc0bcf48410d445f157762a20406c067b27999e8c99e",
+      "cucumber/validation_registry.parquet": "b2fe062fa50904be93d55ccb7774e2e34e3a82da254f747c63657b953c39c209",
+      "strawberry/train_prepared_qc.parquet": "c78831fce9e512268a73c4c34c3cda16f8383b564fcd87bcff9494f9069a3330",
+      "strawberry/train_registry.parquet": "39934b34551eb42aa099f806f2d6d98f7cddc3da07a6ad9ef763caceef60aa03",
+      "strawberry/validation_prepared_qc.parquet": "984785f9b059d26d92e24663783b3a57521e8aa901b7b17fd268a80002d0bede",
+      "strawberry/validation_registry.parquet": "84c85d6633889f54c93d5b2e73be67870d1b816a36809b78f622022bf6223587"
+    },
+    "expected_pair_counts": {
+      "melon/train": 28264,
+      "melon/validation": 5974,
+      "cucumber/train": 14191,
+      "cucumber/validation": 4647,
+      "strawberry/train": 43905,
+      "strawberry/validation": 17358
+    }
+  },
+  "windows": {
+    "horizons_steps": [
+      3,
+      6,
+      12
+    ],
+    "construction": "subset of frozen parent window registry, never bridge removed rows; every current/target raw channel valid; exact 5min same rollout/identity",
+    "empty_population": "BLOCKED; no relaxation"
+  },
+  "scaler": {
+    "fit": "new eligible Train only",
+    "new_four_channels": "zscore current physical channels using existing Train scaler convention",
+    "other_features": "preserve transform family; refit Train statistics where applicable",
+    "validation": "transform only",
+    "quality_flags": "metadata only"
+  },
+  "history": {
+    "reset": "preserve solar/degree carry/condensation and low-VPD/RH90 prehistory contracts; no future raw indoor values",
+    "advance": "all 4 channels from predictions; representative aliases T1/RH1 only in valid domain; recompute VPD/dewpoint/tempdiff/ventloss/rolling/degree causally",
+    "invalid_prediction": "stop and fail finite/physical gate; no fallback sensor/AI/imputation/clipping",
+    "co2_inputs": "forbid direct/indirect model feature dependence, no future recorded CO2 or persistence substitution",
+    "exogenous": "same frozen exogenous replay semantics, no future endogenous state as exogenous"
+  },
+  "candidates": {
+    "melon": {
+      "persistence": {
+        "params": {},
+        "source": "experiments/transition_model_selection/artifacts/step12_v1_4_root_cause/official_rerun/deduplicated_without_quality_flags/melon/melon/persistence/best_config.json",
+        "sha256": "f9f5baeb783a8bef30b9a660aaf1390d48d2ff415f35908b5ea6b923d46cc126",
+        "reason": "stored final A protocol hyperparameters; no search",
+        "seeds": [
+          null
+        ],
+        "migration": "base params/seeds unchanged; parent T-specific overrides copied to T1/T2, RH to RH1/RH2; CO2 overrides removed; never old weights"
+      },
+      "linear_regression": {
+        "params": {
+          "fit_intercept": true,
+          "target_estimator_kwargs": {
+            "obs_indoor_temp1_c": {
+              "fit_intercept": true
+            },
+            "obs_indoor_temp2_c": {
+              "fit_intercept": true
+            },
+            "obs_indoor_humidity1_pct": {
+              "fit_intercept": false
+            },
+            "obs_indoor_humidity2_pct": {
+              "fit_intercept": false
+            }
+          }
+        },
+        "source": "experiments/transition_model_selection/artifacts/step12_v1_4_root_cause/official_rerun/deduplicated_without_quality_flags/melon/melon/linear_regression/best_config.json",
+        "sha256": "55102537cd0cc0ffc3d7fdc2ddd0f369848a18366c623580c29dceecf123bb3a",
+        "reason": "stored final A protocol hyperparameters; no search",
+        "seeds": [
+          null
+        ],
+        "migration": "base params/seeds unchanged; parent T-specific overrides copied to T1/T2, RH to RH1/RH2; CO2 overrides removed; never old weights"
+      },
+      "linear_svr": {
+        "params": {
+          "random_state": 42,
+          "C": 0.1,
+          "epsilon": 0.01,
+          "max_iter": 3000,
+          "target_estimator_kwargs": {
+            "obs_indoor_temp1_c": {
+              "C": 0.1
+            },
+            "obs_indoor_temp2_c": {
+              "C": 0.1
+            },
+            "obs_indoor_humidity1_pct": {
+              "C": 1.0
+            },
+            "obs_indoor_humidity2_pct": {
+              "C": 1.0
+            }
+          }
+        },
+        "source": "experiments/transition_model_selection/artifacts/step12_v1_4_root_cause/official_rerun/deduplicated_without_quality_flags/melon/melon/linear_svr/best_config.json",
+        "sha256": "ce553ba6ec2c199dda525df00fe5e002dc3eab0e26476d1d43d5b1c01a3fb974",
+        "reason": "stored final A protocol hyperparameters; no search",
+        "seeds": [
+          42
+        ],
+        "migration": "base params/seeds unchanged; parent T-specific overrides copied to T1/T2, RH to RH1/RH2; CO2 overrides removed; never old weights"
+      },
+      "knn": {
+        "params": {
+          "n_neighbors": 11,
+          "weights": "uniform",
+          "target_estimator_kwargs": {
+            "obs_indoor_temp1_c": {
+              "n_neighbors": 11
+            },
+            "obs_indoor_temp2_c": {
+              "n_neighbors": 11
+            },
+            "obs_indoor_humidity1_pct": {
+              "n_neighbors": 11
+            },
+            "obs_indoor_humidity2_pct": {
+              "n_neighbors": 11
+            }
+          }
+        },
+        "source": "experiments/transition_model_selection/artifacts/step12_v1_4_root_cause/official_rerun/deduplicated_without_quality_flags/melon/melon/knn/best_config.json",
+        "sha256": "e222c6fb72118c2f56065844e39e1c16b455dd197a23526a0d48d8c23c38b75d",
+        "reason": "stored final A protocol hyperparameters; no search",
+        "seeds": [
+          null
+        ],
+        "migration": "base params/seeds unchanged; parent T-specific overrides copied to T1/T2, RH to RH1/RH2; CO2 overrides removed; never old weights"
+      },
+      "extra_trees": {
+        "params": {
+          "n_estimators": 300,
+          "random_state": 43,
+          "n_jobs": 8,
+          "max_depth": 8,
+          "min_samples_leaf": 1,
+          "max_features": 0.375,
+          "target_estimator_kwargs": {
+            "obs_indoor_temp1_c": {
+              "min_samples_leaf": 4
+            },
+            "obs_indoor_temp2_c": {
+              "min_samples_leaf": 4
+            },
+            "obs_indoor_humidity1_pct": {
+              "min_samples_leaf": 1
+            },
+            "obs_indoor_humidity2_pct": {
+              "min_samples_leaf": 1
+            }
+          }
+        },
+        "source": "experiments/transition_model_selection/artifacts/step12_v1_4_root_cause/official_rerun/deduplicated_without_quality_flags/melon/melon/extra_trees/best_config.json",
+        "sha256": "5067b39814b8101bfd4aec462523b84f6a48febe6758181505a34e051e8646ea",
+        "reason": "stored final A protocol hyperparameters; no search",
+        "seeds": [
+          43
+        ],
+        "migration": "base params/seeds unchanged; parent T-specific overrides copied to T1/T2, RH to RH1/RH2; CO2 overrides removed; never old weights"
+      },
+      "lightgbm": {
+        "params": {
+          "random_state": 43,
+          "verbosity": -1,
+          "n_jobs": 8,
+          "n_estimators": 38,
+          "learning_rate": 0.0225,
+          "num_leaves": 63,
+          "min_child_samples": 9,
+          "subsample": 1.0,
+          "colsample_bytree": 0.75,
+          "reg_alpha": 0.0075,
+          "reg_lambda": 0.75,
+          "target_estimator_kwargs": {
+            "obs_indoor_temp1_c": {
+              "num_leaves": 62
+            },
+            "obs_indoor_temp2_c": {
+              "num_leaves": 62
+            },
+            "obs_indoor_humidity1_pct": {
+              "num_leaves": 30
+            },
+            "obs_indoor_humidity2_pct": {
+              "num_leaves": 30
+            }
+          }
+        },
+        "source": "experiments/transition_model_selection/artifacts/step12_v1_4_root_cause/official_rerun/deduplicated_without_quality_flags/melon/melon/lightgbm/best_config.json",
+        "sha256": "f64c2cda67d6824b663aa0e8c965315aacb6b0a67b871b495213cb2fe7043969",
+        "reason": "stored final A protocol hyperparameters; no search",
+        "seeds": [
+          43
+        ],
+        "migration": "base params/seeds unchanged; parent T-specific overrides copied to T1/T2, RH to RH1/RH2; CO2 overrides removed; never old weights"
+      },
+      "xgboost": {
+        "params": {
+          "random_state": 43,
+          "verbosity": 0,
+          "n_jobs": 8,
+          "n_estimators": 62,
+          "learning_rate": 0.0375,
+          "max_depth": 3,
+          "min_child_weight": 1,
+          "subsample": 0.4,
+          "colsample_bytree": 1.0,
+          "reg_alpha": 0.0125,
+          "reg_lambda": 7.5,
+          "target_estimator_kwargs": {
+            "obs_indoor_temp1_c": {
+              "max_depth": 6
+            },
+            "obs_indoor_temp2_c": {
+              "max_depth": 6
+            },
+            "obs_indoor_humidity1_pct": {
+              "max_depth": 5
+            },
+            "obs_indoor_humidity2_pct": {
+              "max_depth": 5
+            }
+          }
+        },
+        "source": "experiments/transition_model_selection/artifacts/step12_v1_4_root_cause/official_rerun/deduplicated_without_quality_flags/melon/melon/xgboost/best_config.json",
+        "sha256": "3e7dc6267c050862cb2abadaa43bd7ad287c39105e34ce387f59760395ef8afc",
+        "reason": "stored final A protocol hyperparameters; no search",
+        "seeds": [
+          43
+        ],
+        "migration": "base params/seeds unchanged; parent T-specific overrides copied to T1/T2, RH to RH1/RH2; CO2 overrides removed; never old weights"
+      },
+      "mlp": {
+        "params": {
+          "hidden_layer_sizes": [
+            160,
+            80,
+            40
+          ],
+          "max_iter": 1250,
+          "random_state": 43,
+          "alpha": 0.005,
+          "learning_rate_init": 0.0025,
+          "early_stopping": true,
+          "n_iter_no_change": 20,
+          "target_estimator_kwargs": {
+            "obs_indoor_temp1_c": {
+              "alpha": 0.0005
+            },
+            "obs_indoor_temp2_c": {
+              "alpha": 0.0005
+            },
+            "obs_indoor_humidity1_pct": {
+              "alpha": 0.002
+            },
+            "obs_indoor_humidity2_pct": {
+              "alpha": 0.002
+            }
+          }
+        },
+        "source": "experiments/transition_model_selection/artifacts/step12_v1_4_root_cause/official_rerun/deduplicated_without_quality_flags/melon/melon/mlp/best_config.json",
+        "sha256": "54b507f2fc4a320710afa7ad10bf649f9c459fcbcae74af3bfbbe9995d9fa491",
+        "reason": "stored final A protocol hyperparameters; no search",
+        "seeds": [
+          42,
+          43,
+          44
+        ],
+        "migration": "base params/seeds unchanged; parent T-specific overrides copied to T1/T2, RH to RH1/RH2; CO2 overrides removed; never old weights"
+      }
+    },
+    "cucumber": {
+      "persistence": {
+        "params": {},
+        "source": "experiments/transition_model_selection/artifacts/step12_v1_4_root_cause/official_rerun/deduplicated_without_quality_flags/cucumber/cucumber/persistence/best_config.json",
+        "sha256": "78b6b1debc3f0d5ecc6f09b8a8c5c45310b44efafbc4bfec6296ff2bf59a123a",
+        "reason": "stored final A protocol hyperparameters; no search",
+        "seeds": [
+          null
+        ],
+        "migration": "base params/seeds unchanged; parent T-specific overrides copied to T1/T2, RH to RH1/RH2; CO2 overrides removed; never old weights"
+      },
+      "linear_regression": {
+        "params": {
+          "fit_intercept": false,
+          "target_estimator_kwargs": {
+            "obs_indoor_temp1_c": {
+              "fit_intercept": false
+            },
+            "obs_indoor_temp2_c": {
+              "fit_intercept": false
+            },
+            "obs_indoor_humidity1_pct": {
+              "fit_intercept": false
+            },
+            "obs_indoor_humidity2_pct": {
+              "fit_intercept": false
+            }
+          }
+        },
+        "source": "experiments/transition_model_selection/artifacts/step12_v1_4_root_cause/official_rerun/deduplicated_without_quality_flags/cucumber/cucumber/linear_regression/best_config.json",
+        "sha256": "99e120f99c420917fc5a5ff507bea215e6f848bb1c05e7e4746dd7556cb73549",
+        "reason": "stored final A protocol hyperparameters; no search",
+        "seeds": [
+          null
+        ],
+        "migration": "base params/seeds unchanged; parent T-specific overrides copied to T1/T2, RH to RH1/RH2; CO2 overrides removed; never old weights"
+      },
+      "linear_svr": {
+        "params": {
+          "random_state": 42,
+          "C": 1.0,
+          "epsilon": 0.01,
+          "max_iter": 3000,
+          "target_estimator_kwargs": {
+            "obs_indoor_temp1_c": {
+              "C": 10.0
+            },
+            "obs_indoor_temp2_c": {
+              "C": 10.0
+            },
+            "obs_indoor_humidity1_pct": {
+              "C": 10.0
+            },
+            "obs_indoor_humidity2_pct": {
+              "C": 10.0
+            }
+          }
+        },
+        "source": "experiments/transition_model_selection/artifacts/step12_v1_4_root_cause/official_rerun/deduplicated_without_quality_flags/cucumber/cucumber/linear_svr/best_config.json",
+        "sha256": "6d4056009c41ff5e6e500f98210686995893c044e03fd047067018cdcb7eee41",
+        "reason": "stored final A protocol hyperparameters; no search",
+        "seeds": [
+          42
+        ],
+        "migration": "base params/seeds unchanged; parent T-specific overrides copied to T1/T2, RH to RH1/RH2; CO2 overrides removed; never old weights"
+      },
+      "knn": {
+        "params": {
+          "n_neighbors": 7,
+          "weights": "uniform",
+          "target_estimator_kwargs": {
+            "obs_indoor_temp1_c": {
+              "n_neighbors": 7
+            },
+            "obs_indoor_temp2_c": {
+              "n_neighbors": 7
+            },
+            "obs_indoor_humidity1_pct": {
+              "n_neighbors": 11
+            },
+            "obs_indoor_humidity2_pct": {
+              "n_neighbors": 11
+            }
+          }
+        },
+        "source": "experiments/transition_model_selection/artifacts/step12_v1_4_root_cause/official_rerun/deduplicated_without_quality_flags/cucumber/cucumber/knn/best_config.json",
+        "sha256": "9c75fcebc4eb8a9053f0ca9869848a339ea4348fa6a82ab317e44c38b5293cf1",
+        "reason": "stored final A protocol hyperparameters; no search",
+        "seeds": [
+          null
+        ],
+        "migration": "base params/seeds unchanged; parent T-specific overrides copied to T1/T2, RH to RH1/RH2; CO2 overrides removed; never old weights"
+      },
+      "extra_trees": {
+        "params": {
+          "n_estimators": 400,
+          "random_state": 43,
+          "n_jobs": 8,
+          "max_depth": 7,
+          "min_samples_leaf": 7,
+          "max_features": "sqrt",
+          "target_estimator_kwargs": {
+            "obs_indoor_temp1_c": {
+              "min_samples_leaf": 4
+            },
+            "obs_indoor_temp2_c": {
+              "min_samples_leaf": 4
+            },
+            "obs_indoor_humidity1_pct": {
+              "min_samples_leaf": 1
+            },
+            "obs_indoor_humidity2_pct": {
+              "min_samples_leaf": 1
+            }
+          }
+        },
+        "source": "experiments/transition_model_selection/artifacts/step12_v1_4_root_cause/official_rerun/deduplicated_without_quality_flags/cucumber/cucumber/extra_trees/best_config.json",
+        "sha256": "6e5a9290f11069694e5ca6197ec1c20bf3203bed1ed50c8dbe7aaa6025e78300",
+        "reason": "stored final A protocol hyperparameters; no search",
+        "seeds": [
+          43
+        ],
+        "migration": "base params/seeds unchanged; parent T-specific overrides copied to T1/T2, RH to RH1/RH2; CO2 overrides removed; never old weights"
+      },
+      "lightgbm": {
+        "params": {
+          "random_state": 43,
+          "verbosity": -1,
+          "n_jobs": 8,
+          "n_estimators": 100,
+          "learning_rate": 0.0375,
+          "num_leaves": 31,
+          "min_child_samples": 39,
+          "subsample": 0.6,
+          "colsample_bytree": 0.4,
+          "reg_alpha": 0.07500000000000001,
+          "reg_lambda": 0.2,
+          "target_estimator_kwargs": {
+            "obs_indoor_temp1_c": {
+              "num_leaves": 15
+            },
+            "obs_indoor_temp2_c": {
+              "num_leaves": 15
+            },
+            "obs_indoor_humidity1_pct": {
+              "num_leaves": 31
+            },
+            "obs_indoor_humidity2_pct": {
+              "num_leaves": 31
+            }
+          }
+        },
+        "source": "experiments/transition_model_selection/artifacts/step12_v1_4_root_cause/official_rerun/deduplicated_without_quality_flags/cucumber/cucumber/lightgbm/best_config.json",
+        "sha256": "2382b1007b6035a343dab8cef44cba81d2127ef8e46b6125117f0dd016ffa01f",
+        "reason": "stored final A protocol hyperparameters; no search",
+        "seeds": [
+          43
+        ],
+        "migration": "base params/seeds unchanged; parent T-specific overrides copied to T1/T2, RH to RH1/RH2; CO2 overrides removed; never old weights"
+      },
+      "xgboost": {
+        "params": {
+          "random_state": 43,
+          "verbosity": 0,
+          "n_jobs": 8,
+          "n_estimators": 62,
+          "learning_rate": 0.06,
+          "max_depth": 10,
+          "min_child_weight": 10,
+          "subsample": 0.3,
+          "colsample_bytree": 0.4,
+          "reg_alpha": 0.02,
+          "reg_lambda": 0.1,
+          "target_estimator_kwargs": {
+            "obs_indoor_temp1_c": {
+              "max_depth": 6
+            },
+            "obs_indoor_temp2_c": {
+              "max_depth": 6
+            },
+            "obs_indoor_humidity1_pct": {
+              "max_depth": 4
+            },
+            "obs_indoor_humidity2_pct": {
+              "max_depth": 4
+            }
+          }
+        },
+        "source": "experiments/transition_model_selection/artifacts/step12_v1_4_root_cause/official_rerun/deduplicated_without_quality_flags/cucumber/cucumber/xgboost/best_config.json",
+        "sha256": "7339a1f941215462a44bf5e4c15ab1a3691d0afca8d9d616ef792d8a10bc4107",
+        "reason": "stored final A protocol hyperparameters; no search",
+        "seeds": [
+          43
+        ],
+        "migration": "base params/seeds unchanged; parent T-specific overrides copied to T1/T2, RH to RH1/RH2; CO2 overrides removed; never old weights"
+      },
+      "mlp": {
+        "params": {
+          "hidden_layer_sizes": [
+            128,
+            64,
+            32
+          ],
+          "max_iter": 750,
+          "random_state": 43,
+          "alpha": 0.01,
+          "learning_rate_init": 0.01,
+          "early_stopping": true,
+          "n_iter_no_change": 19,
+          "target_estimator_kwargs": {
+            "obs_indoor_temp1_c": {
+              "alpha": 0.002
+            },
+            "obs_indoor_temp2_c": {
+              "alpha": 0.002
+            },
+            "obs_indoor_humidity1_pct": {
+              "alpha": 0.00075
+            },
+            "obs_indoor_humidity2_pct": {
+              "alpha": 0.00075
+            }
+          }
+        },
+        "source": "experiments/transition_model_selection/artifacts/step12_v1_4_root_cause/official_rerun/deduplicated_without_quality_flags/cucumber/cucumber/mlp/best_config.json",
+        "sha256": "19047060f84b8ce5ba550c093a49b63aaf38e43e611cca998d5d0e160ec155d5",
+        "reason": "stored final A protocol hyperparameters; no search",
+        "seeds": [
+          42,
+          43,
+          44
+        ],
+        "migration": "base params/seeds unchanged; parent T-specific overrides copied to T1/T2, RH to RH1/RH2; CO2 overrides removed; never old weights"
+      }
+    },
+    "strawberry": {
+      "persistence": {
+        "params": {},
+        "source": "experiments/transition_model_selection/artifacts/step12_v1_4_root_cause/official_rerun/deduplicated_without_quality_flags/strawberry/strawberry/persistence/best_config.json",
+        "sha256": "55a4a84b240234da00d77f989addd0fa276dc813d5ad5004516acaf9bae994a0",
+        "reason": "stored final A protocol hyperparameters; no search",
+        "seeds": [
+          null
+        ],
+        "migration": "base params/seeds unchanged; parent T-specific overrides copied to T1/T2, RH to RH1/RH2; CO2 overrides removed; never old weights"
+      },
+      "linear_regression": {
+        "params": {},
+        "source": "experiments/transition_model_selection/configs/strawberry_v1_4_without_flags.yaml",
+        "sha256": "fad5567704bc489ecb39f63fabe14d4cb014e9aba91e469e422a00d5ca964cea",
+        "reason": "no eligible saved final config; existing protocol base settings retained, not tuned",
+        "seeds": [
+          null
+        ],
+        "migration": "base params/seeds unchanged; parent T-specific overrides copied to T1/T2, RH to RH1/RH2; CO2 overrides removed; never old weights"
+      },
+      "linear_svr": {
+        "params": {
+          "random_state": 42,
+          "C": 1.0,
+          "epsilon": 0.01,
+          "max_iter": 3000,
+          "target_estimator_kwargs": {
+            "obs_indoor_temp1_c": {
+              "C": 10.0
+            },
+            "obs_indoor_temp2_c": {
+              "C": 10.0
+            },
+            "obs_indoor_humidity1_pct": {
+              "C": 10.0
+            },
+            "obs_indoor_humidity2_pct": {
+              "C": 10.0
+            }
+          }
+        },
+        "source": "experiments/transition_model_selection/artifacts/step12_v1_4_root_cause/official_rerun/deduplicated_without_quality_flags/strawberry/strawberry/linear_svr/best_config.json",
+        "sha256": "9196e63179fcca16a3f5ac0375badd1505023209d7364fab91e97039478cb58d",
+        "reason": "stored final A protocol hyperparameters; no search",
+        "seeds": [
+          42
+        ],
+        "migration": "base params/seeds unchanged; parent T-specific overrides copied to T1/T2, RH to RH1/RH2; CO2 overrides removed; never old weights"
+      },
+      "knn": {
+        "params": {
+          "n_neighbors": 11,
+          "weights": "uniform",
+          "target_estimator_kwargs": {
+            "obs_indoor_temp1_c": {
+              "n_neighbors": 7
+            },
+            "obs_indoor_temp2_c": {
+              "n_neighbors": 7
+            },
+            "obs_indoor_humidity1_pct": {
+              "n_neighbors": 11
+            },
+            "obs_indoor_humidity2_pct": {
+              "n_neighbors": 11
+            }
+          }
+        },
+        "source": "experiments/transition_model_selection/artifacts/step12_v1_4_root_cause/official_rerun/deduplicated_without_quality_flags/strawberry/strawberry/knn/best_config.json",
+        "sha256": "51bbe8c99478fb5f09b0cdd4305e91794007332589b273e374c10b27e682c386",
+        "reason": "stored final A protocol hyperparameters; no search",
+        "seeds": [
+          null
+        ],
+        "migration": "base params/seeds unchanged; parent T-specific overrides copied to T1/T2, RH to RH1/RH2; CO2 overrides removed; never old weights"
+      },
+      "extra_trees": {
+        "params": {
+          "n_estimators": 200,
+          "random_state": 42,
+          "n_jobs": 8,
+          "max_depth": 16,
+          "min_samples_leaf": 4,
+          "max_features": 0.75,
+          "target_estimator_kwargs": {
+            "obs_indoor_temp1_c": {
+              "min_samples_leaf": 2
+            },
+            "obs_indoor_temp2_c": {
+              "min_samples_leaf": 2
+            },
+            "obs_indoor_humidity1_pct": {
+              "min_samples_leaf": 1
+            },
+            "obs_indoor_humidity2_pct": {
+              "min_samples_leaf": 1
+            }
+          }
+        },
+        "source": "experiments/transition_model_selection/artifacts/step12_v1_4_root_cause/official_rerun/deduplicated_without_quality_flags/strawberry/strawberry/extra_trees/best_config.json",
+        "sha256": "9444e81e32382a8166c82c8900948dc5177ed8e48c64ade16ff9404b9855ea35",
+        "reason": "stored final A protocol hyperparameters; no search",
+        "seeds": [
+          42
+        ],
+        "migration": "base params/seeds unchanged; parent T-specific overrides copied to T1/T2, RH to RH1/RH2; CO2 overrides removed; never old weights"
+      },
+      "lightgbm": {
+        "params": {
+          "random_state": 43,
+          "verbosity": -1,
+          "n_jobs": 8,
+          "n_estimators": 75,
+          "learning_rate": 0.015,
+          "num_leaves": 30,
+          "min_child_samples": 39,
+          "subsample": 0.6,
+          "colsample_bytree": 1.0,
+          "reg_alpha": 0.125,
+          "reg_lambda": 0.2,
+          "target_estimator_kwargs": {
+            "obs_indoor_temp1_c": {
+              "num_leaves": 14
+            },
+            "obs_indoor_temp2_c": {
+              "num_leaves": 14
+            },
+            "obs_indoor_humidity1_pct": {
+              "num_leaves": 31
+            },
+            "obs_indoor_humidity2_pct": {
+              "num_leaves": 31
+            }
+          }
+        },
+        "source": "experiments/transition_model_selection/artifacts/step12_v1_4_root_cause/official_rerun/deduplicated_without_quality_flags/strawberry/strawberry/lightgbm/best_config.json",
+        "sha256": "05c59089a9760ae07c70926a9dec7d7f38d20c5c58b2ed5320223b5acfe2f8af",
+        "reason": "stored final A protocol hyperparameters; no search",
+        "seeds": [
+          43
+        ],
+        "migration": "base params/seeds unchanged; parent T-specific overrides copied to T1/T2, RH to RH1/RH2; CO2 overrides removed; never old weights"
+      },
+      "xgboost": {
+        "params": {
+          "random_state": 43,
+          "verbosity": 0,
+          "n_jobs": 8,
+          "n_estimators": 75,
+          "learning_rate": 0.1,
+          "max_depth": 3,
+          "min_child_weight": 10,
+          "subsample": 1.0,
+          "colsample_bytree": 0.8,
+          "reg_alpha": 0.125,
+          "reg_lambda": 20.0,
+          "target_estimator_kwargs": {
+            "obs_indoor_temp1_c": {
+              "max_depth": 3
+            },
+            "obs_indoor_temp2_c": {
+              "max_depth": 3
+            },
+            "obs_indoor_humidity1_pct": {
+              "max_depth": 8
+            },
+            "obs_indoor_humidity2_pct": {
+              "max_depth": 8
+            }
+          }
+        },
+        "source": "experiments/transition_model_selection/artifacts/step12_v1_4_root_cause/official_rerun/deduplicated_without_quality_flags/strawberry/strawberry/xgboost/best_config.json",
+        "sha256": "ada5ffd131bc6dd98a810068df9e36478085528e06cfb430c71623f69eaf193b",
+        "reason": "stored final A protocol hyperparameters; no search",
+        "seeds": [
+          43
+        ],
+        "migration": "base params/seeds unchanged; parent T-specific overrides copied to T1/T2, RH to RH1/RH2; CO2 overrides removed; never old weights"
+      },
+      "mlp": {
+        "params": {
+          "hidden_layer_sizes": [
+            64
+          ],
+          "max_iter": 750,
+          "random_state": 43,
+          "alpha": 0.01,
+          "learning_rate_init": 0.002,
+          "early_stopping": true,
+          "n_iter_no_change": 19,
+          "target_estimator_kwargs": {
+            "obs_indoor_temp1_c": {
+              "alpha": 0.02
+            },
+            "obs_indoor_temp2_c": {
+              "alpha": 0.02
+            },
+            "obs_indoor_humidity1_pct": {
+              "alpha": 0.00075
+            },
+            "obs_indoor_humidity2_pct": {
+              "alpha": 0.00075
+            }
+          }
+        },
+        "source": "experiments/transition_model_selection/artifacts/step12_v1_4_root_cause/official_rerun/deduplicated_without_quality_flags/strawberry/strawberry/mlp/best_config.json",
+        "sha256": "807f306ea63d1998cf7aba889bb2b45fab4fdc46578151473b07bef95b3d79af",
+        "reason": "stored final A protocol hyperparameters; no search",
+        "seeds": [
+          42,
+          43,
+          44
+        ],
+        "migration": "base params/seeds unchanged; parent T-specific overrides copied to T1/T2, RH to RH1/RH2; CO2 overrides removed; never old weights"
+      }
+    }
+  },
+  "dependencies": {
+    "numpy": "2.5.1",
+    "pandas": "3.0.5",
+    "scikit-learn": "1.9.0",
+    "lightgbm": "4.7.0",
+    "xgboost": "3.4.0",
+    "scipy": "1.18.0"
+  },
+  "metric": {
+    "normalization": "fixed eligible Validation next-target population std(ddof=0), parent convention; fallback range then1 only if degenerate; report any fallback before fit",
+    "target_aggregation": "arithmetic mean of four per-channel normalized errors; inherited equal-target principle, not agronomic or reward-derived weights",
+    "channel_weights": [
+      0.25,
+      0.25,
+      0.25,
+      0.25
+    ],
+    "horizon_weights": {
+      "one_step": 0.1,
+      "15min": 0.1,
+      "30min": 0.25,
+      "60min": 0.45,
+      "drift": 0.1
+    },
+    "formula": "0.10 one_step_nRMSE + 0.10 trajectory_nRMSE_3 + 0.25 trajectory_nRMSE_6 + 0.45 trajectory_nRMSE_12 + 0.10 mean_horizon_abs_error_normalized_drift_slope",
+    "drift": "exact parent horizon helper definition; negative slopes retained as parent; prereg bound source hash",
+    "tail": "p90/CVaR90 diagnostics, no new ranking weight",
+    "baseline": "Persistence uses each own current raw channel constant over horizon; baseline only, never missing-channel substitution",
+    "physical_ranges": {
+      "T1": [
+        -60,
+        80
+      ],
+      "T2": [
+        -60,
+        80
+      ],
+      "RH1": [
+        0,
+        100
+      ],
+      "RH2": [
+        0,
+        100
+      ]
+    },
+    "reward_scales": "unchanged and not reused for model metric"
+  },
+  "selection": {
+    "rule": "minimum existing weighted score among eligible candidates; MLP uses median eligible seed among fixed 42/43/44; name tie-break; failed fits remain failures",
+    "approval_guard": "user-requested Persistence comparison: selected weighted score must improve Persistence; negative per-target skill disclosed, not newly made an automatic rejection (legacy protocol permitted it)",
+    "eligibility": "existing finite objective and one-step metrics, zero NaN/Inf and zero physical violations at every horizon, action-response support>=100 and nonzero response; persistence reference only",
+    "one_step_gate": "finite and zero physical violations",
+    "multistep_gate": "all horizons finite and zero physical violations, no OOD/projection/termination masking in model evaluation",
+    "mlp": "fixed42/43/44; median eligible seed per parent; failure records retained",
+    "reproducibility": "selected config/seed fresh repeat fit; reload prediction equality rtol=1e-6 atol=1e-8; hashes recorded; failed repeat blocks approval",
+    "prior_winner": "reference only, no automatic preferred final algorithm"
+  },
+  "phase0_gate": [
+    "all raw channel endpoint/identity checks",
+    "no future endogenous input or CO2 substitution",
+    "exact parent subset row/window registries",
+    "Train-only scaler fit registry",
+    "finite schema and four-channel residual identity",
+    "teacher forcing four-channel/representative/derived/history rtol1e-6 atol1e-8",
+    "boundary/reset/midnight/gap/>288 history regression",
+    "action causal invariant and target-next5min",
+    "deterministic rebuild/hash",
+    "forbidden Test/P0 access guard",
+    "complete input/dependency/code locks before fit"
+  ],
+  "support": "new56 state +6 action and new scaler/population => rebuild/recalibrate later; retain methodology, not thresholds; no support generation now",
+  "execution_sequence": [
+    "Phase0 implementation + dataset/scaler gate",
+    "freeze execution input/code/window/normalization manifests before first fit",
+    "fresh fixed candidates comparison and selected repeat",
+    "only after selection PASS new handoff/support/Step16 validation"
+  ],
+  "not_authorized_now": [
+    "dataset rebuild",
+    "scaler fit",
+    "Transition fit/reselection",
+    "support generation",
+    "PPO",
+    "HPO",
+    "Test/P0 training reads",
+    "production edits",
+    "new SHADOW",
+    "reward changes"
+  ],
+  "parent_metric_code_hashes": {
+    "src/geas35/models/transition/hyperparameters.py": "33e5f52553ea9f6a317c6f209d3e53b530523e034d44c44d7afae8214922bc99",
+    "src/geas35/models/transition/evaluate_command_carry_b_v1.py": "7b6b6cb0500a509edec06a243969c81a6c8337a33024ee274e42b2411866ffa8",
+    "src/geas35/models/transition/action_response.py": "3e72294a7cd95e3e2699a512fa648d59d691701ab33bd5aa2994c280e693b0e5"
+  }
+}

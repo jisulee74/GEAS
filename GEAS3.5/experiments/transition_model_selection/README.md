@@ -45,8 +45,8 @@ Candidate evaluation contract:
 - Candidate models are fitted on train.
 - HPO objective, validation metrics, and validation rollout metrics produce candidate ranking information.
 - The framework does not choose the final transition model.
-- Test metrics are computed for every candidate after validation ranking and are descriptive only.
-- Test metrics are not used for HPO, validation ranking, or model selection.
+- Test metrics are not computed in Step 12; Test remains locked during HPO and candidate ranking.
+- After Step 13 integrity review and explicit Step 14 researcher handoff, only the selected candidate may be evaluated on Test.
 - Every candidate artifact is written under `artifacts/default/<crop>/<model_name>/`.
 - Downstream inference must be given an explicit candidate model name or artifact directory.
 
@@ -55,7 +55,6 @@ Output contract:
 - `candidate_metrics.csv/json`
 - `candidate_rollout_metrics.csv/json`
 - `candidate_resource_metrics.csv/json`
-- `candidate_test_metrics.csv/json`
 - `transition_summary.md`
 - `artifact_integrity.json`
 - `<crop>/<model_name>/model.pkl`
@@ -67,7 +66,6 @@ Output contract:
 - `<crop>/<model_name>/hpo_results.json`
 - `<crop>/<model_name>/best_config.json`
 - `<crop>/<model_name>/training_summary.json`
-- `<crop>/<model_name>/test_metrics.json`
 
 The experiment intentionally does not write selected-model artifacts such as
 `selection_report.json`, `selected_transition_model.json`, selected model
@@ -131,3 +129,25 @@ trade-off, and deployment constraints for every crop. The command validates
 those values against Step 12/13 and writes references to the existing candidate
 artifact directories under `artifacts/step14`. It never chooses a candidate,
 creates the researcher decision, or copies a model artifact.
+
+
+## Residual transition experiment v1.1
+
+The v1.1 configs explicitly set `target_formulation: residual_physical_delta_v1` and write only to `artifacts/step12_v1_1`; the existing absolute-state Step 12 artifacts are not overwritten. Test remains unopened during HPO and Validation ranking.
+
+Run one crop with `python scripts/run.py --config configs/strawberry_v1_1.yaml` (replace the crop name as needed). Run the all-crop publisher with three repeated `--config` options and `--output-root artifacts/step12_v1_1`. Nonlinear candidates use 20 broad trials followed by 20 local trials around the three best broad Validation configurations; other learned candidates use at most 20 unique trials.
+
+
+## v1.2 deduplicated quality-flag ablation
+
+Run the six Train/Validation-only experiments independently. Existing v1.1 artifacts are not reused because the feature schema hash differs.
+
+```bash
+for crop in strawberry melon cucumber; do
+  python scripts/run.py --config configs/${crop}_v1_2_with_flags.yaml
+  python scripts/run.py --config configs/${crop}_v1_2_without_flags.yaml
+done
+python scripts/compare_quality_flag_ablation.py
+```
+
+The two variants write under `artifacts/step12_v1_2/`. Test remains unopened. The comparison script must only run after all six experiments complete.

@@ -24,6 +24,7 @@ TRAINABLE_TRANSITION_CANDIDATES = (
 )
 DEFAULT_HPO_BUDGET = 20
 DEFAULT_HPO_RANDOM_SEED = 42
+STAGED_NONLINEAR_CANDIDATES = ("extra_trees", "lightgbm", "xgboost", "mlp")
 DEFAULT_VALIDATION_ROLLOUT_OBJECTIVE_WEIGHTS = {
     "one_step": 0.10,
     "15min": 0.10,
@@ -40,6 +41,9 @@ class TransitionHPOConfig:
     enabled: bool = True
     budget: int = DEFAULT_HPO_BUDGET
     random_seed: int = DEFAULT_HPO_RANDOM_SEED
+    staged_nonlinear: bool = False
+    nonlinear_budget: int = 40
+    linear_budget: int = 20
     max_train_rows: int | None = None
     max_validation_rows: int | None = None
     search_spaces: Mapping[str, Any] = field(default_factory=dict)
@@ -47,9 +51,10 @@ class TransitionHPOConfig:
     objective_weights: Mapping[str, float] = field(
         default_factory=lambda: dict(DEFAULT_VALIDATION_ROLLOUT_OBJECTIVE_WEIGHTS)
     )
+    strict_eligibility: bool = False
 
     def __post_init__(self) -> None:
-        if self.budget <= 0:
+        if self.budget <= 0 or self.nonlinear_budget <= 0 or self.linear_budget <= 0:
             raise ValueError("TransitionHPOConfig.budget must be positive.")
         for name, value in (("max_train_rows", self.max_train_rows),
                             ("max_validation_rows", self.max_validation_rows)):
@@ -61,6 +66,9 @@ class TransitionHPOConfig:
             "enabled": bool(self.enabled),
             "budget": int(self.budget),
             "random_seed": int(self.random_seed),
+            "staged_nonlinear": bool(self.staged_nonlinear),
+            "nonlinear_budget": int(self.nonlinear_budget),
+            "linear_budget": int(self.linear_budget),
             "max_train_rows": self.max_train_rows,
             "max_validation_rows": self.max_validation_rows,
             "search_spaces": _jsonable(self.search_spaces),
@@ -69,6 +77,7 @@ class TransitionHPOConfig:
                 str(key): float(value)
                 for key, value in self.objective_weights.items()
             },
+            "strict_eligibility": bool(self.strict_eligibility),
             "test_used_for_hpo": False,
             "test_used_for_validation_ranking": False,
             "test_used_for_selection": False,
@@ -86,10 +95,18 @@ class TransitionHPOTrialResult:
     validation_rollout_metrics: Mapping[str, Any]
     objective_components: Mapping[str, float]
     validation_rollout_weighted_score: float
+    search_stage: str = "single"
+    search_seed: int | None = None
+    eligible: bool = True
+    ineligibility_reasons: tuple[str, ...] = ()
+    error_type: str | None = None
+    error_message: str | None = None
 
     def to_artifact(self) -> dict[str, Any]:
         return {
             "trial_index": int(self.trial_index),
+            "search_stage": self.search_stage,
+            "search_seed": self.search_seed,
             "model_name": self.model_name,
             "params": _jsonable(self.params),
             "validation_one_step_metrics": _jsonable(self.validation_one_step_metrics),
@@ -98,6 +115,10 @@ class TransitionHPOTrialResult:
             "validation_rollout_weighted_score": _jsonable_float(
                 self.validation_rollout_weighted_score
             ),
+            "eligible": bool(self.eligible),
+            "ineligibility_reasons": list(self.ineligibility_reasons),
+            "error_type": self.error_type,
+            "error_message": self.error_message,
         }
 
 
@@ -117,6 +138,10 @@ class TransitionHPOResult:
     @property
     def applied(self) -> bool:
         return self.status == "completed"
+
+    @property
+    def has_eligible_trial(self) -> bool:
+        return self.status == "completed" and self.best_trial_index is not None
 
     def to_artifact(self) -> dict[str, Any]:
         return {
@@ -142,6 +167,13 @@ class TransitionHPOResult:
                 "test_used_for_selection": False,
             },
             "config": self.config.to_artifact(),
+            "requested_trial_count": int(
+                self.config.nonlinear_budget
+                if self.config.staged_nonlinear and self.model_name in STAGED_NONLINEAR_CANDIDATES
+                else self.config.linear_budget if self.config.staged_nonlinear
+                else self.config.budget
+            ),
+            "actual_unique_trial_count": len(self.trials),
             "trials": [trial.to_artifact() for trial in self.trials],
         }
 
@@ -270,8 +302,16 @@ def sample_transition_hpo_params(
         **_default_search_space(model_name, seed=int(config.random_seed)),
         **_configured_search_space(model_name, config.search_spaces),
     }
+    requested_budget = (
+        config.nonlinear_budget if config.staged_nonlinear and model_name in STAGED_NONLINEAR_CANDIDATES
+        else config.linear_budget if config.staged_nonlinear
+        else config.budget
+    )
     trials = []
-    for _ in range(int(config.budget)):
+    seen = set()
+    attempts = 0
+    while len(trials) < int(requested_budget) and attempts < int(requested_budget) * 100:
+        attempts += 1
         params = dict(base_params)
         for key, spec in space.items():
             params[str(key)] = _sample_value(spec, rng)
@@ -287,7 +327,12 @@ def sample_transition_hpo_params(
                 }
         if target_kwargs:
             params["target_estimator_kwargs"] = target_kwargs
+        signature = repr(_jsonable(params))
+        if signature in seen:
+            continue
+        seen.add(signature)
         trials.append(params)
+    # Exhausted finite spaces are recorded with their actual unique trial count.
     return tuple(trials)
 
 
@@ -346,17 +391,22 @@ def _default_search_space(model_name: str, *, seed: int) -> dict[str, Any]:
         }
     if model_name == "extra_trees":
         return {
-            "n_estimators": {"values": [50, 100, 200]},
-            "max_depth": {"values": [None, 8, 16]},
-            "min_samples_leaf": {"values": [1, 2, 4]},
+            "n_estimators": {"values": [100, 200, 400, 600]},
+            "max_depth": {"values": [None, 8, 16, 24]},
+            "min_samples_leaf": {"values": [1, 2, 4, 8]},
+            "max_features": {"values": [0.5, 0.75, 1.0, "sqrt"]},
             "random_state": {"value": seed},
-            "n_jobs": {"value": -1},
         }
     if model_name == "lightgbm":
         return {
             "n_estimators": {"values": [50, 100, 200]},
             "learning_rate": {"values": [0.03, 0.05, 0.1]},
-            "num_leaves": {"values": [15, 31, 63]},
+            "num_leaves": {"values": [15, 31, 63, 127]},
+            "min_child_samples": {"values": [5, 10, 20, 40]},
+            "subsample": {"values": [0.6, 0.8, 1.0]},
+            "colsample_bytree": {"values": [0.6, 0.8, 1.0]},
+            "reg_alpha": {"values": [0.0, 0.01, 0.1]},
+            "reg_lambda": {"values": [0.0, 0.1, 1.0]},
             "random_state": {"value": seed},
             "verbosity": {"value": -1},
         }
@@ -364,16 +414,23 @@ def _default_search_space(model_name: str, *, seed: int) -> dict[str, Any]:
         return {
             "n_estimators": {"values": [50, 100, 200]},
             "learning_rate": {"values": [0.03, 0.05, 0.1]},
-            "max_depth": {"values": [3, 5, 7]},
+            "max_depth": {"values": [3, 5, 7, 9]},
+            "min_child_weight": {"values": [1, 3, 5, 10]},
+            "subsample": {"values": [0.6, 0.8, 1.0]},
+            "colsample_bytree": {"values": [0.6, 0.8, 1.0]},
+            "reg_alpha": {"values": [0.0, 0.01, 0.1]},
+            "reg_lambda": {"values": [0.1, 1.0, 10.0]},
             "random_state": {"value": seed},
             "verbosity": {"value": 0},
         }
     if model_name == "mlp":
         return {
-            "hidden_layer_sizes": {"values": [(32,), (64,), (64, 32)]},
+            "hidden_layer_sizes": {"values": [(32,), (64,), (128,), (64, 32), (128, 64), (128, 64, 32)]},
             "alpha": {"values": [0.0001, 0.001, 0.01]},
             "learning_rate_init": {"values": [0.0005, 0.001, 0.005]},
-            "max_iter": {"value": 300},
+            "max_iter": {"value": 1000},
+            "early_stopping": {"value": True},
+            "n_iter_no_change": {"value": 20},
             "random_state": {"value": seed},
         }
     return {}
@@ -510,6 +567,7 @@ __all__ = [
     "DEFAULT_HPO_RANDOM_SEED",
     "DEFAULT_VALIDATION_ROLLOUT_OBJECTIVE_WEIGHTS",
     "PERSISTENCE_CANDIDATE_NAME",
+    "STAGED_NONLINEAR_CANDIDATES",
     "TRAINABLE_TRANSITION_CANDIDATES",
     "TransitionHPOConfig",
     "TransitionHPOResult",

@@ -1,0 +1,38 @@
+{
+  "schema_version": "geas35.rl.step19_5.config.v2_2",
+  "protocol_version": "geas35.rl.step19_5.v2_2",
+  "source_protocol": "geas35.rl.step19_5.v2_1_v1_4",
+  "source_steps": [262144, 524288],
+  "extension_budget_steps": 1048576,
+  "representative_configurations": 5,
+  "seeds": [42, 43, 44],
+  "configuration_eligibility": {
+    "require_all_seeds_safe": true,
+    "minimum_eligible_configurations": 2
+  },
+  "practical_equivalence": {
+    "absolute_median_reward_difference_max": 0.001,
+    "bootstrap_samples": 1000,
+    "bootstrap_confidence": 0.95
+  },
+  "ranking_stability": {
+    "kendall_tau_b_min": 0.6,
+    "consecutive_intervals": 2,
+    "require_identical_top_equivalence_group": true
+  },
+  "learning_stability": {
+    "absolute_reward_delta_median_max": 0.001,
+    "absolute_reward_delta_q90_max": 0.002,
+    "consecutive_intervals": 2,
+    "bootstrap_samples": 1000,
+    "bootstrap_confidence": 0.95,
+    "require_slope_ci_contains_zero": true,
+    "require_finite_diagnostics": true
+  },
+  "split_policy": {
+    "fit": "train",
+    "evaluate": "validation",
+    "test": "locked"
+  },
+  "on_unmet_stability_at_extension_budget": "calibration_inconclusive_v2_2"
+}

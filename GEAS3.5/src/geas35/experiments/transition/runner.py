@@ -10,9 +10,12 @@ from typing import Any
 import pandas as pd
 
 from geas35.models.transition.datasets import build_transition_dataset_from_rl_frame
+from geas35.models.transition.feature_variants import (
+    TransitionFeatureVariant, feature_variant_contract,
+    observation_columns_for_variant, prepare_frame_for_feature_variant,
+)
 from geas35.models.transition.comparison import (
     write_transition_candidate_comparison_outputs,
-    write_transition_candidate_test_outputs,
 )
 from geas35.models.transition.registry import (
     TransitionModelFactory,
@@ -22,6 +25,7 @@ from geas35.models.transition.selector import (
     RankingMetricStrategy,
     build_ranking_strategy,
 )
+from geas35.rl import MDP_V1_ACTION_COLUMNS, MdpV1ObservationScaler
 from geas35.models.transition.hyperparameters import TransitionHPOConfig
 from geas35.models.transition.trainer import (
     DEFAULT_ROLLOUT_HORIZON_STEPS,
@@ -55,6 +59,10 @@ class TransitionExperimentConfig:
     rollout_horizon_steps: tuple[int, ...] = DEFAULT_ROLLOUT_HORIZON_STEPS
     rollout_step_minutes: int = DEFAULT_ROLLOUT_STEP_MINUTES
     random_seed: int = 0
+    provenance: Mapping[str, Any] = field(default_factory=dict)
+    target_formulation: str = "absolute_state"
+    resume_completed: bool = False
+    feature_variant: str | None = None
 
 
 @dataclass(frozen=True)
@@ -79,19 +87,29 @@ def run_transition_model_experiment(
     rollout_df: pd.DataFrame | None = None,
     registry: Mapping[str, TransitionModelFactory] | None = None,
     ranking_strategy: RankingMetricStrategy | None = None,
+    observation_scaler: MdpV1ObservationScaler | None = None,
+    observation_scaler_hash: str | None = None,
 ) -> TransitionExperimentResult:
     """Run transition model training from in-memory RL-ready frames."""
 
+    if config.rollout_enabled and (observation_scaler is None or not observation_scaler_hash):
+        raise ValueError("Rollout requires a frozen Train observation scaler and hash.")
+    variant = None if config.feature_variant is None else TransitionFeatureVariant(config.feature_variant)
+    contract = ({} if variant is None else feature_variant_contract(variant, action_columns=MDP_V1_ACTION_COLUMNS))
+    if variant is not None:
+        train_df = prepare_frame_for_feature_variant(train_df, variant)
+        validation_df = prepare_frame_for_feature_variant(validation_df, variant)
+        rollout_df = (None if rollout_df is None else prepare_frame_for_feature_variant(rollout_df, variant))
+    explicit_observations = None if variant is None else observation_columns_for_variant(variant)
     output_root = Path(config.output_root)
     output_root.mkdir(parents=True, exist_ok=True)
     write_json(output_root / "config.json", _config_payload(config), convert=True)
 
-    train_build = build_transition_dataset_from_rl_frame(train_df)
-    validation_build = build_transition_dataset_from_rl_frame(validation_df)
-    test_build = (
-        None
-        if test_df is None
-        else build_transition_dataset_from_rl_frame(test_df)
+    train_build = build_transition_dataset_from_rl_frame(
+        train_df, observation_columns=explicit_observations
+    )
+    validation_build = build_transition_dataset_from_rl_frame(
+        validation_df, observation_columns=explicit_observations
     )
     candidate_specs = build_transition_candidate_specs(
         config.models,
@@ -110,15 +128,23 @@ def run_transition_model_experiment(
         validation_build.dataset,
         candidate_specs,
         crop=config.crop,
+        observation_scaler=observation_scaler,
+        observation_scaler_hash=observation_scaler_hash,
         models_root=output_root,
         ranking_strategy=strategy,
         rollout_frame=rollout_source,
         rollout_horizon_steps=config.rollout_horizon_steps,
         rollout_step_minutes=config.rollout_step_minutes,
         hpo_config=config.hpo_config,
+        target_formulation=config.target_formulation,
+        resume_completed=config.resume_completed,
+        feature_contract=contract,
         artifact_metadata={
             "experiment": "transition",
             "random_seed": int(config.random_seed),
+            "target_formulation": config.target_formulation,
+            "feature_contract": contract,
+            "provenance": dict(config.provenance),
         },
     )
     summary_path = output_root / "experiment_summary.json"
@@ -132,9 +158,7 @@ def run_transition_model_experiment(
             test_rows=None if test_df is None else len(test_df.index),
             train_dataset_rows=len(train_build.dataset.x.index),
             validation_dataset_rows=len(validation_build.dataset.x.index),
-            test_dataset_rows=(
-                None if test_build is None else len(test_build.dataset.x.index)
-            ),
+            test_dataset_rows=None,
             rollout_rows=None if rollout_source is None else len(rollout_source.index),
         ),
         convert=True,
@@ -146,9 +170,7 @@ def run_transition_model_experiment(
         test_rows=None if test_df is None else len(test_df.index),
         train_dataset_rows=len(train_build.dataset.x.index),
         validation_dataset_rows=len(validation_build.dataset.x.index),
-        test_dataset_rows=(
-            None if test_build is None else len(test_build.dataset.x.index)
-        ),
+        test_dataset_rows=None,
         rollout_rows=None if rollout_source is None else len(rollout_source.index),
     )
     comparison_output_paths = write_transition_candidate_comparison_outputs(
@@ -158,15 +180,6 @@ def run_transition_model_experiment(
         dataset_payload=dataset_payload,
     )
     test_output_paths = {}
-    if test_build is not None and test_df is not None:
-        test_output_paths = write_transition_candidate_test_outputs(
-            output_root,
-            training_result,
-            test_dataset=test_build.dataset,
-            test_frame=test_df,
-            rollout_horizon_steps=config.rollout_horizon_steps,
-            rollout_step_minutes=config.rollout_step_minutes,
-        )
     return TransitionExperimentResult(
         output_root=str(output_root),
         crop=config.crop,
@@ -197,6 +210,12 @@ def _config_payload(config: TransitionExperimentConfig) -> dict[str, Any]:
             "step_minutes": int(config.rollout_step_minutes),
         },
         "random_seed": int(config.random_seed),
+        "feature_variant": config.feature_variant,
+        "feature_contract": (
+            {} if config.feature_variant is None else feature_variant_contract(
+                config.feature_variant, action_columns=MDP_V1_ACTION_COLUMNS
+            )
+        ),
     }
 
 
@@ -216,12 +235,19 @@ def _summary_payload(
         "stage": "transition_experiment_summary",
         "crop": config.crop,
         "automatic_model_selection": False,
+        "feature_variant": config.feature_variant,
+        "feature_contract": (
+            {} if config.feature_variant is None else feature_variant_contract(
+                config.feature_variant, action_columns=MDP_V1_ACTION_COLUMNS
+            )
+        ),
         "validation_ranking": training_result.validation_ranking.to_artifact(),
         "hpo": config.hpo_config.to_artifact(),
         "candidate_artifacts": {
             result.model_name: str(result.artifact.artifact_dir)
             for result in training_result.candidate_results
         },
+        "candidate_failures": list(training_result.candidate_failures),
         **_dataset_payload(
             train_rows=train_rows,
             validation_rows=validation_rows,

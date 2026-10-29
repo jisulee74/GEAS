@@ -1,0 +1,35 @@
+{
+  "schema_version": "geas35.rl.step19_5.v2_2",
+  "crop": "strawberry",
+  "config_id": "representative_0",
+  "seed": 42,
+  "training_steps": 1048576,
+  "source_checkpoint_sha256": "d9a1bd6adc62a81f02b9b32aaa0e63141c2840ff681d31aa54df13796c6c6db0",
+  "checkpoint_sha256": "c261fcc9ddb0315e60c0a7ae5be1b61c63bc78073a79eefbb60486684ad66caa",
+  "ppo_config": {
+    "observation_dim": 55,
+    "continuous_action_dim": 3,
+    "binary_action_dim": 3,
+    "hidden_sizes": [
+      128,
+      128
+    ],
+    "activation": "tanh",
+    "beta_concentration_floor": 1.01,
+    "learning_rate": 0.0003,
+    "gamma": 0.99,
+    "gae_lambda": 0.95,
+    "clip_range": 0.2,
+    "value_clip_range": 0.2,
+    "value_coefficient": 0.5,
+    "entropy_coefficient": 0.01,
+    "max_gradient_norm": 0.5,
+    "update_epochs": 10,
+    "minibatch_size": 64,
+    "target_kl": 0.03,
+    "normalize_advantages": true,
+    "seed": 42
+  },
+  "status": "complete",
+  "test_accessed": false
+}

@@ -9,12 +9,9 @@ import pandas as pd
 
 
 MDP_DERIVED_CONTINUOUS_COLUMNS = [
-    "obs_derived_vpd_kpa",
-    "obs_derived_dewpoint_c",
-    "obs_derived_condensation_margin_c",
     "obs_derived_rh90_minutes_1h",
     "obs_derived_low_vpd_minutes_1h",
-    "dTcond_pred_10m",
+    "obs_derived_condensation_margin_pred_10m",
     "obs_derived_dli_mol_m2",
     "obs_derived_light_sum",
     "obs_derived_clear_sky_sum",
@@ -331,9 +328,11 @@ def add_mdp_derived_features(
     df["obs_derived_condensation_margin_c"] = cond_margin
     df["obs_derived_rh90_minutes_1h"] = _rolling_minutes(t, indoor_humidity >= rh_high_pct)
     df["obs_derived_low_vpd_minutes_1h"] = _rolling_minutes(t, vpd < vpd_low_kpa)
-    df["dTcond_pred_10m"] = cond_10m.where(cond_10m.notna(), cond_margin)
+    df["obs_derived_condensation_margin_pred_10m"] = cond_10m.where(
+        cond_10m.notna(), cond_margin
+    )
     df["obs_derived_condensation_risk_10m"] = (
-        df["dTcond_pred_10m"] < condensation_margin_min_c
+        df["obs_derived_condensation_margin_pred_10m"] < condensation_margin_min_c
     ).astype(float)
 
     df["obs_derived_dli_mol_m2"] = _cumulative_light_dli(

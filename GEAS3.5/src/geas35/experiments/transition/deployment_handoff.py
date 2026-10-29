@@ -81,6 +81,7 @@ def create_step14_deployment_handoff(
         crop_decision = _mapping(decisions[crop], f"{crop} decision")
         candidate = str(crop_decision.get("candidate_name", "")).strip()
         _require(candidate in OFFICIAL_CANDIDATES, f"{crop}: invalid candidate_name")
+        _require(candidate != "persistence", f"{crop}: Persistence is baseline-only and cannot be deployed")
         _validate_research_rationale(crop, crop_decision)
         crop_root = _project_path(
             root, _mapping(_mapping(step12.get("crops"), "Step 12 crops").get(crop), crop).get("output_root")

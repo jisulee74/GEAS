@@ -1,0 +1,583 @@
+{
+  "created_at_utc": "2026-09-07T23:05:53.148240+00:00",
+  "files": [
+    {
+      "path": "runtime_src/geas35/__init__.py",
+      "sha256": "3d9db75c1cfeaa90eb5e7d3934be6fec74978680572a06f58467fff03fc3b80f",
+      "source_path": "src/geas35/__init__.py"
+    },
+    {
+      "path": "runtime_src/geas35/core/__init__.py",
+      "sha256": "413c9fbc17e15e77806c1fb56079aff5fb00e2f4a83e7682162b567088ce9e61",
+      "source_path": "src/geas35/core/__init__.py"
+    },
+    {
+      "path": "runtime_src/geas35/core/growth_stage.py",
+      "sha256": "38b8bf1afc58c2851d010eab75b324929be4366234b7396af5fd7a1fc3c6ee25",
+      "source_path": "src/geas35/core/growth_stage.py"
+    },
+    {
+      "path": "runtime_src/geas35/core/solar_time.py",
+      "sha256": "4ff49926ec6c8145912f57079a3a3332c5ff7d0f657bf7ae0c98326e1b668c55",
+      "source_path": "src/geas35/core/solar_time.py"
+    },
+    {
+      "path": "runtime_src/geas35/data/__init__.py",
+      "sha256": "616034b6b20eef1f95dc5d344bfe37c6c0af87bb460eb1969cf2acdef652fe51",
+      "source_path": "src/geas35/data/__init__.py"
+    },
+    {
+      "path": "runtime_src/geas35/data/crop_info.py",
+      "sha256": "2831fcabd5e4f8b9aa4454c95f99809ea5038fee172855571fba8375f20230f1",
+      "source_path": "src/geas35/data/crop_info.py"
+    },
+    {
+      "path": "runtime_src/geas35/data/weather.py",
+      "sha256": "6086e4f42e5ac1fe851949f451231aca64e84029ecee648e1f0bd719027a70e9",
+      "source_path": "src/geas35/data/weather.py"
+    },
+    {
+      "path": "runtime_src/geas35/experiments/__init__.py",
+      "sha256": "30b7e25affbe04823dd4a41860d01066972d434151ed63eb81ab10db100e0c5c",
+      "source_path": "src/geas35/experiments/__init__.py"
+    },
+    {
+      "path": "runtime_src/geas35/experiments/quality/__init__.py",
+      "sha256": "2451f8383f94fe3b6bc8b2dfc016389d3ee224b0f1ea1140a692592eabf6df38",
+      "source_path": "src/geas35/experiments/quality/__init__.py"
+    },
+    {
+      "path": "runtime_src/geas35/experiments/quality/benchmark_runner.py",
+      "sha256": "423b675d830f36342bcbdcfa53fc4e04721c591c98ec375d123dac06056fe677",
+      "source_path": "src/geas35/experiments/quality/benchmark_runner.py"
+    },
+    {
+      "path": "runtime_src/geas35/experiments/quality/calibration_runner.py",
+      "sha256": "4cfde7194fcf574648b320de7ab986a3036aa7052c2fa9c0fbe649d02f4ba504",
+      "source_path": "src/geas35/experiments/quality/calibration_runner.py"
+    },
+    {
+      "path": "runtime_src/geas35/experiments/quality/cli.py",
+      "sha256": "975c0a096c350bb7a32d14e1e28d17ad072fedebec74fd142acbbe8c17453760",
+      "source_path": "src/geas35/experiments/quality/cli.py"
+    },
+    {
+      "path": "runtime_src/geas35/experiments/quality/config.py",
+      "sha256": "c293af25951f8272b79490bb31bf693992b9cfe3a30ae9a6a36ce2021b84f79c",
+      "source_path": "src/geas35/experiments/quality/config.py"
+    },
+    {
+      "path": "runtime_src/geas35/experiments/quality/evaluation_runner.py",
+      "sha256": "e6ae1b23b8f833760b4c3806eded4d7fe082b386a583e99537f3760f0b2fc60f",
+      "source_path": "src/geas35/experiments/quality/evaluation_runner.py"
+    },
+    {
+      "path": "runtime_src/geas35/experiments/quality/figures.py",
+      "sha256": "1363f5b10a3cd53829c98667f066743711bffa26797ddd1232867e29b1f94de0",
+      "source_path": "src/geas35/experiments/quality/figures.py"
+    },
+    {
+      "path": "runtime_src/geas35/experiments/quality/hpo_runner.py",
+      "sha256": "e6c2a67f4ba4160c8201158a0a264aa47085512a7bdd39181912dbfca92d1bfb",
+      "source_path": "src/geas35/experiments/quality/hpo_runner.py"
+    },
+    {
+      "path": "runtime_src/geas35/experiments/quality/integrity_runner.py",
+      "sha256": "abe3e7dbaef1379a5befa6e9bf0e1dd84594385cdf75b28f77e2177e20446a8a",
+      "source_path": "src/geas35/experiments/quality/integrity_runner.py"
+    },
+    {
+      "path": "runtime_src/geas35/experiments/quality/report_runner.py",
+      "sha256": "998aa9f301b948a2be731daf859ab1c66faead5b05b00fd957a93ecc211ff991",
+      "source_path": "src/geas35/experiments/quality/report_runner.py"
+    },
+    {
+      "path": "runtime_src/geas35/experiments/quality/runner.py",
+      "sha256": "263451904fb66345d1ddcfaccc7d475d2e22f84bd5c8686580e73445a7aedcdb",
+      "source_path": "src/geas35/experiments/quality/runner.py"
+    },
+    {
+      "path": "runtime_src/geas35/experiments/quality/search.py",
+      "sha256": "33e3dc1acc1c77b98c51103184f409bf846ca088ba0aa53748a3722131da2e6b",
+      "source_path": "src/geas35/experiments/quality/search.py"
+    },
+    {
+      "path": "runtime_src/geas35/experiments/quality/visualization_runner.py",
+      "sha256": "b2c135a140d1366267c66418b6ed789452585d757ea6d0305e3332abcc941041",
+      "source_path": "src/geas35/experiments/quality/visualization_runner.py"
+    },
+    {
+      "path": "runtime_src/geas35/experiments/rl/__init__.py",
+      "sha256": "9f6561321ab442599e237fdaa5431df7130a605e0dc1f3a25dd0a696f37dcb84",
+      "source_path": "src/geas35/experiments/rl/__init__.py"
+    },
+    {
+      "path": "runtime_src/geas35/experiments/rl/checkpoint_v2.py",
+      "sha256": "271c3977432ddd6c7a57e23902629e11322c32ca0001eb337be7655bfed5a187",
+      "source_path": "src/geas35/experiments/rl/checkpoint_v2.py"
+    },
+    {
+      "path": "runtime_src/geas35/experiments/rl/step15_contract.py",
+      "sha256": "89efc146b767f853f47e5ec6d2474a83e6c6065898955a771b67002f4b3de8dc",
+      "source_path": "src/geas35/experiments/rl/step15_contract.py"
+    },
+    {
+      "path": "runtime_src/geas35/experiments/rl/step15_v2.py",
+      "sha256": "e6750147f45740f12175ffcef2a37c99e65cdffcf296b66a9e4678b12b61932d",
+      "source_path": "src/geas35/experiments/rl/step15_v2.py"
+    },
+    {
+      "path": "runtime_src/geas35/experiments/rl/step16_environment.py",
+      "sha256": "6d91f186626438b117fee48f839a0542eab25c478d544500bfc6eaddd4facccd",
+      "source_path": "src/geas35/experiments/rl/step16_environment.py"
+    },
+    {
+      "path": "runtime_src/geas35/experiments/rl/step17_validation.py",
+      "sha256": "a23f4a889b8bc2926fa10bb3ccc476d76560fbcb358ea2f164e8e8bc10dc62fe",
+      "source_path": "src/geas35/experiments/rl/step17_validation.py"
+    },
+    {
+      "path": "runtime_src/geas35/experiments/rl/step18_hybrid_ppo.py",
+      "sha256": "057576ae4c8ef3dd29f867be688f7cc7296e72f008245fc9cb2ba82c9f887391",
+      "source_path": "src/geas35/experiments/rl/step18_hybrid_ppo.py"
+    },
+    {
+      "path": "runtime_src/geas35/experiments/rl/step19_5_calibration.py",
+      "sha256": "cb9959840d8c1861a72679a609dcc0b7f4697c8eb67bc48656c0459929e3b038",
+      "source_path": "src/geas35/experiments/rl/step19_5_calibration.py"
+    },
+    {
+      "path": "runtime_src/geas35/experiments/rl/step19_5_parallel.py",
+      "sha256": "a8a1edc80351b0909a1151be5ac9d086fb5b12d15aad25b037f0151644d836e9",
+      "source_path": "src/geas35/experiments/rl/step19_5_parallel.py"
+    },
+    {
+      "path": "runtime_src/geas35/experiments/rl/step19_5_runner.py",
+      "sha256": "57d5b0f56d0de2d9d84ffbd485041ae2933764c0c24a83eae2b3131172373401",
+      "source_path": "src/geas35/experiments/rl/step19_5_runner.py"
+    },
+    {
+      "path": "runtime_src/geas35/experiments/rl/step19_pilot.py",
+      "sha256": "a982b2c53433c099d7d587b118f50fb80614666fd6b260629754b54cac0c7146",
+      "source_path": "src/geas35/experiments/rl/step19_pilot.py"
+    },
+    {
+      "path": "runtime_src/geas35/experiments/rl/step20_hpo.py",
+      "sha256": "ad54c5bc22352fa8906f97f4c521f6fce559f2962ee3d14e1d20060f57290ca8",
+      "source_path": "src/geas35/experiments/rl/step20_hpo.py"
+    },
+    {
+      "path": "runtime_src/geas35/experiments/rl/step20_protocol.py",
+      "sha256": "595edc88b8308043f8a7b49576cacafdeea4641490fe07b0f28a0f668386e74f",
+      "source_path": "src/geas35/experiments/rl/step20_protocol.py"
+    },
+    {
+      "path": "runtime_src/geas35/experiments/rl/step20_runner.py",
+      "sha256": "5c6bfca188b63df9855271f129fe1b26710d46babf61b17d504f721f5627a8e3",
+      "source_path": "src/geas35/experiments/rl/step20_runner.py"
+    },
+    {
+      "path": "runtime_src/geas35/experiments/rl/step20_v2.py",
+      "sha256": "2fa6ecbd9b84204863027bd1f9f6457fc6a722827001326dd3ace8eb7a7a7673",
+      "source_path": "src/geas35/experiments/rl/step20_v2.py"
+    },
+    {
+      "path": "runtime_src/geas35/experiments/rl/step20_v2_runner.py",
+      "sha256": "183a9ef747bf4bea523b4e9f0039d2d02bb3dd3e26ef40a6d579d3a0a3eda0f8",
+      "source_path": "src/geas35/experiments/rl/step20_v2_runner.py"
+    },
+    {
+      "path": "runtime_src/geas35/experiments/rl/v2_readiness.py",
+      "sha256": "5ee817d0f314248eaea8ed5d5d6cc1c959b34d7436c4b666a3797a2a08e765c1",
+      "source_path": "src/geas35/experiments/rl/v2_readiness.py"
+    },
+    {
+      "path": "runtime_src/geas35/experiments/transition/__init__.py",
+      "sha256": "943be04b3f5d5f0ac53b6855b6e9298bb46fbeeae3ff101420d177dac1af35cb",
+      "source_path": "src/geas35/experiments/transition/__init__.py"
+    },
+    {
+      "path": "runtime_src/geas35/experiments/transition/cli.py",
+      "sha256": "5aaf5da1bcc584ebee259e13dae653231ca95c3536f69f159fe9f9b779ad1c10",
+      "source_path": "src/geas35/experiments/transition/cli.py"
+    },
+    {
+      "path": "runtime_src/geas35/experiments/transition/config.py",
+      "sha256": "8851c8c4d78c992a878da99d5780ec408ac003a824e17fea497bd903555cbade",
+      "source_path": "src/geas35/experiments/transition/config.py"
+    },
+    {
+      "path": "runtime_src/geas35/experiments/transition/deployment_handoff.py",
+      "sha256": "08f58e25973009d278f0f905b909f1871b3328910ebacf29f546f324f320b121",
+      "source_path": "src/geas35/experiments/transition/deployment_handoff.py"
+    },
+    {
+      "path": "runtime_src/geas35/experiments/transition/integrity_handoff.py",
+      "sha256": "e3b9778a1a47ba035272ffe22f20db1a01d8cf1c0ae05c22cf86457cf8baf83c",
+      "source_path": "src/geas35/experiments/transition/integrity_handoff.py"
+    },
+    {
+      "path": "runtime_src/geas35/experiments/transition/qc_contract_freeze.py",
+      "sha256": "119c674b2fce468120ff985357bb75bc3c57946030364fefa4af2ccdaa5c958a",
+      "source_path": "src/geas35/experiments/transition/qc_contract_freeze.py"
+    },
+    {
+      "path": "runtime_src/geas35/experiments/transition/qc_schema_validation.py",
+      "sha256": "f946daabee4de40fa6c59be47c74118b80f462b86eb0f94e1ce7500b8157df21",
+      "source_path": "src/geas35/experiments/transition/qc_schema_validation.py"
+    },
+    {
+      "path": "runtime_src/geas35/experiments/transition/qc_test_completion.py",
+      "sha256": "a3ff2c474faf14c02a00af347537a112a91c490481f88d0ab02a1bdd3efe259f",
+      "source_path": "src/geas35/experiments/transition/qc_test_completion.py"
+    },
+    {
+      "path": "runtime_src/geas35/experiments/transition/random_restart.py",
+      "sha256": "e91aca29504663c947168ef7f09568f9f2bd5982d8769db02e4a033ac9e5b3d0",
+      "source_path": "src/geas35/experiments/transition/random_restart.py"
+    },
+    {
+      "path": "runtime_src/geas35/experiments/transition/real_data_benchmark.py",
+      "sha256": "cfd9ef84a15223f129e2f1ab67be32a6044ab6f17f43ba4ff304ebb07c2ad16c",
+      "source_path": "src/geas35/experiments/transition/real_data_benchmark.py"
+    },
+    {
+      "path": "runtime_src/geas35/experiments/transition/reproducibility_review.py",
+      "sha256": "699519f3e27014a3713bee32e59318f0125bc974fe3b7c4eeb0436b2545cf9b4",
+      "source_path": "src/geas35/experiments/transition/reproducibility_review.py"
+    },
+    {
+      "path": "runtime_src/geas35/experiments/transition/runner.py",
+      "sha256": "fa583b6f2c94d971e01d66a34da69e55b2d0503043caa4437f1accdcdbc82649",
+      "source_path": "src/geas35/experiments/transition/runner.py"
+    },
+    {
+      "path": "runtime_src/geas35/features/__init__.py",
+      "sha256": "7e97d31d715a98be15165e97aa76c38cadfd5ef2f889165d32e99761ff2d5d45",
+      "source_path": "src/geas35/features/__init__.py"
+    },
+    {
+      "path": "runtime_src/geas35/features/context.py",
+      "sha256": "728a0018d8931724fd2ed6fe48a7357b54da7dc51fcba3dfe8687ffac6eb71e2",
+      "source_path": "src/geas35/features/context.py"
+    },
+    {
+      "path": "runtime_src/geas35/features/derived.py",
+      "sha256": "1c91f2ca5ca40707139a9ed486cc2767e20dd141325a30b6d88b605082698363",
+      "source_path": "src/geas35/features/derived.py"
+    },
+    {
+      "path": "runtime_src/geas35/io_utils.py",
+      "sha256": "3dd4902ccf5460c86765c0d5da0b2ef5748f025f82d427570f78abdeda3b6287",
+      "source_path": "src/geas35/io_utils.py"
+    },
+    {
+      "path": "runtime_src/geas35/models/__init__.py",
+      "sha256": "8b63fc5cd2973f349995b27ec195d08c23e2d2efcd3594e3f176bce4d4ee5de8",
+      "source_path": "src/geas35/models/__init__.py"
+    },
+    {
+      "path": "runtime_src/geas35/models/crop_specific.py",
+      "sha256": "c16c4e5aa153c39d3c03e00627a785b9a6d090d415e19ed9d9b355b1860c9d2c",
+      "source_path": "src/geas35/models/crop_specific.py"
+    },
+    {
+      "path": "runtime_src/geas35/models/quality/__init__.py",
+      "sha256": "b4ddae18e17ab5566513d6f9a961360f33a42ee28801f83487d9f4594098346b",
+      "source_path": "src/geas35/models/quality/__init__.py"
+    },
+    {
+      "path": "runtime_src/geas35/models/quality/artifacts.py",
+      "sha256": "5ee576c0162b7d95497a11fc13bc50d97096473829d7e6767ada84e578ed532d",
+      "source_path": "src/geas35/models/quality/artifacts.py"
+    },
+    {
+      "path": "runtime_src/geas35/models/quality/base.py",
+      "sha256": "2aebb6e08c3e94dabb10e2b4c468c4623cb66052a3be861b4366e42328ab6fc9",
+      "source_path": "src/geas35/models/quality/base.py"
+    },
+    {
+      "path": "runtime_src/geas35/models/quality/baseline.py",
+      "sha256": "78289f010b36630e97f01d621a248a1b102df21f6e93d9a7465cf1decfc7b202",
+      "source_path": "src/geas35/models/quality/baseline.py"
+    },
+    {
+      "path": "runtime_src/geas35/models/quality/deep/__init__.py",
+      "sha256": "e6cbd1988e245f0ff0d3c27e60021d002058128cef246283d3ec7c67c1fe2cfd",
+      "source_path": "src/geas35/models/quality/deep/__init__.py"
+    },
+    {
+      "path": "runtime_src/geas35/models/quality/deep/common.py",
+      "sha256": "d1075fbcdfcb97cc9444dca6f67a44e415032f892dd060aa2046dfee0628a3cd",
+      "source_path": "src/geas35/models/quality/deep/common.py"
+    },
+    {
+      "path": "runtime_src/geas35/models/quality/evaluation.py",
+      "sha256": "607992fa856022ae650f0320beedadea8733a1e5dcea4c999c6cf85b3174e9be",
+      "source_path": "src/geas35/models/quality/evaluation.py"
+    },
+    {
+      "path": "runtime_src/geas35/models/quality/hyperparameters.py",
+      "sha256": "12ce45a42521fe9a515b538808e8395666f25bf70dcd790d774dbf33c46c078b",
+      "source_path": "src/geas35/models/quality/hyperparameters.py"
+    },
+    {
+      "path": "runtime_src/geas35/models/quality/modern_tcn.py",
+      "sha256": "ef384772ea19ddcd7b412d6879ee70f5561804180cb017edc647e75748de3514",
+      "source_path": "src/geas35/models/quality/modern_tcn.py"
+    },
+    {
+      "path": "runtime_src/geas35/models/quality/patch_tst.py",
+      "sha256": "580ba3c920d8733a8759c6e5ed5cf521394500e8e593ae5e60c21ceb69ea657d",
+      "source_path": "src/geas35/models/quality/patch_tst.py"
+    },
+    {
+      "path": "runtime_src/geas35/models/quality/rule_only.py",
+      "sha256": "2198eb3c5c2637b754914b38c07d6d15cc1df3e3075e87eadab8242bbbf66761",
+      "source_path": "src/geas35/models/quality/rule_only.py"
+    },
+    {
+      "path": "runtime_src/geas35/models/quality/selection_report.py",
+      "sha256": "f75f8329c142aeec0c9e620f6ef04ad02cc0e54bfe9591399e05b6284830dbf2",
+      "source_path": "src/geas35/models/quality/selection_report.py"
+    },
+    {
+      "path": "runtime_src/geas35/models/quality/thresholds.py",
+      "sha256": "ea9c150a7f1a7a02aedbdfc402d543ec300e17734de61b18bed7ccfe2d3b7067",
+      "source_path": "src/geas35/models/quality/thresholds.py"
+    },
+    {
+      "path": "runtime_src/geas35/models/quality/timesnet.py",
+      "sha256": "37b8636036507437f8019be3c4533c001202a1cc5fa95a63705c618aea8b98c3",
+      "source_path": "src/geas35/models/quality/timesnet.py"
+    },
+    {
+      "path": "runtime_src/geas35/models/transition/__init__.py",
+      "sha256": "b489275e2621df6a21adf3a9106329653470b3c9bb724f1319403bde35912fcb",
+      "source_path": "src/geas35/models/transition/__init__.py"
+    },
+    {
+      "path": "runtime_src/geas35/models/transition/action_response.py",
+      "sha256": "7376f58b21a9237d95948040c791efb6f80dbc4e52851102510845474b4d2798",
+      "source_path": "src/geas35/models/transition/action_response.py"
+    },
+    {
+      "path": "runtime_src/geas35/models/transition/artifacts.py",
+      "sha256": "b029b988af4215a08aa008651cda18f4668700bd45c4d439e17591b94d359879",
+      "source_path": "src/geas35/models/transition/artifacts.py"
+    },
+    {
+      "path": "runtime_src/geas35/models/transition/base.py",
+      "sha256": "4b9985531532049c332a0debe2ebd735750a70d307c10c217a19256de382c7d5",
+      "source_path": "src/geas35/models/transition/base.py"
+    },
+    {
+      "path": "runtime_src/geas35/models/transition/boosting_models.py",
+      "sha256": "605743a40123b125309bc293ab47d39d2f7a6029359e1707ef803790f1561bfa",
+      "source_path": "src/geas35/models/transition/boosting_models.py"
+    },
+    {
+      "path": "runtime_src/geas35/models/transition/causal_state.py",
+      "sha256": "fb3be548d3bdbb1aeca6fc29e1c3cda53569925b9dd0ae3c662a94e87624a0fd",
+      "source_path": "src/geas35/models/transition/causal_state.py"
+    },
+    {
+      "path": "runtime_src/geas35/models/transition/comparison.py",
+      "sha256": "c8ad0d5cea28902f3a5cc7715fd1b384fdff1c8269c96f1b9e29ac1986e02764",
+      "source_path": "src/geas35/models/transition/comparison.py"
+    },
+    {
+      "path": "runtime_src/geas35/models/transition/datasets.py",
+      "sha256": "e9af1c19d8434ee0a03b2739b6878fa650b35f3cc4233b3043705ebb85e21dc0",
+      "source_path": "src/geas35/models/transition/datasets.py"
+    },
+    {
+      "path": "runtime_src/geas35/models/transition/evaluator.py",
+      "sha256": "d7ebdfc8ce843945df767e05d9cabd3b581ace4ce70d46ccbc80c04a837976d3",
+      "source_path": "src/geas35/models/transition/evaluator.py"
+    },
+    {
+      "path": "runtime_src/geas35/models/transition/feature_variants.py",
+      "sha256": "3c2f490ea00f6e612720e8c182fadb0d336b59b50d55c3947acd2b68126bb31a",
+      "source_path": "src/geas35/models/transition/feature_variants.py"
+    },
+    {
+      "path": "runtime_src/geas35/models/transition/features.py",
+      "sha256": "1c2f2f931b211796cc4e5115811d24fd33dbad0bae343b3fde83555b3ee99dfc",
+      "source_path": "src/geas35/models/transition/features.py"
+    },
+    {
+      "path": "runtime_src/geas35/models/transition/hpo_staged.py",
+      "sha256": "00e346241ab3787767b5db7dec5442ff7ebcdde81398de9e93f022ebf9628a66",
+      "source_path": "src/geas35/models/transition/hpo_staged.py"
+    },
+    {
+      "path": "runtime_src/geas35/models/transition/hyperparameters.py",
+      "sha256": "a0bbc4b7839cfc631335c9f1aceb4e02eac6078e8b55da5de3108acf80da3a5f",
+      "source_path": "src/geas35/models/transition/hyperparameters.py"
+    },
+    {
+      "path": "runtime_src/geas35/models/transition/inference.py",
+      "sha256": "102abba2909a27497baeb34be94aa893e7287c14500993b5f71b45d2201c1bc6",
+      "source_path": "src/geas35/models/transition/inference.py"
+    },
+    {
+      "path": "runtime_src/geas35/models/transition/quality_flag_ablation.py",
+      "sha256": "eda5b2ae942e659235587a687dbe769f65e099715312af30ac3526b3af746740",
+      "source_path": "src/geas35/models/transition/quality_flag_ablation.py"
+    },
+    {
+      "path": "runtime_src/geas35/models/transition/registry.py",
+      "sha256": "92880726d9a1b9c549389bbb760525a62dd947e80fbef3d0f026314e1647bc1e",
+      "source_path": "src/geas35/models/transition/registry.py"
+    },
+    {
+      "path": "runtime_src/geas35/models/transition/resources.py",
+      "sha256": "1af704e7858410c179db7f6e8406bbaddb947a5a5c570e871af7b5d9783e711d",
+      "source_path": "src/geas35/models/transition/resources.py"
+    },
+    {
+      "path": "runtime_src/geas35/models/transition/rollout.py",
+      "sha256": "a739818be92a9230c46f6fd5437fea4a8b035e56e95f698dd46394254eaa4b72",
+      "source_path": "src/geas35/models/transition/rollout.py"
+    },
+    {
+      "path": "runtime_src/geas35/models/transition/selector.py",
+      "sha256": "e49707c367a11f8f1729effc09f773ca0e8b7fb4bb336f803e8353d371c80aa9",
+      "source_path": "src/geas35/models/transition/selector.py"
+    },
+    {
+      "path": "runtime_src/geas35/models/transition/sklearn_models.py",
+      "sha256": "52a51d975a2d88a740cefab8684aafcb65e5eb35cb35dc3713765f75aabf7a7b",
+      "source_path": "src/geas35/models/transition/sklearn_models.py"
+    },
+    {
+      "path": "runtime_src/geas35/models/transition/trainer.py",
+      "sha256": "4d2200be5a3de72aaa730ec8ee129310498f4408b450ea3aad5f4f0c9d065057",
+      "source_path": "src/geas35/models/transition/trainer.py"
+    },
+    {
+      "path": "runtime_src/geas35/preprocessing/1_input_schema_preparation.py",
+      "sha256": "12fb48e17ca55826113f9d510e45c269cb36ddf1400b8c700feeab3a44c65669",
+      "source_path": "src/geas35/preprocessing/1_input_schema_preparation.py"
+    },
+    {
+      "path": "runtime_src/geas35/preprocessing/2_unit_canonicalization.py",
+      "sha256": "8a663fc83d856e3b165acad37a79a93c53d59179c2a9c15df1a6341dbf817831",
+      "source_path": "src/geas35/preprocessing/2_unit_canonicalization.py"
+    },
+    {
+      "path": "runtime_src/geas35/preprocessing/3_missing_outliers_handling.py",
+      "sha256": "930f992e43234c5c2e68e5274d7d2731fb65bea1c4526ba3319248851c4799d1",
+      "source_path": "src/geas35/preprocessing/3_missing_outliers_handling.py"
+    },
+    {
+      "path": "runtime_src/geas35/preprocessing/__init__.py",
+      "sha256": "ee5b00c9056b5e6a35d151240df6287e44c1e6442ba8f678c40c6fa64d0caa71",
+      "source_path": "src/geas35/preprocessing/__init__.py"
+    },
+    {
+      "path": "runtime_src/geas35/preprocessing/growth_stage_features.py",
+      "sha256": "3826e1fbb328ea442d7aa51713a313ccef436d2c4d52616a622d0940723fd3c0",
+      "source_path": "src/geas35/preprocessing/growth_stage_features.py"
+    },
+    {
+      "path": "runtime_src/geas35/qc/__init__.py",
+      "sha256": "1b30a4d0279729772e7e0f907f100513649819636dabd3881ea460f04d672adc",
+      "source_path": "src/geas35/qc/__init__.py"
+    },
+    {
+      "path": "runtime_src/geas35/qc/domain.py",
+      "sha256": "26ea71edb0235a6216b694b7d9db7140a38be44184fbbcca7e4c77da8cd39e7a",
+      "source_path": "src/geas35/qc/domain.py"
+    },
+    {
+      "path": "runtime_src/geas35/realtime/__init__.py",
+      "sha256": "a52ca3f3ac6819fee37bb77b74e05a4084b3add80710930dc9d3461534bb4030",
+      "source_path": "src/geas35/realtime/__init__.py"
+    },
+    {
+      "path": "runtime_src/geas35/realtime/adapters.py",
+      "sha256": "a1c2fff254acdc0031bd80b77ca3f3f31082fb3eb408f7e77fa5d08e93edd6ba",
+      "source_path": "src/geas35/realtime/adapters.py"
+    },
+    {
+      "path": "runtime_src/geas35/realtime/artifacts.py",
+      "sha256": "7add149696b430fcb85c6893003715cf785aa66a9567c9ff8556bb2f743f7604",
+      "source_path": "src/geas35/realtime/artifacts.py"
+    },
+    {
+      "path": "runtime_src/geas35/realtime/contracts.py",
+      "sha256": "ad7903cdab39ca0396eaf03f1ed5a92d6ce8c2d8321240b9b1b5122dbd24745a",
+      "source_path": "src/geas35/realtime/contracts.py"
+    },
+    {
+      "path": "runtime_src/geas35/realtime/engine.py",
+      "sha256": "edbf32c65bd769934f3533a12a69e30df7ace75ff3f404b6567becd4c673cb16",
+      "source_path": "src/geas35/realtime/engine.py"
+    },
+    {
+      "path": "runtime_src/geas35/realtime/factory.py",
+      "sha256": "dd73a32a4bb66bfca9e38d7d8e3474c7cf7ab396b3facb00beff5210628165b7",
+      "source_path": "src/geas35/realtime/factory.py"
+    },
+    {
+      "path": "runtime_src/geas35/realtime/policy.py",
+      "sha256": "98b94f058f938c2f7dc7c39a04e367030c102b67360b42de9d0c86680627cba6",
+      "source_path": "src/geas35/realtime/policy.py"
+    },
+    {
+      "path": "runtime_src/geas35/realtime/preprocessing.py",
+      "sha256": "f6e87dbf6af3b0953ada157d612e41909e2089327d4c5cb5bd801fb717ae3739",
+      "source_path": "src/geas35/realtime/preprocessing.py"
+    },
+    {
+      "path": "runtime_src/geas35/realtime/sanitization.py",
+      "sha256": "74e03b76c946d2ccf5a6906db03a5532992c67932e937ea41824a7a891fd3b4f",
+      "source_path": "src/geas35/realtime/sanitization.py"
+    },
+    {
+      "path": "runtime_src/geas35/realtime/telemetry.py",
+      "sha256": "1365c53c60dcf83cbf8533d2e08f42a476bd9ea935924ff0552574f5697b975a",
+      "source_path": "src/geas35/realtime/telemetry.py"
+    },
+    {
+      "path": "runtime_src/geas35/rl/__init__.py",
+      "sha256": "68dc96e2f5c81d24366ab7ee3aaae74f87a475a7497a6da0c9054100b94dbcf0",
+      "source_path": "src/geas35/rl/__init__.py"
+    },
+    {
+      "path": "runtime_src/geas35/rl/datasets.py",
+      "sha256": "22b29d4b0a91a3ee32fd86504228da81e0f5a595c9e68c20786106f88a7037e2",
+      "source_path": "src/geas35/rl/datasets.py"
+    },
+    {
+      "path": "runtime_src/geas35/rl/hybrid_ppo.py",
+      "sha256": "bb36fa0de817b471ab4712345b0449a67e7066dcca80a9a7d6b2f9ee206f9e24",
+      "source_path": "src/geas35/rl/hybrid_ppo.py"
+    },
+    {
+      "path": "runtime_src/geas35/rl/mdp_v1.py",
+      "sha256": "af986f41d2e8393f026a305dc8f30a5bdd30a9acce655ea913030af8bfa567f8",
+      "source_path": "src/geas35/rl/mdp_v1.py"
+    },
+    {
+      "path": "runtime_src/geas35/rl/model_driven_env.py",
+      "sha256": "ea0c5efb93efd7fd145030211b09e83d9926f9c45258a079ab9a08242a583013",
+      "source_path": "src/geas35/rl/model_driven_env.py"
+    },
+    {
+      "path": "runtime_src/geas35/rl/parallel_v2.py",
+      "sha256": "ada87c89fe2fc73442d396504d3d34514e13164b42e411cb0dd876f625236905",
+      "source_path": "src/geas35/rl/parallel_v2.py"
+    },
+    {
+      "path": "runtime_src/geas35/rl/support_v1.py",
+      "sha256": "3ee7554e3dfb128f53f869a6910cdaefd2b95bf620fc22b96c95b5f7d18b6a6d",
+      "source_path": "src/geas35/rl/support_v1.py"
+    }
+  ],
+  "git_commit": "d51dcee1cacbdfaf035b65789f77b3be70a6ce88",
+  "protocol_version": "geas35.transition.random_restart.v1.3",
+  "snapshot_sha256": "109b15c6142b7470f7cae181be3a0cd42eec523a06fbe363e0fe8adf04da7666"
+}
