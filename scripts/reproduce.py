@@ -53,7 +53,28 @@ def destination_for(member_name, destination, mappings):
     return None
 
 
-def restore(archive, checksum, destination, mappings, overlays=()):
+def restore_links(destination, links):
+    destination = Path(destination).resolve()
+    for link in links:
+        for value in (link['path'], link['target']):
+            parts = PurePosixPath(value)
+            if parts.is_absolute() or '..' in parts.parts or '.git' in parts.parts:
+                raise ValueError('Unsafe declared restore link')
+        path = destination / link['path']
+        target = destination / link['target']
+        if not path.parent.resolve().is_relative_to(destination) or not target.resolve().is_relative_to(destination):
+            raise ValueError('Restore link escapes destination')
+        if not target.exists():
+            raise FileNotFoundError('Restore link target missing: ' + link['target'])
+        if path.exists() or path.is_symlink():
+            if not path.is_symlink() or path.resolve() != target.resolve():
+                raise FileExistsError('Existing restore link differs: ' + str(path))
+            continue
+        path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
+        path.symlink_to(os.path.relpath(target, path.parent), target_is_directory=target.is_dir())
+
+
+def restore(archive, checksum, destination, mappings, overlays=(), links=()):
     archives = [verify_archive(archive, checksum), *(verify_archive(p) for p in overlays)]
     superseded = [set() for _ in archives]
     for i in range(len(archives) - 1):
@@ -63,6 +84,7 @@ def restore(archive, checksum, destination, mappings, overlays=()):
     destination = Path(destination).resolve()
     destination.mkdir(parents=True, exist_ok=True)
     copied = skipped = 0
+    declared_links = {str(destination / link['path']) for link in links}
     for index, archive in enumerate(archives):
         with tarfile.open(archive, 'r:*') as tar:
             for member in tar:
@@ -70,6 +92,9 @@ def restore(archive, checksum, destination, mappings, overlays=()):
                     continue
                 target = destination_for(member.name, destination, mappings)
                 if target is None or member.isdir():
+                    continue
+                if str(target) in declared_links and member.issym():
+                    # Recreate only the reviewed relative alias after its target is restored.
                     continue
                 if not member.isfile():
                     raise ValueError('Refusing non-regular restore member: ' + member.name)
@@ -89,7 +114,8 @@ def restore(archive, checksum, destination, mappings, overlays=()):
                     target.chmod(0o600)
                     shutil.copyfileobj(source, output, 8 * 1024 * 1024)
                 copied += 1
-    print(json.dumps({'restored_files': copied, 'identical_existing_files': skipped}))
+    restore_links(destination, links)
+    print(json.dumps({'restored_files': copied, 'identical_existing_files': skipped, 'restored_links': len(links)}))
 
 
 def smoke(config):
@@ -120,7 +146,7 @@ def main():
     if args.action == 'verify-backup':
         print('SHA-256 verified:', verify_archive(args.archive, args.checksum).name)
     else:
-        restore(args.archive, args.checksum, args.destination, config['restore_mappings'], args.overlay)
+        restore(args.archive, args.checksum, args.destination, config['restore_mappings'], args.overlay, config.get('restore_links', []))
     return 0
 
 

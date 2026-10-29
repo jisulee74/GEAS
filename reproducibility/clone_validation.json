@@ -1,0 +1,22 @@
+{
+  "date": "2026-10-29",
+  "repository": "https://github.com/jisulee74/GEAS",
+  "tested_source_commit": "c6e9b8d1ba71844655c4ce7874de526f446baccf",
+  "clone_source": "GitHub, fresh shallow clone",
+  "environment": "Existing recorded Python 3.12.3 environment; no fresh package install",
+  "synthetic_tests_passed": 39,
+  "restore_safety_tests_passed": 7,
+  "restore_tool_sha256": "aad875fbd9da7e8cabe308820de0b02beb847234119a664f4f2732f381dacaea",
+  "private_restoration_checks": {
+    "status": "PASS",
+    "experiment_payload_sha256": "3580155904fc600015e6c6ce55d5b305771ce275cef68e09e134dbb6de43726e",
+    "checks": [
+      "authoritative input hashes",
+      "frozen implementation hashes",
+      "PPO contract",
+      "GAE reset isolation"
+    ],
+    "full_training_executed": false
+  },
+  "full_retraining_executed": false
+}

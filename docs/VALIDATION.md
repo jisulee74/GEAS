@@ -14,3 +14,10 @@
 Clone validation details and private-input checks are recorded in `reproducibility/clone_validation.json`
 when completed. Fresh package installation and full GPU retraining are separate from using a fresh clone
 with the recorded existing environment.
+
+## Actual GitHub clone and private restore
+
+- Fresh GitHub clone: 39 synthetic tests passed with the recorded existing environment.
+- Restore safety: 7 checks passed (no overwrite, traversal/escape rejection, checksum, aliases, delta precedence).
+- Profile-A preflight passed all authoritative/frozen input hashes after private restore.
+- See `reproducibility/clone_validation.json` for the exact tested source revision and limits.

@@ -1,0 +1,12 @@
+{
+  "date": "2026-10-29",
+  "private_archives": [
+    {
+      "file": "GEAS.tar",
+      "bytes": 78336245760,
+      "sha256": "dbdd1123b4e99f13d25178596add75bc6ee606f720e9f4399251d8cfd75b1ba1"
+    }
+  ],
+  "location": "Access-restricted maintenance_backups directory on the persistent workspace; request from owner",
+  "offsite_copy_completed": false
+}
